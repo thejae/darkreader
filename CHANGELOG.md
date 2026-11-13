@@ -3,7 +3,7 @@
 - Edge: Every `git push` now builds the Edge extension into `edge-build/` (pre-push hook + `scripts/build-edge.ps1`), ready for `edge://extensions` -> Load unpacked.
 - Popup: Removed the anniversary banner, the "Pay for using Dark Reader" boxes, the news and mobile QR panels, and the Help/News/Mobile footer buttons to simplify the interface.
 - Settings: Removed the Activation pane (activation code form and reset control) from the settings page.
-- Popup: Reduced the popup window height from 30rem to 25rem, so tab content fills the window without a long empty strip at the bottom. Long site lists, the More panel and the header dropdowns scroll inside the popup.
+- Popup: Reduced the popup window height from 30rem to 27rem, so tab content fills the window without a long empty strip at the bottom. Long site lists, the More panel and the header dropdowns scroll inside the popup.
 
 # 4.9.135 (November 6, 2026)
 
