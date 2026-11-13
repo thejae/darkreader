@@ -6,13 +6,6 @@ interface SiteProps {
     url: string[];
 }
 
-export interface SiteListIndex {
-    urls: readonly string[];
-    domains: Readonly<{[domain: string]: number[]}>;
-    domainLabels: Readonly<{[domainLabel: string]: readonly number[]}>;
-    nonstandard: readonly number[];
-}
-
 export interface SitesFixesParserOptions<T> {
     commands: readonly string[];
     getCommandPropName: (command: string) => keyof T;

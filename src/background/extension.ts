@@ -35,7 +35,6 @@ type AutomationState = 'turn-on' | 'turn-off' | 'scheme-dark' | 'scheme-light' |
 interface ExtensionState extends Record<string, unknown> {
     autoState: AutomationState;
     wasEnabledOnLastCheck: boolean | null;
-    registeredContextMenus: boolean | null;
 }
 
 interface SystemColorState extends Record<string, unknown> {
@@ -50,7 +49,6 @@ declare const __THUNDERBIRD__: boolean;
 export class Extension {
     private static autoState: AutomationState = '';
     private static wasEnabledOnLastCheck: boolean | null = null;
-    private static registeredContextMenus: boolean | null = null;
     /**
      * This value is used for two purposes:
      *  - to bypass Firefox bug
@@ -92,7 +90,6 @@ export class Extension {
         Extension.stateManager = new StateManager<ExtensionState>(Extension.LOCAL_STORAGE_KEY, Extension, {
             autoState: '',
             wasEnabledOnLastCheck: null,
-            registeredContextMenus: null,
         }, logWarn);
 
         chrome.alarms.onAlarm.addListener(Extension.alarmListener);
@@ -105,17 +102,6 @@ export class Extension {
             } else {
                 chrome.commands.onCommand.addListener(async (command, tab) => Extension.onCommand(command as Command, tab && tab.id! || null, 0, null));
             }
-        }
-
-        if (chrome.permissions.onRemoved) {
-            chrome.permissions.onRemoved.addListener((permissions) => {
-                // As far as we know, this code is never actually run because there
-                // is no browser UI for removing 'contextMenus' permission.
-                // This code exists for future-proofing in case browsers ever add such UI.
-                if (!permissions?.permissions?.includes('contextMenus')) {
-                    Extension.registeredContextMenus = false;
-                }
-            });
         }
     }
 
@@ -253,8 +239,7 @@ export class Extension {
 
         // The context menu items survive in Chrome, but the onClicked listener
         // dies when an MV3 service worker is evicted. Register the listener on
-        // every startup, so the menu keeps working after worker restarts; the
-        // registeredContextMenus flag only guards the menu creation.
+        // every startup, so the menu keeps working after worker restarts.
         // contextMenus is an optional permission, so the API is undefined
         // before the user grants it, and the startup must not depend on it.
         if (chrome.contextMenus) {
@@ -378,7 +363,6 @@ export class Extension {
 
     private static registerContextMenus() {
         chrome.contextMenus.removeAll(() => {
-            Extension.registeredContextMenus = false;
             chrome.contextMenus.create({
                 id: 'DarkReader-top',
                 title: 'Dark Reader',
@@ -405,7 +389,6 @@ export class Extension {
                     parentId: 'DarkReader-top',
                     title: msgSwitchEngine || 'Switch engine',
                 });
-                Extension.registeredContextMenus = true;
             });
         });
     }

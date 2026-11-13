@@ -158,7 +158,7 @@ async function getExtensionPageTabMV3(): Promise<chrome.tabs.Tab | null> {
             populate: true,
             windowTypes: ['popup'],
         }, (w) => {
-            const responses: Array<Promise<string>> = [];
+            const responses: Array<Promise<string | null>> = [];
             let found = false;
             for (const window of w) {
                 // A popup tab with no content-script listener rejects the

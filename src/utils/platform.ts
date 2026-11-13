@@ -33,8 +33,6 @@ const platform = isNavigatorDefined ? (navigator.userAgentData && typeof navigat
 // Note: if you are using these constants in tests, make sure they are not compiled out by adding __TEST__ to them
 export const isChromium = __CHROMIUM_MV2__ || __CHROMIUM_MV3__ || (!__FIREFOX_MV2__ && !__THUNDERBIRD__ && (userAgent.includes('chrome') || userAgent.includes('chromium')));
 export const isFirefox = __FIREFOX_MV2__ || __THUNDERBIRD__ || ((__TEST__ || (!__CHROMIUM_MV2__ && !__CHROMIUM_MV3__)) && (userAgent.includes('firefox') || userAgent.includes('thunderbird') || userAgent.includes('librewolf')));
-export const isVivaldi = (__CHROMIUM_MV2__ || __CHROMIUM_MV3__) && (!__FIREFOX_MV2__ && !__THUNDERBIRD__ && userAgent.includes('vivaldi'));
-export const isYaBrowser = (__CHROMIUM_MV2__ || __CHROMIUM_MV3__) && (!__FIREFOX_MV2__ && !__THUNDERBIRD__ && userAgent.includes('yabrowser'));
 export const isOpera = (__CHROMIUM_MV2__ || __CHROMIUM_MV3__) && (!__FIREFOX_MV2__ && !__THUNDERBIRD__ && (userAgent.includes('opr') || userAgent.includes('opera')));
 export const isEdge = (__CHROMIUM_MV2__ || __CHROMIUM_MV3__) && (!__FIREFOX_MV2__ && !__THUNDERBIRD__ && userAgent.includes('edg'));
 export const isSafari = !__CHROMIUM_MV2__ && !__CHROMIUM_MV3__ && !__FIREFOX_MV2__ && !__THUNDERBIRD__ && userAgent.includes('safari') && !isChromium;
@@ -56,22 +54,6 @@ export const isMatchMediaChangeEventListenerBuggy = !__TEST__ && !__FIREFOX_MV2_
 // Note: make sure that this value matches manifest.json keys
 export const isNonPersistent = !__FIREFOX_MV2__ && !__THUNDERBIRD__ && (__CHROMIUM_MV3__ || isSafari);
 
-export const chromiumVersion = (() => {
-    const m = userAgent.match(/chrom(?:e|ium)(?:\/| )([^ ]+)/);
-    if (m && m[1]) {
-        return m[1];
-    }
-    return '';
-})();
-
-export const firefoxVersion = (() => {
-    const m = userAgent.match(/(?:firefox|librewolf)(?:\/| )([^ ]+)/);
-    if (m && m[1]) {
-        return m[1];
-    }
-    return '';
-})();
-
 export const isDefinedSelectorSupported = (() => {
     try {
         document.querySelector(':defined');
@@ -80,17 +62,6 @@ export const isDefinedSelectorSupported = (() => {
         return false;
     }
 })();
-
-export function compareChromeVersions($a: string, $b: string): -1 | 0 | 1 {
-    const a = $a.split('.').map((x) => parseInt(x));
-    const b = $b.split('.').map((x) => parseInt(x));
-    for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i]) {
-            return a[i] < b[i] ? -1 : 1;
-        }
-    }
-    return 0;
-}
 
 export const isXMLHttpRequestSupported = typeof XMLHttpRequest === 'function';
 

@@ -24,7 +24,7 @@ export default function MultiSwitch(props: MultiSwitchProps, ...children: Malevi
                     break;
                 }
                 const root = (e.currentTarget as HTMLElement).parentElement;
-                const nextElement = root.querySelector(`[data-option="${next}"]`) as HTMLElement | null;
+                const nextElement = root?.querySelector(`[data-option="${next}"]`) as HTMLElement | null;
                 nextElement?.focus();
                 props.onChange(next);
                 break;
