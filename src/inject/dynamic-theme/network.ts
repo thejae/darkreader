@@ -12,6 +12,7 @@ interface FetchRequest {
 
 const resolvers = new Map<string, (data: string) => void>();
 const rejectors = new Map<string, (reason?: any) => void>();
+const FETCH_TIMEOUT_MS = 30000;
 
 export async function bgFetch(request: FetchRequest): Promise<string> {
     if ((window as any).DarkReader?.Plugins?.fetch) {
@@ -23,8 +24,22 @@ export async function bgFetch(request: FetchRequest): Promise<string> {
     }
     return new Promise<string>((resolve, reject) => {
         const id = generateUID();
-        resolvers.set(id, resolve);
-        rejectors.set(id, reject);
+        // Without a timeout, a request the background never answers (MV3
+        // service worker died, sender context invalidated) keeps its resolver
+        // entry in the map forever and the page-side promise hangs.
+        const timeout = setTimeout(() => {
+            resolvers.delete(id);
+            rejectors.delete(id);
+            reject(new Error(`Unable to fetch ${request.url}: timed out`));
+        }, FETCH_TIMEOUT_MS);
+        resolvers.set(id, (data) => {
+            clearTimeout(timeout);
+            resolve(data);
+        });
+        rejectors.set(id, (reason) => {
+            clearTimeout(timeout);
+            reject(reason);
+        });
         chrome.runtime.sendMessage<MessageCStoBG>({type: MessageTypeCStoBG.FETCH, data: request, id});
     });
 }

@@ -1,4 +1,18 @@
 import {scale, clamp, multiplyMatrices} from '../../../src/utils/math';
+import {evalMath} from '../../../src/utils/math-eval';
+
+test('evalMath', () => {
+    expect(evalMath('1 + 2 * 3')).toEqual(7);
+    expect(evalMath('(1 + 2) * 3')).toEqual(9);
+    expect(evalMath('10% - (10% + 20%)')).toEqual(-20);
+    expect(evalMath('100% - (10% + 20%)')).toEqual(70);
+    expect(evalMath('-10% + 100%')).toEqual(90);
+    expect(evalMath('(0.5 + 0.25) * 100%')).toEqual(75);
+    expect(evalMath('10% - -5%')).toEqual(15);
+    expect(evalMath('2 * (3 + 4) * (5 - 1)')).toEqual(56);
+    expect(evalMath('100 / 2 / 5')).toEqual(10);
+    expect(evalMath('-(0.5 + 0.25) * 100')).toEqual(-75);
+});
 
 test('Scale', () => {
     expect(scale(5, 0, 10, 0, 100)).toEqual(50);

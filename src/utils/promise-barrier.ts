@@ -46,12 +46,4 @@ export class PromiseBarrier<RESOLVUTION, REJECTION> {
     isPending(): boolean {
         return !this.wasResolved && !this.wasRejected;
     }
-
-    isFulfilled(): boolean {
-        return this.wasResolved;
-    }
-
-    isRejected(): boolean {
-        return this.wasRejected;
-    }
 }

@@ -1,7 +1,7 @@
 import {mkdir, rm, copyFile, writeFile, readFile, stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 
-import unzipper from 'adm-zip';
+import AdmZip from 'adm-zip';
 
 import {log} from './utils.js';
 
@@ -191,11 +191,15 @@ async function firefoxFetchAllMetadata(noCache = false) {
 
         await rm(tempDest, {force: true, recursive: true});
         await mkdir(tempDest, {recursive: true});
+
+        const zip = new AdmZip(fileName);
+        zip.extractAllTo(tempDest);
+
+        // Extract first, replace the tracked integrity data only after the archive
+        // opened successfully: a broken run used to wipe the tracked directories
+        // and then crash.
         await rm(dest, {force: true, recursive: true});
         await mkdir(dest, {recursive: true});
-
-        const zip = new unzipper(fileName);
-        zip.extractAllTo(tempDest);
 
 
         const manifestMf = await readFile(`${tempDest}/META-INF/manifest.mf`, {encoding: 'utf-8'});

@@ -22,6 +22,19 @@ export function evalMath(expression: string): number {
 
         // Is the token a operator?
         if (operators.has(token)) {
+            // '-'/'+' at the start, after an operator or after '(' is unary.
+            const unary = !lastToken || operators.has(lastToken) || lastToken === '(';
+            if (unary) {
+                if (token === '-') {
+                    workingStack.unshift('u');
+                    lastToken = token;
+                    continue;
+                }
+                if (token === '+') {
+                    lastToken = token;
+                    continue;
+                }
+            }
             const op = operators.get(token);
 
             // Go trough the workingstack and determine it's place in the workingStack
@@ -42,7 +55,17 @@ export function evalMath(expression: string): number {
             // Add the operation to the workingStack.
             workingStack.unshift(token);
         // Otherwise was the last token a operator?
-        } else if (!lastToken || operators.has(lastToken)) {
+        } else if (token === '(') {
+            workingStack.unshift(token);
+        } else if (token === ')') {
+            // Close the innermost group: pop operators up to the '('.
+            while (workingStack.length && workingStack[0] !== '(') {
+                rpnStack.push(workingStack.shift()!);
+            }
+            if (workingStack[0] === '(') {
+                workingStack.shift();
+            }
+        } else if (!lastToken || operators.has(lastToken) || lastToken === '(' || lastToken === ')') {
             rpnStack.push(token);
         // Otherwise just append the result to the last token(e.g. multiple digits numbers).
         } else {
@@ -60,10 +83,18 @@ export function evalMath(expression: string): number {
     for (let i = 0, len = rpnStack.length; i < len; i++) {
         const op = operators.get(rpnStack[i]);
         if (op) {
+            if (rpnStack[i] === 'u') {
+                // Unary minus pops only one operand.
+                stack.unshift(-stack.shift()!);
+                continue;
+            }
             // Get the arguments of for the operation(first two in the stack).
             const args = stack.splice(0, 2);
             // Excute it, because of reverse notation we first pass second item then the first item.
-            stack.push(op.exec(args[1], args[0]));
+            // The number stack is front-to-top (unshift), so the result must be
+            // unshifted too, otherwise a nested group result ends up behind its
+            // operands and later operators read the wrong pair.
+            stack.unshift(op.exec(args[1], args[0]));
         } else {
             // Add the number to the stack.
             stack.unshift(parseFloat(rpnStack[i]));
@@ -93,6 +124,7 @@ class Operator {
 }
 
 const operators: Readonly<Map<string, Operator>> = new Map([
+    ['u', new Operator(3, (left: number, right: number): number => -right)], // unary minus, pops one operand
     ['+', new Operator(1, (left: number, right: number): number => left + right)],
     ['-', new Operator(1, (left: number, right: number): number => left - right)],
     ['*', new Operator(2, (left: number, right: number): number => left * right)],

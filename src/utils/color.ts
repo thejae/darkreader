@@ -460,7 +460,7 @@ export function lowerCalcExpression(color: string): string {
     };
 
     // Run this code until it doesn't find any `calc(...)`.
-    while ((searchIndex = color.indexOf('calc(')) !== -1) {
+    while ((searchIndex = color.indexOf('calc(', searchIndex)) !== -1) {
         // Get the parentheses ranges of `calc(...)`.
         const range = getParenthesesRange(color, searchIndex);
         if (!range) {
@@ -469,6 +469,12 @@ export function lowerCalcExpression(color: string): string {
 
         // Get the content between the parentheses.
         let slice = color.slice(range.start + 1, range.end - 1);
+        // calc() mixing % with length units (px, em, ...) cannot be computed
+        // as a plain number. Keep the original text so parseColor skips it.
+        if (/[a-z]/i.test(slice)) {
+            searchIndex = range.end;
+            continue;
+        }
         // Does the content include a percentage?
         const includesPercentage = slice.includes('%');
         // Remove all percentages.
@@ -479,6 +485,7 @@ export function lowerCalcExpression(color: string): string {
 
         // Replace `calc(...)` with the result.
         replaceBetweenIndices(range.start - 4, range.end, output + (includesPercentage ? '%' : ''));
+        searchIndex = range.start;
     }
     return color;
 }

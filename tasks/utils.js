@@ -182,10 +182,15 @@ export function timeout(delay) {
  * @returns {Promise<{buffer(): Buffer; text(encoding?: BufferEncoding): string; type(): string}>}
  */
 export function httpsRequest(url) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         /** @type {Uint8Array[]} */
         const data = [];
         https.get(url, (response) => {
+            if (response.statusCode < 200 || response.statusCode > 299) {
+                response.resume();
+                reject(new Error(`GET ${url} responded with status ${response.statusCode}`));
+                return;
+            }
             response
                 .on('data', (chunk) => data.push(chunk))
                 .on('end', () => {
@@ -195,7 +200,9 @@ export function httpsRequest(url) {
                         text: (encoding = 'utf8') => buffer.toString(encoding),
                         type: () => response.headers['content-type'] || '',
                     });
-                });
-        });
+                })
+                .on('error', reject);
+        })
+            .on('error', reject);
     });
 }

@@ -1,12 +1,9 @@
 import type {ExtensionData, Theme, TabInfo, MessageUItoBG, UserSettings, DevToolsData, MessageCStoBG, MessageBGtoUI, DevFixType} from '../definitions';
 import {MessageTypeBGtoUI, MessageTypeUItoBG} from '../utils/message';
-import {HOMEPAGE_URL} from '../utils/links';
 import {isFirefox} from '../utils/platform';
 
 import {makeFirefoxHappy} from './make-firefox-happy';
 import {ASSERT} from './utils/log';
-
-declare const __PLUS__: boolean;
 
 export interface ExtensionAdapter {
     collect: () => Promise<ExtensionData>;
@@ -51,14 +48,7 @@ export default class Messenger {
             chrome.runtime.getURL('/ui/options/index.html'),
             chrome.runtime.getURL('/ui/stylesheet-editor/index.html'),
         ];
-        if (
-            allowedSenderURL.includes(sender.url!) || (
-                message.type === MessageTypeUItoBG.CHANGE_SETTINGS && (
-                    sender.url?.startsWith(`${HOMEPAGE_URL}/activate/`) ||
-                    (__PLUS__ && sender.url?.startsWith(`${HOMEPAGE_URL}/plus/activate/`))
-                )
-            )
-        ) {
+        if (allowedSenderURL.includes(sender.url!)) {
             Messenger.adapter
                 .waitUntilReady()
                 .then(() => Messenger.onUIMessage(message as MessageUItoBG, sendResponse));

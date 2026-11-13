@@ -1,46 +1,15 @@
 import type {Theme, InversionFix} from '../definitions';
-import {compareChromeVersions, chromiumVersion, isFirefox, firefoxVersion} from '../utils/platform';
 import {parseArray, formatArray} from '../utils/text';
 import {compareURLPatterns, isURLInList} from '../utils/url';
 
 import {createTextStyle} from './text-style';
 import {formatSitesFixesConfig} from './utils/format';
-import {applyColorMatrix, createFilterMatrix} from './utils/matrix';
 import {parseSitesFixesConfig, getSitesFixesFor} from './utils/parse';
 import type {SiteFixesIndex} from './utils/parse';
-
-declare const __CHROMIUM_MV2__: boolean;
-declare const __CHROMIUM_MV3__: boolean;
 
 export enum FilterMode {
     light = 0,
     dark = 1
-}
-
-/**
- * This checks if the current chromium version has the patch in it.
- * As of Chromium v81.0.4035.0 this has been the situation
- *
- * Bug report: https://bugs.chromium.org/p/chromium/issues/detail?id=501582
- * Patch: https://chromium-review.googlesource.com/c/chromium/src/+/1979258
- */
-export function hasPatchForChromiumIssue501582(): boolean {
-    return __CHROMIUM_MV3__ || Boolean(
-        __CHROMIUM_MV2__ &&
-        compareChromeVersions(chromiumVersion, '81.0.4035.0') >= 0
-    );
-}
-
-/**
- * Since Firefox v102.0, they have changed to the new root behavior.
- * This was already the case for Chromium v81.0.4035.0 and Firefox now
- * switched over as well.
- */
-export function hasFirefoxNewRootBehavior(): boolean {
-    return Boolean(
-        isFirefox &&
-        compareChromeVersions(firefoxVersion, '102.0') >= 0
-    );
 }
 
 export default function createCSSFilterStyleSheet(config: Theme, url: string, isTopFrame: boolean, fixes: string, index: SiteFixesIndex): string {
@@ -89,11 +58,9 @@ export function cssFilterStyleSheetTemplate(filterRoot: string, filterValue: str
 
     if (isTopFrame) {
         const light: [number, number, number] = [255, 255, 255];
-        // If browser affected by Chromium Issue 501582, set dark background on html
-        // Or if browser is Firefox v102+
-        const bgColor = (!hasPatchForChromiumIssue501582() && !hasFirefoxNewRootBehavior()) && config.mode === FilterMode.dark ?
-            applyColorMatrix(light, createFilterMatrix(config)).map(Math.round) :
-            light;
+        // Chromium 81+ and Firefox 102+ apply filtered root backgrounds correctly,
+        // and the manifest floors guarantee both, so html always gets the light color.
+        const bgColor = light;
         lines.push('');
         lines.push('/* Page background */');
         lines.push('html {');

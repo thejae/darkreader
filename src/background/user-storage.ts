@@ -138,7 +138,10 @@ export default class UserStorage {
             logWarn('Sync settings are missing');
             local.syncSettings = false;
             UserStorage.set({syncSettings: false});
-            UserStorage.saveSyncSetting(false);
+            // Do not persist syncSettings=false here: a one-time sync read
+            // failure (quota, offline) must not permanently disable
+            // synchronization on every device. The user turns it off in the
+            // popup, which saves it explicitly.
             UserStorage.loadBarrier.resolve(local);
             return local;
         }
@@ -182,14 +185,20 @@ export default class UserStorage {
         }
         UserStorage.saveStorageBarrier = new PromiseBarrier();
 
-        const settings = UserStorage.settings;
+        // writeSyncStorage -> prepareSyncStorage mutates its argument (adds chunk
+        // keys, replaces split values with {__meta_split_count}). Work on a clone
+        // so the live settings object stays intact for .find/.map consumers.
+        const settings = JSON.parse(JSON.stringify(UserStorage.settings));
         if (settings.syncSettings) {
             try {
                 await writeSyncStorage(settings);
             } catch (err) {
-                logWarn('Settings synchronization was disabled due to error:', chrome.runtime.lastError);
+                // A transient sync write failure (quota, offline) must not
+                // persist syncSettings=false to every device. Disable
+                // synchronization for this session only; the settings stay in
+                // local storage and sync is retried on the next startup.
+                logWarn('Settings synchronization failed and is disabled for this session:', chrome.runtime.lastError);
                 UserStorage.set({syncSettings: false});
-                await UserStorage.saveSyncSetting(false);
                 await writeLocalStorage(settings);
             }
         } else {

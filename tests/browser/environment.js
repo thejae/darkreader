@@ -3,7 +3,7 @@ import {launch} from 'puppeteer-core';
 import {WebSocketServer} from 'ws';
 
 import {generateHTMLCoverageReports} from './coverage.js';
-import {getChromePath, getFirefoxPath, chromeMV3ExtensionDebugDir, chromeMV3PlusExtensionDebugDir, firefoxExtensionDebugDir, getEdgePath} from './paths.js';
+import {getChromePath, getFirefoxPath, chromePlusExtensionDebugDir, chromeMV3ExtensionDebugDir, firefoxExtensionDebugDir, getEdgePath} from './paths.js';
 import {createTestServer, generateRandomId} from './server.js';
 
 const TEST_SERVER_PORT = 8891;
@@ -105,7 +105,9 @@ export default class CustomJestEnvironment extends TestEnvironment {
      * @returns {Promise<Browser>}
      */
     async launchEdge() {
-        const extensionDir = chromeMV3PlusExtensionDebugDir;
+        // test:edge builds --debug --test --plus which lands in build/debug/chrome-plus;
+        // chrome-mv3-plus is only produced by the mv3+plus build and was never built for this test.
+        const extensionDir = chromePlusExtensionDebugDir;
         let executablePath;
         try {
             executablePath = await getEdgePath();
@@ -327,7 +329,7 @@ export default class CustomJestEnvironment extends TestEnvironment {
                     const message = JSON.parse(data);
                     if (message.id === null && message.data && message.data.type === 'background' && message.data.extensionOrigin) {
                         // This is the initial message which contains extension's URL origin
-                        // and signals that extenstion is ready
+                        // and signals that extension is ready
                         this.extensionOrigin = message.data.extensionOrigin;
                         this.extensionStartListeners.forEach((ready) => ready());
                         ws.on('close', () => backgroundSocket = null);

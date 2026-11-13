@@ -4,6 +4,7 @@ build/
 darkreader.js
 darkreader.mjs
 debug.log
+[0-9]*-*.txt
 src/plus
 
 # Node.js modules

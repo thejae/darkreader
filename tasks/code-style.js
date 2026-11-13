@@ -10,7 +10,7 @@ import {readFile, writeFile, getPaths} from './utils.js';
 const options = {
     arrowParens: 'always',
     bracketSpacing: false,
-    endOfLine: 'crlf',
+    endOfLine: 'lf',
     printWidth: 80,
     quoteProps: 'consistent',
     singleQuote: false,
@@ -55,14 +55,14 @@ async function codeStyle({platforms, debug}) {
     if (debug) {
         throw new Error('code-style task does not support debug builds');
     }
-    const promisses = [];
+    const promises = [];
     if (platforms[PLATFORM.API]) {
-        promisses.push(processAPIBuild());
+        promises.push(processAPIBuild());
     }
     Object.values(PLATFORM)
         .filter((platform) => platform !== PLATFORM.API && platforms[platform])
-        .forEach((platform) => promisses.push(processExtensionPlatform(platform)));
-    await Promise.all(promisses);
+        .forEach((platform) => promises.push(processExtensionPlatform(platform)));
+    await Promise.all(promises);
 }
 
 const codeStyleTask = createTask(

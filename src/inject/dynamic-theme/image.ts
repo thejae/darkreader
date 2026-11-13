@@ -109,12 +109,22 @@ let loadingImagesCount = 0;
 async function loadImage(url: string): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>((resolve, reject) => {
         const image = new Image();
-        image.onload = () => resolve(image);
-        image.onerror = () => reject(`Unable to load image ${url}`);
-        if (++loadingImagesCount <= INCOMPLETE_DOC_LOADING_IMAGE_LIMIT || isReadyStateComplete()) {
+        image.onload = () => {
+            loadingImagesCount--;
+            resolve(image);
+        };
+        image.onerror = () => {
+            loadingImagesCount--;
+            reject(`Unable to load image ${url}`);
+        };
+        if (loadingImagesCount < INCOMPLETE_DOC_LOADING_IMAGE_LIMIT || isReadyStateComplete()) {
+            loadingImagesCount++;
             image.src = url;
         } else {
-            addReadyStateCompleteListener(() => image.src = url);
+            addReadyStateCompleteListener(() => {
+                loadingImagesCount++;
+                image.src = url;
+            });
         }
     });
 }

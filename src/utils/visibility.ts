@@ -47,7 +47,12 @@ function stopWatchingForDocumentVisibility(): void {
 }
 
 export function setDocumentVisibilityListener(callback: () => void): void {
-    const alreadyWatching = Boolean(documentVisibilityListener);
+    // Re-registration must unbind the old closure and bind the new one:
+    // removeEventListener is only effective when called with the closure that
+    // was added, so stop watching before the listener reference is replaced.
+    if (documentVisibilityListener) {
+        stopWatchingForDocumentVisibility();
+    }
     documentVisibilityListener = () => {
         if (!document.hidden) {
             removeDocumentVisibilityListener();
@@ -55,9 +60,7 @@ export function setDocumentVisibilityListener(callback: () => void): void {
             documentIsVisible_ = true;
         }
     };
-    if (!alreadyWatching) {
-        watchForDocumentVisibility();
-    }
+    watchForDocumentVisibility();
 }
 
 export function removeDocumentVisibilityListener(): void {

@@ -30,9 +30,12 @@ export function openFile(options: {extensions: string[]}, callback: (content: st
     input.onchange = () => {
         if (input.files![0]) {
             reader.readAsText(input.files![0]);
-            document.body.removeChild(input);
         }
+        document.body.removeChild(input);
     };
+    // The file picker fires no change event on cancel, so the hidden input
+    // would stay in document.body forever.
+    input.oncancel = () => document.body.removeChild(input);
     document.body.appendChild(input);
     input.click();
 }
@@ -42,6 +45,7 @@ export function saveFile(name: string, content: string): void {
     a.href = URL.createObjectURL(new Blob([content]));
     a.download = name;
     a.click();
+    URL.revokeObjectURL(a.href);
 }
 
 type AnyVoidFunction = (...args: any[]) => void;
@@ -81,31 +85,31 @@ function onSwipeStart(
         startEventObj.preventDefault();
     }
 
-    function getSwipeEventObject(e: MouseEvent | TouchEvent) {
-        const {clientX, clientY} = isTouchEvent
-            ? getTouch(e as TouchEvent)
+    function getSwipeEventObject(e: MouseEvent | TouchEvent): SwipeEventObject | null {
+        const source = isTouchEvent
+            // The tracked touch is gone when this returns undefined;
+            // the `!` here used to crash on multi-touch pages.
+            ? Array.from((e as TouchEvent).changedTouches).find(({identifier: id}) => id === touchId)
             : e as MouseEvent;
-        return {clientX, clientY};
+        return source ? {clientX: source.clientX, clientY: source.clientY} : null;
     }
 
-    const startSE = getSwipeEventObject(startEventObj);
+    const startSE = getSwipeEventObject(startEventObj)!;
     const {move: moveHandler, up: upHandler} = startHandler(startSE, startEventObj);
-
-    function getTouch(e: TouchEvent) {
-        return Array.from(e.changedTouches).find(
-            ({identifier: id}) => id === touchId,
-        )!;
-    }
 
     const onPointerMove = throttle((e) => {
         const se = getSwipeEventObject(e);
-        moveHandler(se, e);
+        if (se) {
+            moveHandler(se, e);
+        }
     });
 
     function onPointerUp(e: MouseEvent) {
         unsubscribe();
         const se = getSwipeEventObject(e);
-        upHandler(se, e);
+        if (se) {
+            upHandler(se, e);
+        }
     }
 
     function unsubscribe() {
@@ -157,7 +161,11 @@ async function getExtensionPageTabMV3(): Promise<chrome.tabs.Tab | null> {
             const responses: Array<Promise<string>> = [];
             let found = false;
             for (const window of w) {
-                const response = chrome.tabs.sendMessage<string, 'getExtensionPageTabMV3_pong'>(window.tabs![0]!.id!, 'getExtensionPageTabMV3_ping', {frameId: 0});
+                // A popup tab with no content-script listener rejects the
+                // sendMessage. Without the catch, Promise.all never resolves
+                // and openExtensionPage hangs forever.
+                const response = chrome.tabs.sendMessage<string, 'getExtensionPageTabMV3_pong'>(window.tabs![0]!.id!, 'getExtensionPageTabMV3_ping', {frameId: 0})
+                    .catch(() => null);
                 response.then((response) => {
                     if (response === 'getExtensionPageTabMV3_pong') {
                         found = true;

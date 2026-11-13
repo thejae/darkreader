@@ -39,6 +39,9 @@ declare const __PLUS__: boolean;
 const INSTANCE_ID = generateUID();
 const styleManagers = new Map<StyleElement, StyleManager>();
 const adoptedStyleManagers: AdoptedStyleSheetManager[] = [];
+// The shadow-DOM observer calls handleAdoptedStyleSheets for the same node
+// more than once. Reusing the manager keeps one override per node.
+const adoptedStyleManagersByNode = new WeakMap<Node, AdoptedStyleSheetManager>();
 let theme: Theme | null = null;
 let fixes: Partial<DynamicThemeFix> | null = null;
 let isIFrame: boolean | null = null;
@@ -115,6 +118,9 @@ class HeadStaticStyleInjector extends StaticStyleInjectorBase {
         style.textContent = text;
         const prevNode = position === 'beginning' ? this.lastStyle : document.head.lastChild;
         document.head.insertBefore(style, prevNode ? prevNode.nextSibling : document.head.firstChild);
+        if (position === 'beginning') {
+            this.lastStyle = style;
+        }
         setupNodePositionWatcher(style, id, callback);
         return style.sheet!;
     }
@@ -545,7 +551,11 @@ function handleAdoptedStyleSheets(node: ShadowRoot | Document) {
         forEach(isFirefox ? unwrap(node.adoptedStyleSheets) : node.adoptedStyleSheets, (s) => {
             variablesStore.addRulesForMatching(s.cssRules);
         });
+        if (adoptedStyleManagersByNode.has(node)) {
+            return;
+        }
         const newManger = createAdoptedStyleSheetOverride(node);
+        adoptedStyleManagersByNode.set(node, newManger);
         adoptedStyleManagers.push(newManger);
         newManger.render(theme!, ignoredImageAnalysisSelectors);
         newManger.watch((sheets) => {
@@ -663,7 +673,12 @@ function interceptOldScript({success, failure}: {success: () => void; failure: (
     }
 
     const oldMeta = document.head.querySelector('meta[name="darkreader"]') as HTMLMetaElement | null;
+    // The meta was there when the caller checked, but between the check and
+    // here it can be gone (bfcache restore, other instance unloading) or be
+    // this instance's own. Both cases mean this instance owns the page, so
+    // the theme must be created, not silently skipped.
     if (!oldMeta || oldMeta.content === INSTANCE_ID) {
+        success();
         return;
     }
 
@@ -774,7 +789,7 @@ function tryInvertChromePDF() {
 
 function tryInvertEdgePDF() {
     let embedded: HTMLElement | null;
-    if (!document.body || !(embedded = document.querySelector('embed[type="application/pdf"'))) {
+    if (!document.body || !(embedded = document.querySelector('embed[type="application/pdf"]'))) {
         return;
     }
     (embedded as HTMLElement).style.filter = 'none';
@@ -1027,6 +1042,10 @@ export function removeDynamicTheme(): void {
     shadowRootsWithOverrides.forEach((root) => {
         removeNode(root.querySelector('.darkreader--inline'));
         removeNode(root.querySelector('.darkreader--override'));
+        // document.querySelectorAll('.darkreader') cannot pierce shadow DOM,
+        // so the invert style created in createDelayedoverrides (:341) must be
+        // removed here, otherwise custom elements stay inverted after disabling.
+        removeNode(root.querySelector('.darkreader--invert'));
     });
     shadowRootsWithOverrides.clear();
     forEach(styleManagers.keys(), (el) => removeManager(el));

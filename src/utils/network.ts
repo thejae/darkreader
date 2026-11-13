@@ -12,7 +12,6 @@ async function getOKResponse(url: string, mimeType?: string, origin?: string): P
     const sameOrigin = origin && url.startsWith(`${origin}/`);
     const credentials = sameOrigin ? undefined : 'omit';
     const redirect = mimeType === 'text/css' ? undefined : 'error';
-    // const targetAddressSpace = __TEST__ || sameOrigin ? undefined : 'public';
     const response = await fetch(
         url,
         {
@@ -20,7 +19,6 @@ async function getOKResponse(url: string, mimeType?: string, origin?: string): P
             credentials,
             referrer: origin,
             redirect,
-            // targetAddressSpace,
         },
     );
 
@@ -72,8 +70,11 @@ export async function loadAsText(url: string, mimeType?: string, origin?: string
 }
 
 const MAX_CORS_HOSTS = 16;
-const corsHosts = new Set<string>();
-const checkedOrigins = new Set<string>();
+// origin -> host, in insertion order, so the oldest entry can be evicted.
+// Entries are only added for origins that pass the checks, and the map is
+// capped, so a long-lived tab does not fill up on blocked hosts and stay
+// blocked forever.
+const checkedOrigins = new Map<string, string>();
 const localAliases = [
     '127-0-0-1.org.uk',
     '42foo.com',
@@ -125,14 +126,10 @@ export function shouldIgnoreCors(url: URL) {
     }
     const {host, port, protocol} = url;
     const hostname = url.hostname.endsWith('.') ? url.hostname.slice(0, -1) : url.hostname;
-    if (!corsHosts.has(host)) {
-        corsHosts.add(host);
-    }
     if (checkedOrigins.has(url.origin)) {
         return false;
     }
     if (
-        corsHosts.size >= MAX_CORS_HOSTS ||
         protocol !== 'https:' ||
         port !== '' ||
         localAliases.includes(hostname) ||
@@ -141,6 +138,9 @@ export function shouldIgnoreCors(url: URL) {
     ) {
         return true;
     }
-    checkedOrigins.add(url.origin);
+    if (checkedOrigins.size >= MAX_CORS_HOSTS) {
+        checkedOrigins.delete(checkedOrigins.keys().next().value!);
+    }
+    checkedOrigins.set(url.origin, host);
     return false;
 }

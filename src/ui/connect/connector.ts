@@ -18,7 +18,15 @@ export default class Connector implements ExtensionActions {
 
     private async sendRequest<T>(type: MessageTypeUItoBG, data?: {type: DevFixType; text: string}): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            chrome.runtime.sendMessage<MessageUItoBG>({type, data}, ({data, error}: MessageUItoBG) => {
+            chrome.runtime.sendMessage<MessageUItoBG>({type, data}, (response: {data?: any; error?: string} | undefined) => {
+                // When the MV3 service worker dies mid-request the callback
+                // fires with undefined. Destructuring that throws inside the
+                // callback and the promise never resolves: the popup freezes.
+                if (!response) {
+                    reject(new Error('No response from Dark Reader. The background may have closed, try again.'));
+                    return;
+                }
+                const {data, error} = response;
                 if (error) {
                     reject(error);
                 } else {

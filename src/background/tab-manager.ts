@@ -252,6 +252,14 @@ export default class TabManager {
                         }
                     }
                     const {url, responseType, mimeType, origin} = message.data;
+                    // origin must be the origin of the frame that sent the
+                    // message. It is used to decide when fetch sends cookies
+                    // (network.ts sameOrigin), so a message must not be allowed
+                    // to claim another frame's origin.
+                    if (origin && sender.url && new URL(sender.url).origin !== origin) {
+                        sendResponse({data: null});
+                        return false;
+                    }
                     if (!TabManager.fileLoader) {
                         TabManager.fileLoader = createFileLoader();
                     }

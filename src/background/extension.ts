@@ -251,7 +251,12 @@ export class Extension {
             UserStorage.loadSettings(),
         ]);
 
-        if (UserStorage.settings.enableContextMenus && !Extension.registeredContextMenus) {
+        // The context menu items survive in Chrome, but the onClicked listener
+        // dies when an MV3 service worker is evicted. Register the listener on
+        // every startup, so the menu keeps working after worker restarts; the
+        // registeredContextMenus flag only guards the menu creation.
+        chrome.contextMenus.onClicked.addListener(Extension.contextMenuListener);
+        if (UserStorage.settings.enableContextMenus) {
             chrome.permissions.contains({permissions: ['contextMenus']}, (permitted) => {
                 if (permitted) {
                     Extension.registerContextMenus();
@@ -364,9 +369,10 @@ export class Extension {
     // is holding down a certain shortcut.
     private static onCommand = debounce(75, Extension.onCommandInternal);
 
+    private static contextMenuListener = ({menuItemId, frameId, frameUrl, pageUrl}: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) =>
+        Extension.onCommand(menuItemId as Command, tab && tab.id || null, frameId || null, frameUrl || pageUrl || null);
+
     private static registerContextMenus() {
-        chrome.contextMenus.onClicked.addListener(async ({menuItemId, frameId, frameUrl, pageUrl}, tab) =>
-            Extension.onCommand(menuItemId as Command, tab && tab.id || null, frameId || null, frameUrl || pageUrl || null));
         chrome.contextMenus.removeAll(() => {
             Extension.registeredContextMenus = false;
             chrome.contextMenus.create({

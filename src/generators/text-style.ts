@@ -40,7 +40,6 @@ export function createTextStyle(config: Theme): string {
 
     if (config.textStroke > 0) {
         lines.push(`  -webkit-text-stroke: ${config.textStroke}px !important;`);
-        lines.push(`  text-stroke: ${config.textStroke}px !important;`);
     }
 
     lines.push('}');

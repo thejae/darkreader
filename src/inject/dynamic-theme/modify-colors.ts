@@ -85,14 +85,6 @@ function modifyColorWithCache(rgb: RGBA, theme: Theme, modifyHSL: HSLModifyFunct
     return color;
 }
 
-function noopHSL(hsl: HSLA): HSLA {
-    return hsl;
-}
-
-export function modifyColor(rgb: RGBA, theme: Theme): string {
-    return modifyColorWithCache(rgb, theme, noopHSL);
-}
-
 function modifyAndRegisterColor(
     type: 'background' | 'text' | 'border',
     rgb: RGBA,

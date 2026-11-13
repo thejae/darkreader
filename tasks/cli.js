@@ -70,7 +70,7 @@ function getVersion(args) {
         return null;
     }
     const version = arg.substring(prefix.length);
-    if (/^\d+(.\d+){0,3}$/.test(version)) {
+    if (/^\d+(\.\d+){0,3}$/.test(version)) {
         return version;
     }
     throw new Error(`Invalid version argument ${version}`);
@@ -79,7 +79,7 @@ function getVersion(args) {
 async function ensureGitClean() {
     const diff = await execute('git diff');
     if (diff) {
-        throw new Error('git source tree is not clean. Pease commit your work and try again');
+        throw new Error('git source tree is not clean. Please commit your work and try again');
     }
 }
 
@@ -127,7 +127,7 @@ async function checkoutHead() {
 function validateArguments(args) {
     const validationErrors = [];
 
-    const validFlags = ['--api', '--chrome', '--chrome-mv2', '--chrome-mv3', '--firefox', '--firefox-mv2', '--thunderbird', '--release', '--debug', '--watch', '--plus', '--log-info', '--log-warn', '--test'];
+    const validFlags = ['--api', '--chrome', '--chrome-mv2', '--chrome-mv3', '--chrome-plus', '--chrome-mv3-plus', '--firefox', '--firefox-mv2', '--firefox-mv3', '--thunderbird', '--release', '--debug', '--watch', '--plus', '--log-info', '--log-warn', '--log-assert', '--test'];
     const invalidFlags = args.filter((flag) => !validFlags.includes(flag) && !flag.startsWith('--version='));
     invalidFlags.forEach((flag) => validationErrors.push(`Invalid flag ${flag}`));
 
@@ -169,7 +169,7 @@ async function run() {
             assert(stats.isDirectory());
         } catch (e) {
             console.log(`Could not find signature files for version ${version}`);
-            return;
+            process.exit(1);
         }
     }
 

@@ -367,8 +367,24 @@ function getSVGElementRoot(svgElement: SVGElement): SVGSVGElement | null {
 const inlineStringValueCache = new Map<string, Map<string, string>>();
 
 const MAX_LOOP_TEARDOWNS = 10;
+const TEARDOWN_EXPIRY_MS = 10000;
 const inlineStyleParents = new Map<HTMLElement, Node>();
-let parentTeardownCounts = new WeakMap<Node, number>();
+let parentTeardownCounts = new WeakMap<Node, {count: number; last: number}>();
+
+// A one-time DOM churn burst must not exempt a container from inline style
+// updates forever: counts expire when no teardown happened in the last
+// TEARDOWN_EXPIRY_MS.
+function getActiveTeardownCount(parent: Node): number {
+    const record = parentTeardownCounts.get(parent);
+    if (!record) {
+        return 0;
+    }
+    if (Date.now() - record.last > TEARDOWN_EXPIRY_MS) {
+        parentTeardownCounts.delete(parent);
+        return 0;
+    }
+    return record.count;
+}
 
 function trackInlineStyleTeardown(element: HTMLElement): void {
     const parent = element.parentNode;
@@ -386,8 +402,8 @@ function checkForTeardown() {
         if (element.isConnected || !parent.isConnected) {
             return;
         }
-        const count = (parentTeardownCounts.get(parent) ?? 0) + 1;
-        parentTeardownCounts.set(parent, count);
+        const count = getActiveTeardownCount(parent) + 1;
+        parentTeardownCounts.set(parent, {count, last: Date.now()});
         if (count === MAX_LOOP_TEARDOWNS) {
             logWarn('Inline style change causes DOM teardown. Suspending changes for the container', parent);
         }
@@ -400,7 +416,7 @@ function parentHadTeardown(element: HTMLElement): boolean {
     if (!parent) {
         return true;
     }
-    return (parentTeardownCounts.get(parent) ?? 0) >= MAX_LOOP_TEARDOWNS;
+    return getActiveTeardownCount(parent) >= MAX_LOOP_TEARDOWNS;
 }
 
 function resetInlineStyleLoopDetection() {

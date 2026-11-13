@@ -65,15 +65,12 @@ export default class IconManager {
         }
     }
 
-    static setIcon({isActive = this.iconState.active, colorScheme = 'dark', tabId}: IconOptions): void {
+    static setIcon({isActive = this.iconState.active, colorScheme: _ = 'dark', tabId}: IconOptions): void {
         if (__THUNDERBIRD__ || !chrome.browserAction.setIcon) {
             // Fix for Firefox Android and Thunderbird.
             return;
         }
         // Temporary disable per-site icons
-        // eslint-disable-next-line no-empty
-        if (colorScheme === 'dark') {
-        }
         if (tabId) {
             return;
         }
@@ -92,14 +89,6 @@ export default class IconManager {
         }
 
         // Temporary disable per-site icons
-        /*
-        if (tabId) {
-            chrome.browserAction.setIcon({tabId, path});
-        } else {
-            chrome.browserAction.setIcon({path});
-            IconManager.handleUpdate();
-        }
-        */
         chrome.browserAction.setIcon({path});
         IconManager.handleUpdate();
     }

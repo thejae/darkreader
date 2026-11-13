@@ -1,5 +1,3 @@
-const emptyPseudoClasses = [':before', ':after', ':empty'];
-
 export type FilterSelectorsCollection = {
     invert: Set<string>;
     dim: Set<string>;
@@ -42,14 +40,6 @@ export function addFilterSelector(selector: string, type: keyof FilterSelectorsC
         changed = true;
     });
     return changed;
-}
-
-export function makeSelectorEmpty(selector: string) {
-    selector = selector.trim();
-    if (emptyPseudoClasses.some((pseudo) => selector.endsWith(pseudo))) {
-        return selector;
-    }
-    return `${selector}:empty`;
 }
 
 export function isSelectorWithin(sub: string, parent: string): boolean {

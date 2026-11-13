@@ -2,12 +2,11 @@ name: Run browser tests
 
 on:
   # Runs for pushes, pull requests, and manual triggers.
-  # (Dooes not run when only some config is changed.)
+  # Site fixes (src/config/**) change behavior that the browser tests verify,
+  # so no path filter here.
   push:
     branches:
       - main
-    paths-ignore:
-      - 'src/config/*'
   pull_request:
     branches:
       - main
@@ -16,8 +15,6 @@ on:
       - synchronize
       - reopened
       - ready_for_review
-    paths-ignore:
-      - 'src/config/**'
   workflow_dispatch:
     inputs:
       test_results_retention_days:
@@ -95,7 +92,9 @@ jobs:
         run: cat package-lock.json
 
       - name: Run injection tests
-        run: npm run test:inject -- --ci --json --outputFile=test-results-inject.json
+        # Karma CLI has no --json/--outputFile options; karma reports through its
+        # reporters and exits non-zero on failure.
+        run: npm run test:inject -- --ci
 
       - name: Run browser tests on Chromium MV2 build
         if: ${{ matrix.chrome }}

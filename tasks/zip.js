@@ -16,7 +16,7 @@ import {getPaths} from './utils.js';
 function archiveFiles({files, dest, cwd, date, mode}) {
     return new Promise((resolve) => {
         const archive = new yazl.ZipFile();
-        // Rproducible builds: sort filenames so files appear in the same order in zip
+        // Reproducible builds: sort filenames so files appear in the same order in zip
         files.sort();
         files.forEach((file) => archive.addFile(
             file,
@@ -44,9 +44,14 @@ async function getLastCommitTime() {
     // We need to offset the user's time zone since yazl can not represent time zone in produced archive
     // If called outside of the git tree, make sure we don't pass a negative date.
     return new Promise((resolve) =>
-        exec('git log -1 --format=%ct', (_, stdout) => resolve(new Date(
-            Math.max(0, Number(stdout) + (new Date()).getTimezoneOffset() * 60) * 1000
-        ))));
+        exec('git log -1 --format=%ct', (error, stdout) => {
+            if (error) {
+                // Failed git log used to resolve Number('') = 0 -> epoch 1970 stamps in the archive
+                resolve(new Date());
+                return;
+            }
+            resolve(new Date(Math.max(0, Number(stdout) + (new Date()).getTimezoneOffset() * 60) * 1000));
+        }));
 }
 
 async function zip({platforms, debug, version}) {

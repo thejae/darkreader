@@ -1,4 +1,4 @@
-import {isSelectorWithin, makeSelectorEmpty} from '../../../src/inject/dynamic-theme/selectors';
+import {isSelectorWithin} from '../../../src/inject/dynamic-theme/selectors';
 
 describe('Check if a selector is within another selector', () => {
     it('Treats identical selector as within', () => {
@@ -50,28 +50,5 @@ describe('Check if a selector is within another selector', () => {
         expect(isSelectorWithin('.a:hover .b', '.a')).toBe(true);
         expect(isSelectorWithin('.a .b > .c', '.a')).toBe(true);
         expect(isSelectorWithin('.a + .b .c', '.a')).toBe(false);
-    });
-});
-
-describe('Make selector empty', () => {
-    it('Should append :empty', () => {
-        expect(makeSelectorEmpty('.a')).toBe('.a:empty');
-        expect(makeSelectorEmpty('div.a')).toBe('div.a:empty');
-        expect(makeSelectorEmpty('.a .b')).toBe('.a .b:empty');
-    });
-
-    it('Should ignore already :empty selectors', () => {
-        expect(makeSelectorEmpty('.a:empty')).toBe('.a:empty');
-    });
-
-    it('Should treat :before and :after as empty', () => {
-        expect(makeSelectorEmpty('.a:before')).toBe('.a:before');
-        expect(makeSelectorEmpty('.a:after')).toBe('.a:after');
-        expect(makeSelectorEmpty('.a::before')).toBe('.a::before');
-        expect(makeSelectorEmpty('.a::after')).toBe('.a::after');
-    });
-
-    it('Should trim selectors', () => {
-        expect(makeSelectorEmpty('  .a  ')).toBe('.a:empty');
     });
 });

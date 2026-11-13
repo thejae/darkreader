@@ -135,7 +135,12 @@ export function parseColorSchemeConfig(config: string): { result: ParsedColorSch
 
             // Check if the variant is valid.
             // if isSecondVariant is true, then we will check if the variant is 'Light', 'Dark' is not considered valid.
-            if (variant !== 'LIGHT' && variant !== 'DARK' && (isSecondVariant && variant === 'Light')) {
+            const normalizedVariant = variant.toUpperCase();
+            if (normalizedVariant !== 'LIGHT' && normalizedVariant !== 'DARK') {
+                throwError(`The ${humanizeNumber(lineIndex)} line of the color scheme "${name}" is not a valid variant.`);
+                return;
+            }
+            if (isSecondVariant && normalizedVariant !== 'LIGHT') {
                 throwError(`The ${humanizeNumber(lineIndex)} line of the color scheme "${name}" is not a valid variant.`);
                 return;
             }
@@ -181,11 +186,15 @@ export function parseColorSchemeConfig(config: string): { result: ParsedColorSch
             return {
                 backgroundColor,
                 textColor,
-                variant,
+                variant: normalizedVariant,
             };
         };
 
-        const firstVariant = checkVariant(2, false)!;
+        const firstVariant = checkVariant(2, false);
+        if (!firstVariant) {
+            // checkVariant already reported the error via throwError.
+            return;
+        }
         const isFirstVariantLight = firstVariant.variant === 'LIGHT';
         delete firstVariant.variant;
         // If the interrupt variable is set, we should stop parsing.
@@ -196,7 +205,12 @@ export function parseColorSchemeConfig(config: string): { result: ParsedColorSch
         let isSecondVariantLight = false;
         // Check if the 7th line is defined otherwise we should stop parsing.
         if (lines[6]) {
-            secondVariant = checkVariant(6, true)!;
+            const second = checkVariant(6, true);
+            if (!second) {
+                // checkVariant already reported the error via throwError.
+                return;
+            }
+            secondVariant = second;
             isSecondVariantLight = secondVariant.variant === 'LIGHT';
             delete secondVariant.variant;
             // If the interrupt variable is set, we should stop parsing.
