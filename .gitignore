@@ -1,6 +1,7 @@
 # Build files
 #-----------------------------------
 build/
+edge-build/
 darkreader.js
 darkreader.mjs
 debug.log

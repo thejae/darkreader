@@ -1,0 +1,16 @@
+#!/bin/sh
+# Git has no post-push hook, so the Edge build runs as part of every push:
+# the push only completes when the build succeeds, and edge-build/ therefore
+# always contains the Edge extension built from the last pushed commit.
+# Drain the ref list Git passes on stdin.
+while read -r line; do :; done
+
+repo_root=$(git rev-parse --show-toplevel)
+ps1=$(cygpath -w "$repo_root/scripts/build-edge.ps1" 2>/dev/null || echo "$repo_root/scripts/build-edge.ps1")
+
+if command -v pwsh >/dev/null 2>&1; then
+    pwsh -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$ps1"
+else
+    powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$ps1"
+fi
+exit $?
