@@ -31,7 +31,7 @@ Open the terminal in the root folder and run:
 - `npm install`
 - `npm run build` or `npm run build [-- flags]`
 
-This will create a `build/release/darkreader-chrome.zip` file for use in a Chromium-based browser and a `build/release/darkreader-firefox.xpi` file for use in Firefox.
+This will create a `build/release/darkreader-chrome.zip` file for use in a Chromium-based browser, a `build/release/darkreader-edge.zip` file for Microsoft Edge, and a `build/release/darkreader-firefox.xpi` file for use in Firefox.
 
 You can customize the build process by passing flags to build script. To see all flags, run `npm run build -- --help`.
 

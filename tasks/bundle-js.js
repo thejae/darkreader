@@ -9,7 +9,7 @@ import * as rollup from 'rollup';
 import typescript from 'typescript';
 
 import {getDestDir, absolutePath} from './paths.js';
-import {PLATFORM} from './platform.js';
+import {PLATFORM, isChromiumMV3, isPlus} from './platform.js';
 import * as reload from './reload.js';
 const {PORT} = reload;
 import {createTask} from './task.js';
@@ -34,7 +34,7 @@ const jsEntries = [
         src: 'src/inject/dynamic-theme/mv3-proxy.ts',
         dest: 'inject/proxy.js',
         reloadType: reload.FULL,
-        platforms: [PLATFORM.CHROMIUM_MV3, PLATFORM.CHROMIUM_MV3_PLUS],
+        platforms: [PLATFORM.CHROMIUM_MV3, PLATFORM.CHROMIUM_MV3_PLUS, PLATFORM.EDGE],
     },
     {
         src: 'src/inject/fallback.ts',
@@ -45,7 +45,7 @@ const jsEntries = [
         src: 'src/inject/color-scheme-watcher.ts',
         dest: 'inject/color-scheme-watcher.js',
         reloadType: reload.FULL,
-        platforms: [PLATFORM.CHROMIUM_MV3, PLATFORM.CHROMIUM_MV3_PLUS],
+        platforms: [PLATFORM.CHROMIUM_MV3, PLATFORM.CHROMIUM_MV3_PLUS, PLATFORM.EDGE],
     },
     {
         src: 'src/ui/devtools/index.tsx',
@@ -89,6 +89,7 @@ async function bundleJS(/** @type {JSEntry} */entry, platform, debug, watch, log
             break;
         case PLATFORM.CHROMIUM_MV3:
         case PLATFORM.CHROMIUM_MV3_PLUS:
+        case PLATFORM.EDGE:
             replace = {
                 'chrome.browserAction.setIcon': 'chrome.action.setIcon',
                 'chrome.browserAction.setBadgeBackgroundColor': 'chrome.action.setBadgeBackgroundColor',
@@ -134,7 +135,7 @@ async function bundleJS(/** @type {JSEntry} */entry, platform, debug, watch, log
                 rootDir: absolutePath('.'),
                 typescript,
                 tsconfig: absolutePath('src/tsconfig.json'),
-                compilerOptions: (platform === PLATFORM.CHROMIUM_MV3 || platform === PLATFORM.CHROMIUM_MV3_PLUS) ? {
+                compilerOptions: isChromiumMV3(platform) ? {
                     target: 'ES2022',
                 } : undefined,
                 noImplicitAny: debug ? false : true,
@@ -158,10 +159,10 @@ async function bundleJS(/** @type {JSEntry} */entry, platform, debug, watch, log
                 ...replace,
                 __DEBUG__: debug,
                 __CHROMIUM_MV2__: platform === PLATFORM.CHROMIUM_MV2 || platform === PLATFORM.CHROMIUM_MV2_PLUS,
-                __CHROMIUM_MV3__: platform === PLATFORM.CHROMIUM_MV3 || platform === PLATFORM.CHROMIUM_MV3_PLUS,
+                __CHROMIUM_MV3__: isChromiumMV3(platform),
                 __FIREFOX_MV2__: platform === PLATFORM.FIREFOX_MV2,
                 __THUNDERBIRD__: platform === PLATFORM.THUNDERBIRD,
-                __PLUS__: platform === PLATFORM.CHROMIUM_MV2_PLUS || platform === PLATFORM.CHROMIUM_MV3_PLUS,
+                __PLUS__: isPlus(platform),
                 __PORT__: watch ? String(PORT) : '-1',
                 __TEST__: test,
                 __WATCH__: watch,
@@ -218,6 +219,7 @@ export function createBundleJSTask(jsEntries) {
             platforms['chrome-mv3'] = initialPlatforms['chrome-mv3'];
             platforms['chrome-plus'] = initialPlatforms['chrome-plus'];
             platforms['chrome-mv3-plus'] = initialPlatforms['chrome-mv3-plus'];
+            platforms['edge'] = initialPlatforms['edge'];
         }
         if (connectedBrowsers.includes('firefox')) {
             platforms.firefox = true;

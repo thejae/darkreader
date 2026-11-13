@@ -105,6 +105,7 @@ function getParams(args) {
         '--chrome-mv3': PLATFORM.CHROMIUM_MV3,
         '--chrome-plus': PLATFORM.CHROMIUM_MV2_PLUS,
         '--chrome-mv3-plus': PLATFORM.CHROMIUM_MV3_PLUS,
+        '--edge': PLATFORM.EDGE,
         '--firefox': PLATFORM.FIREFOX_MV2,
         '--firefox-mv2': PLATFORM.FIREFOX_MV2,
         '--firefox-mv3': PLATFORM.FIREFOX_MV3,
@@ -115,6 +116,7 @@ function getParams(args) {
         [PLATFORM.CHROMIUM_MV2_PLUS]: false,
         [PLATFORM.CHROMIUM_MV3]: false,
         [PLATFORM.CHROMIUM_MV3_PLUS]: false,
+        [PLATFORM.EDGE]: false,
         [PLATFORM.FIREFOX_MV2]: false,
         [PLATFORM.THUNDERBIRD]: false,
     };

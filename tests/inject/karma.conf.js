@@ -106,10 +106,11 @@ export function configureKarma(config, env) {
         options.customLaunchers = {};
         options.browsers = [];
 
-        // CHROME_TEST and FIREFOX_TEST are used in CI
+        // CHROME_TEST, FIREFOX_TEST and EDGE_TEST are used in CI
         const chrome = env.CHROME_TEST;
         const firefox = env.FIREFOX_TEST;
-        const all = !chrome && !firefox;
+        const edge = env.EDGE_TEST;
+        const all = !chrome && !firefox && !edge;
         // Chrome
         if (chrome || all) {
             options.customLaunchers['CIChromeHeadless'] = {
@@ -125,6 +126,17 @@ export function configureKarma(config, env) {
                 base: 'FirefoxHeadless',
             };
             options.browsers.push('CIFirefoxHeadless');
+        }
+
+        // Edge
+        if (edge) {
+            // karma-chrome-launcher has no Edge launcher, so the headless Chromium launcher
+            // is reused with CHROME_BIN set to the Edge executable (see CI workflow).
+            options.customLaunchers['CIEdgeHeadless'] = {
+                base: 'ChromeHeadless',
+                flags: ['--no-sandbox', '--disable-setuid-sandbox'],
+            };
+            options.browsers.push('CIEdgeHeadless');
         }
 
         options.autoWatch = false;

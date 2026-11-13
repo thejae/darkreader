@@ -96,12 +96,6 @@ jobs:
         # reporters and exits non-zero on failure.
         run: npm run test:inject -- --ci
 
-      - name: Run browser tests on Chromium MV2 build
-        if: ${{ matrix.chrome }}
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: npm run test:chrome -- --json --outputFile=test-results-chrome.json
-
       - name: Run browser tests on Chromium MV3 build
         if: ${{ matrix.chrome }}
         uses: coactions/setup-xvfb@v1
@@ -119,4 +113,53 @@ jobs:
         with:
           name: test-results-chrome-${{ matrix.chrome }}-firefox-${{ matrix.firefox }}-coverage-${{ matrix.coverage }}
           path: test-results-*
+          retention-days: ${{ inputs.test_results_retention_days }}
+
+  test-edge:
+    name: Run Edge browser tests
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        edge:
+          - stable
+          - beta
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Install Edge
+        uses: browser-actions/setup-edge@latest
+        with:
+          edge-version: ${{ matrix.edge }}
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version || '22.x' }}
+          cache: npm
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run injection tests
+        # karma-chrome-launcher has no Edge launcher, so the headless Chromium launcher
+        # is reused with CHROME_BIN pointing at the Edge executable (EDGE_TEST in karma.conf.js).
+        run: |
+          microsoft-edge --version
+          CHROME_BIN="$(which microsoft-edge)" EDGE_TEST=1 npm run test:inject -- --ci
+
+      - name: Run browser tests on Edge MV3 build
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: npm run test:edge -- --json --outputFile=test-results-edge.json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-edge-${{ matrix.edge }}
+          path: test-results-edge.json
           retention-days: ${{ inputs.test_results_retention_days }}

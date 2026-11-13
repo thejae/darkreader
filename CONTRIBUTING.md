@@ -215,11 +215,11 @@ Then execute `npm run debug`.
 
 #### Chrome and Edge
 
-- Open the `chrome://extensions` page.
+- Open the `chrome://extensions` (Edge uses `edge://extensions`) page.
 - Disable the official Dark Reader version.
 - Enable the **Developer mode**.
 - Click **Load unpacked extension** button.
-- Navigate to the project's `build/debug/chrome` folder.
+- Navigate to the project's `build/debug/chrome` folder for Chrome, `build/debug/edge` folder for Edge.
 
 #### Firefox
 

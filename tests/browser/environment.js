@@ -3,7 +3,7 @@ import {launch} from 'puppeteer-core';
 import {WebSocketServer} from 'ws';
 
 import {generateHTMLCoverageReports} from './coverage.js';
-import {getChromePath, getFirefoxPath, chromePlusExtensionDebugDir, chromeMV3ExtensionDebugDir, firefoxExtensionDebugDir, getEdgePath} from './paths.js';
+import {getChromePath, getFirefoxPath, chromeMV3ExtensionDebugDir, edgeExtensionDebugDir, firefoxExtensionDebugDir, getEdgePath} from './paths.js';
 import {createTestServer, generateRandomId} from './server.js';
 
 const TEST_SERVER_PORT = 8891;
@@ -105,9 +105,7 @@ export default class CustomJestEnvironment extends TestEnvironment {
      * @returns {Promise<Browser>}
      */
     async launchEdge() {
-        // test:edge builds --debug --test --plus which lands in build/debug/chrome-plus;
-        // chrome-mv3-plus is only produced by the mv3+plus build and was never built for this test.
-        const extensionDir = chromePlusExtensionDebugDir;
+        const extensionDir = edgeExtensionDebugDir;
         let executablePath;
         try {
             executablePath = await getEdgePath();
@@ -289,11 +287,6 @@ export default class CustomJestEnvironment extends TestEnvironment {
                 return;
             }
             await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: colorScheme}]);
-            // Switching Edge to MV3
-            // if (global.product === 'edge') {
-            //     const page = await this.getChromiumMV2BackgroundPage();
-            //     await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: colorScheme}]);
-            // }
         };
 
         global.loadTestPage = async (paths, gotoOptions) => {

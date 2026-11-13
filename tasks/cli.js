@@ -45,6 +45,7 @@ function printHelp() {
         '  --api          Library build (published to NPM)',
         '  --chrome       MV2 for Chromium-based browsers (published to Chrome Web Store)',
         '  --chrome-mv3   MV3 for Chromium-based browsers (will replace MV2 version eventually)',
+        '  --edge         MV3 build for Edge Add-ons',
         '  --firefox      MV2 for Firefox (published to Mozilla Add-on store)',
         '  --thunderbird  Thunderbird',
         '',
@@ -127,7 +128,7 @@ async function checkoutHead() {
 function validateArguments(args) {
     const validationErrors = [];
 
-    const validFlags = ['--api', '--chrome', '--chrome-mv2', '--chrome-mv3', '--chrome-plus', '--chrome-mv3-plus', '--firefox', '--firefox-mv2', '--firefox-mv3', '--thunderbird', '--release', '--debug', '--watch', '--plus', '--log-info', '--log-warn', '--log-assert', '--test'];
+    const validFlags = ['--api', '--chrome', '--chrome-mv2', '--chrome-mv3', '--chrome-plus', '--chrome-mv3-plus', '--edge', '--firefox', '--firefox-mv2', '--firefox-mv3', '--thunderbird', '--release', '--debug', '--watch', '--plus', '--log-info', '--log-warn', '--log-assert', '--test'];
     const invalidFlags = args.filter((flag) => !validFlags.includes(flag) && !flag.startsWith('--version='));
     invalidFlags.forEach((flag) => validationErrors.push(`Invalid flag ${flag}`));
 

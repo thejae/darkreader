@@ -1,21 +1,21 @@
 // @ts-check
 import {getDestDir, absolutePath} from './paths.js';
-import {PLATFORM} from './platform.js';
+import {PLATFORM, isChromiumMV3, isPlus} from './platform.js';
 import * as reload from './reload.js';
 import {createTask} from './task.js';
 import {readJSON, writeJSON} from './utils.js';
 
 async function patchManifest(platform, debug, watch, test) {
     const isMV2 = platform === PLATFORM.CHROMIUM_MV2 || platform === PLATFORM.CHROMIUM_MV2_PLUS;
-    const isMV3 = platform === PLATFORM.CHROMIUM_MV3 || platform === PLATFORM.CHROMIUM_MV3_PLUS;
-    const isPlus = platform === PLATFORM.CHROMIUM_MV2_PLUS || platform === PLATFORM.CHROMIUM_MV3_PLUS;
+    const isMV3 = isChromiumMV3(platform);
+    const isPlusBuild = isPlus(platform);
 
     const manifest = await readJSON(absolutePath('src/manifest.json'));
     const manifestPatch = isMV2 ? {} : await readJSON(absolutePath(`src/manifest-${platform.replace('-plus', '')}.json`));
-    const manifestExtras = isPlus ? await readJSON(absolutePath(`src/plus/manifest.json`)) : {};
+    const manifestExtras = isPlusBuild ? await readJSON(absolutePath(`src/plus/manifest.json`)) : {};
     const patched = {...manifest, ...manifestPatch, ...manifestExtras};
     if (debug && isMV3) {
-        patched.name = isPlus ? 'Dark Reader MV3 Plus' : 'Dark Reader MV3';
+        patched.name = isPlusBuild ? 'Dark Reader MV3 Plus' : 'Dark Reader MV3';
     }
     if (isMV3) {
         patched.browser_action = undefined;
@@ -28,7 +28,7 @@ async function patchManifest(platform, debug, watch, test) {
         patched.permissions.push('tabs');
     }
     if (debug && (isMV2 || isMV3)) {
-        patched.version_name = isPlus ? 'Debug Plus' : 'Debug';
+        patched.version_name = isPlusBuild ? 'Debug Plus' : 'Debug';
     }
     // Needed to test settings export and CSS theme export via a download
     if (test || debug) {

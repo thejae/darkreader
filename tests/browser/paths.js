@@ -111,8 +111,6 @@ export async function getFirefoxPath() {
     throw new Error('Could not find firefox-nightly');
 }
 
-export const chromeExtensionDebugDir = path.join(__dirname, '../../build/debug/chrome');
-export const chromePlusExtensionDebugDir = path.join(__dirname, '../../build/debug/chrome-plus');
 export const chromeMV3ExtensionDebugDir = path.join(__dirname, '../../build/debug/chrome-mv3');
-export const chromeMV3PlusExtensionDebugDir = path.join(__dirname, '../../build/debug/chrome-mv3-plus');
+export const edgeExtensionDebugDir = path.join(__dirname, '../../build/debug/edge');
 export const firefoxExtensionDebugDir = path.join(__dirname, '../../build/debug/firefox');
