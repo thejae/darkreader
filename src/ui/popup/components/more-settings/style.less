@@ -3,7 +3,18 @@
 .more-settings {
     display: flex;
     flex-direction: column;
+    // The popup is 25rem tall, so the More panel scrolls inside its own box
+    min-height: 0;
+    overflow-y: auto;
     width: 100%;
+
+    &::-webkit-scrollbar {
+        width: @size-scrollbar-thickness + @indent-small;
+
+        &-thumb {
+            border-left: @indent-small solid @color-back;
+        }
+    }
 
     &__description {
         font-size: @size-text-small;

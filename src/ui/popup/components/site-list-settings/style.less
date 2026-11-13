@@ -18,6 +18,9 @@
     }
 
     &__text-list {
-        flex: initial;
+        flex: auto;
+        // The list fills the remaining popup height, so a short list leaves no empty strip,
+        // and a long one scrolls inside its own box.
+        min-height: 0;
     }
 }

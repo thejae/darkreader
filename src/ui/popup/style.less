@@ -2,7 +2,8 @@
 @import "../shared";
 
 @popup-content-width: 15rem;
-@popup-content-height: 30rem;
+// Height fits the tallest popup tab (Filter) so the window does not end in a long empty strip.
+@popup-content-height: 25rem;
 @popup-content-padding: 1rem;
 
 @import "./components/custom-settings-toggle/style";
@@ -34,6 +35,20 @@ body {
 .tab-panel {
     flex: auto;
     margin-top: @indent-large;
+
+    // The popup is sized to the Filter tab, so taller tabs (More, long site lists)
+    // scroll inside their own panel instead of running past the window bottom.
+    &__tab--active {
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: @size-scrollbar-thickness + @indent-small;
+
+            &-thumb {
+                border-left: @indent-small solid @color-back;
+            }
+        }
+    }
 }
 
 .dev-tools-button {
