@@ -33,7 +33,11 @@ Open the terminal in the root folder and run:
 
 This will create a `build/release/darkreader-chrome.zip` file for use in a Chromium-based browser, a `build/release/darkreader-edge.zip` file for Microsoft Edge, and a `build/release/darkreader-firefox.xpi` file for use in Firefox.
 
+To build one store's artifact only, pass its flag: `npm run build -- --chrome`, `npm run build -- --edge`, `npm run build -- --firefox`. The `--edge` build is the Chromium MV3 build that is submitted to Edge Add-ons, so it needs Edge 106 or newer.
+
 You can customize the build process by passing flags to build script. To see all flags, run `npm run build -- --help`.
+
+For development, `npm run debug` builds the unpacked extension folders (`build/debug/chrome`, `build/debug/edge`, `build/debug/firefox`), and `npm run debug:watch:edge` rebuilds the Edge folder while you edit the source. How to load them into Chrome (`chrome://extensions`) and Edge (`edge://extensions`) is described in [CONTRIBUTING.md](https://github.com/darkreader/darkreader/blob/main/CONTRIBUTING.md).
 
 ### Building with Deno
 
@@ -51,6 +55,13 @@ npm run build -- --firefox --version=4.9.63
 ```
 
 Please note that only Firefox Add-ons store signatures are present in the repository right now. Also, due to NodeJS and TypeScript version compatibility, one might have to first check out the old revision (commit), then build the extension files, then check out the recent commit and create the bundle (by running only `signature` and `zip` steps).
+
+### Running tests
+
+- `npm test` runs the unit tests.
+- `npm run test:browser` runs the browser suites in Chrome MV3, Edge, and Firefox MV2. To run one browser, use `npm run test:chrome-mv3`, `npm run test:edge`, or `npm run test:firefox`. Each command builds the matching debug bundle first.
+- `npm run test:inject` runs the injection tests in Chrome and Firefox (and Safari on macOS). `karma-chrome-launcher` has no Edge launcher, so the Edge injection tests reuse the headless Chromium launcher with `CHROME_BIN` pointed at the Edge executable: `CHROME_BIN="$(which microsoft-edge)" EDGE_TEST=1 npm run test:inject -- --ci` on Linux, or set `CHROME_BIN` to the `msedge.exe` path and `EDGE_TEST=1` on Windows.
+- MV2 Chrome builds are not tested, because Chrome and Edge 127+ refuse to load MV2 extensions.
 
 ## Using Dark Reader on a website
 
