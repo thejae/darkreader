@@ -80,6 +80,13 @@ function Header(props: HeaderProps) {
 
     const automationMessage = getAutomationMessage({data});
 
+    function onButtonKeydown(e: KeyboardEvent, action: () => void) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            action();
+        }
+    }
+
     const isProtected = !isFile && ((!__CHROMIUM_MV3__ && !tab.isInjected) || tab.isProtected);
     const isProtectedFile = isFile && !data.isAllowedFileSchemeAccess;
     const isSiteEnabled = !(isProtected || isProtectedFile || tab.isInDarkList);
@@ -101,7 +108,10 @@ function Header(props: HeaderProps) {
                         'header__more-settings-button': true,
                         'header__more-settings-button--off': !isSiteEnabled,
                     }}
+                    role="button"
+                    tabindex="0"
                     onclick={onMoreSiteSettingsClick}
+                    onkeydown={(e: KeyboardEvent) => onButtonKeydown(e, onMoreSiteSettingsClick)}
                 >
                     <SettingsIcon class="header__more-settings-button__icon" />
                     {siteToggleMessage}
@@ -114,7 +124,10 @@ function Header(props: HeaderProps) {
                         'header__more-settings-button': true,
                         'header__more-settings-button--off': !data.isEnabled,
                     }}
+                    role="button"
+                    tabindex="0"
                     onclick={onMoreToggleSettingsClick}
+                    onkeydown={(e: KeyboardEvent) => onButtonKeydown(e, onMoreToggleSettingsClick)}
                 >
                     <SettingsIcon class="header__more-settings-button__icon" />
                     {automationMessage}

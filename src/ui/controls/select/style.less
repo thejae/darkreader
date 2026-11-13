@@ -55,6 +55,7 @@
         border-bottom: @size-border solid @color-border;
         border-left: @size-border solid @color-border;
         border-right: @size-border solid @color-border;
+        border-radius: @size-radius;
         box-sizing: border-box;
         left: 0;
         max-height: 0;
@@ -64,7 +65,7 @@
         top: ~"calc(100% - @{size-border})";
         transition: max-height @time-fast;
         width: 100%;
-        z-index: 999;
+        z-index: @z-index-dropdown;
 
         &--expanded {
             max-height: 12rem;
@@ -86,8 +87,14 @@
         flex-direction: row;
         padding-left: @size-control-inner / 2 - @size-text-normal / 2;
 
-        &:hover {
+        &:hover,
+        &--focused {
             background-color: @color-control-hover;
+        }
+
+        &--selected {
+            background-color: @color-control-active;
+            color: @color-control-fore;
         }
     }
 }

@@ -4,6 +4,7 @@
     background-color: @color-back;
     border-bottom: @size-border solid @color-border;
     border-top: @size-border solid @color-border;
+    border-radius: @size-radius;
     display: flex;
     flex-direction: column;
     padding: @indent-large;
@@ -28,6 +29,10 @@
     }
 
     &__button-ok {
-        border-color: gray;
+        border-color: @color-ok;
+    }
+
+    &__button-cancel {
+        border-color: @color-error;
     }
 }

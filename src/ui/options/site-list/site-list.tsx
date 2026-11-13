@@ -56,8 +56,8 @@ export function SiteList(props: SiteListProps): Malevic.Child {
         props.onChange(values);
     }
 
-    function removeValue(event: MouseEvent) {
-        const previousSibling = ((event.target as HTMLInputElement).previousSibling as HTMLInputElement);
+    function removeValue(event: Event) {
+        const previousSibling = ((event.target as HTMLElement).previousSibling as HTMLInputElement);
         const index = store.indices.get(previousSibling)!;
         const filtered = props.siteList.slice();
         filtered.splice(index, 1);
@@ -85,7 +85,15 @@ export function SiteList(props: SiteListProps): Malevic.Child {
                 {text ? <span
                     class="site-list__item__remove"
                     role="button"
+                    tabindex="0"
+                    aria-label="Remove"
                     onclick={removeValue}
+                    onkeydown={(e: KeyboardEvent) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            removeValue(e);
+                        }
+                    }}
                 /> : null}
             </div>
         );

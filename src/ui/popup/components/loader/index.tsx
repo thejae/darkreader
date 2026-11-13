@@ -3,6 +3,7 @@ import {getContext} from 'malevic/dom';
 import {withState, useState} from 'malevic/state';
 
 import {getLocalMessage} from '../../../../utils/locales';
+import {Button} from '../../../controls';
 
 
 interface LoaderProps {
@@ -30,7 +31,7 @@ function Loader({complete = false}: LoaderProps) {
         clearTimeout(context.store.loaderTimeoutID);
     }
 
-    const labelMessage = state.errorOccured ? "A unknown error has occured, the UI couldn't be loaded" : getLocalMessage('loading_please_wait');
+    const labelMessage = state.errorOccured ? 'An unknown error occurred, the UI couldn\'t be loaded' : getLocalMessage('loading_please_wait');
 
     return (
         <div
@@ -44,7 +45,15 @@ function Loader({complete = false}: LoaderProps) {
             <label class={{
                 'loader__message': true,
                 'loader__error': state.errorOccured,
-            }}>{labelMessage}</label>
+            }} role="status">{labelMessage}</label>
+            {state.errorOccured ?
+                <Button
+                    class="loader__retry"
+                    onclick={() => location.reload()}
+                >
+                    Reload
+                </Button>
+                : null}
         </div>
     );
 }

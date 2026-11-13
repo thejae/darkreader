@@ -17,7 +17,7 @@
         font-weight: bold;
         height: @size-control-inner + @size-border;
         padding: 0 @indent-small + @size-border;
-        white-space: pre;
+        white-space: nowrap;
 
         &:hover {
             color: @color-fore;
@@ -25,6 +25,11 @@
 
         &:active {
             background-color: @color-control-hover;
+        }
+
+        &:focus-visible {
+            outline: @size-focus-ring solid @color-focus;
+            outline-offset: -@size-focus-ring;
         }
 
         &--active {

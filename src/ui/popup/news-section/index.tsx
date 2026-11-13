@@ -2,7 +2,7 @@ import {m} from 'malevic';
 import {getContext} from 'malevic/dom';
 
 import type {News, ViewProps} from '../../../definitions';
-import {HOMEPAGE_URL} from '../../../utils/links';
+import {getLocalMessage} from '../../../utils/locales';
 import {getDuration} from '../../../utils/time';
 
 function isFresh(n: News) {
@@ -73,25 +73,22 @@ export default function NewsSection(props: ViewProps) {
         }
     });
 
-    const birthdayExpired = (new Date(2024, 7, 2)).getTime();
-    const birthdayNews = {
-        id: 'birthday',
-        date: '2024-07-07T00:00:00Z',
-        url: `${HOMEPAGE_URL}/timeline/`,
-        headline: 'On July 7th we celebrate 10 years!',
-        icon: '/ui/assets/images/birthday-icon.svg',
-    };
-    const birthdayLink = <NewsLink isSmall news={birthdayNews} />;
+    function onKeydown(e: KeyboardEvent) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleNews();
+        }
+    }
 
     return (
         <div class={{'news-section': true, 'news-section--expanded': expanded}}>
-            {Date.now() < birthdayExpired ? birthdayLink : latest ? <NewsLink isSmall news={latest} onClick={markLatestAsRead} /> : null}
+            {latest ? <NewsLink isSmall news={latest} onClick={markLatestAsRead} /> : null}
             <div class="news-section__popover">
                 <div class="news-section__popover__top">
                     <div class="news-section__title">
-                        What's New
+                        {getLocalMessage('news')}
                     </div>
-                    <span role="button" class="news-section__close" onclick={toggleNews}>✕</span>
+                    <span role="button" tabindex="0" class="news-section__close" aria-label="Close" onclick={toggleNews} onkeydown={onKeydown}>✕</span>
                 </div>
                 {latest ? <NewsLink news={latest} onClick={markLatestAsRead} /> : null}
             </div>

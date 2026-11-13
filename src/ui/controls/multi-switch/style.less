@@ -3,6 +3,7 @@
 .multi-switch {
     background-color: @color-control-back;
     border: @size-border solid @color-border;
+    border-radius: @size-radius;
     box-sizing: content-box;
     color: @color-control-fore;
     display: inline-flex;
@@ -13,6 +14,7 @@
 
     &__option {
         align-items: center;
+        border-radius: @size-radius;
         cursor: pointer;
         display: inline-flex;
         justify-content: center;
@@ -25,6 +27,11 @@
 
         &:hover:not(&--selected) {
             background-color: @color-control-hover;
+        }
+
+        &:focus-visible {
+            outline: @size-focus-ring solid @color-focus;
+            outline-offset: -@size-focus-ring;
         }
     }
 

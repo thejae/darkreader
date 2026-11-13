@@ -31,26 +31,6 @@ header {
     justify-content: flex-start;
 }
 
-#logo {
-    display: inline-block;
-    font-size: @size-text-large;
-    height: @size-control-inner;
-    width: 15rem;
-}
-
-#title {
-    align-items: stretch;
-    display: inline-flex;
-    flex-direction: row;
-    font-size: @size-control-inner * 4 / 3;
-    font-weight: 100;
-    line-height: @size-control-inner;
-    height: @size-control-inner;
-    margin: 0 0 0 @indent-small;
-    text-transform: uppercase;
-    transform: translateY(-0.0625rem);
-}
-
 .config-editor {
     display: flex;
     flex-direction: column;
@@ -61,7 +41,7 @@ header {
     flex: none;
     font-size: @size-text-normal;
     font-weight: normal;
-    margin: 0.3rem 0 @indent-large 0;
+    margin: @indent-small 0 @indent-large 0;
     text-transform: uppercase;
 }
 
@@ -74,7 +54,6 @@ header {
     font-family: monospace;
     font-size: @size-text-normal;
     min-width: 9rem;
-    outline: none;
     padding: @size-control-inner / 2 - @size-text-normal / 2;
     resize: none;
     white-space: pre;
@@ -134,7 +113,6 @@ header {
     flex: none;
     margin: @indent-large 0 0 0;
     text-align: left;
-    white-space: wrap;
 
     a {
         color: @color-fore;
@@ -190,7 +168,7 @@ header {
 
 .config-editor-per-site {
     display: grid;
-    gap: 0.5rem;
+    gap: @indent-small;
     grid: "search editor" @size-control-inner + 2 * @size-border
           "list   editor" auto
           / 10rem auto;
@@ -207,7 +185,9 @@ header {
 
     &__urls {
         grid-area: list;
+        margin: 0;
         overflow: auto;
+        padding: 0;
 
         li {
             list-style-type: none;
@@ -218,6 +198,7 @@ header {
         border: none;
         color: @color-fore;
         height: @size-control-inner;
+        justify-content: flex-start;
         text-align: left;
         width: 100%;
 
@@ -232,12 +213,14 @@ header {
     }
 
     &__add-fix {
+        grid-area: editor;
+
         &__button {
-            padding: 0 0.5rem;
+            padding: 0 @indent-small;
         }
 
         &__description {
-            margin: 0.5rem 0 0 0;
+            margin: @indent-small 0 0 0;
         }
     }
 }

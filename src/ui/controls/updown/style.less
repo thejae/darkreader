@@ -91,6 +91,7 @@
     align-items: center;
     background-color: @color-control-back;
     border: @size-border solid @color-border;
+    border-radius: @size-radius;
     box-sizing: content-box;
     display: inline-flex;
     flex: auto;
@@ -108,12 +109,17 @@
         transition: background-color @time-fast;
     }
 
+    &:active {
+        background-color: @color-control-active;
+    }
+
     &--clickable {
         cursor: pointer;
     }
 
     &__value {
         background-color: @color-control-active;
+        border-radius: @size-radius;
         height: 100%;
         left: 0;
         position: absolute;

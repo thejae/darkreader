@@ -36,6 +36,61 @@ export default function DropDown<T>(props: DropDownProps<T>) {
         store.selectedNode = el as HTMLElement;
     }
 
+    function selectValue(value: DropDownOption<T>) {
+        store.isOpen = false;
+        context.refresh();
+        store.selectedNode.focus();
+        props.onChange(value.id);
+    }
+
+    function openList() {
+        store.isOpen = true;
+        context.refresh();
+        const selected = store.listNode.querySelector('.dropdown__list__item--selected') as HTMLElement | null;
+        (selected || store.listNode.firstElementChild as HTMLElement | null)?.focus();
+    }
+
+    function onSelectedKeydown(e: KeyboardEvent) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            openList();
+        }
+    }
+
+    function onItemKeydown(e: KeyboardEvent, value: DropDownOption<T>) {
+        switch (e.key) {
+            case 'Enter':
+            case ' ':
+                e.preventDefault();
+                selectValue(value);
+                break;
+            case 'Escape':
+                e.preventDefault();
+                store.isOpen = false;
+                context.refresh();
+                store.selectedNode.focus();
+                break;
+            case 'ArrowDown': {
+                e.preventDefault();
+                const next = (e.currentTarget as HTMLElement).nextElementSibling as HTMLElement | null;
+                if (next) {
+                    next.focus();
+                }
+                break;
+            }
+            case 'ArrowUp': {
+                e.preventDefault();
+                const prev = (e.currentTarget as HTMLElement).previousElementSibling as HTMLElement | null;
+                if (prev) {
+                    prev.focus();
+                } else {
+                    store.selectedNode.focus();
+                }
+                break;
+            }
+        }
+    }
+
     function onSelectedClick() {
         store.isOpen = !store.isOpen;
         context.refresh();
@@ -70,11 +125,11 @@ export default function DropDown<T>(props: DropDownProps<T>) {
                     'dropdown__list__item--selected': value.id === props.selected,
                     [props.class!]: Boolean(props.class),
                 }}
-                onclick={() => {
-                    store.isOpen = false;
-                    context.refresh();
-                    props.onChange(value.id);
-                }}
+                role="option"
+                aria-selected={String(value.id === props.selected)}
+                tabindex="0"
+                onclick={() => selectValue(value)}
+                onkeydown={(e: KeyboardEvent) => onItemKeydown(e, value)}
             >
                 {value.content}
             </span>
@@ -104,6 +159,11 @@ export default function DropDown<T>(props: DropDownProps<T>) {
                 class="dropdown__selected"
                 oncreate={saveSelectedNode}
                 onclick={onSelectedClick}
+                onkeydown={onSelectedKeydown}
+                role="button"
+                aria-haspopup="listbox"
+                aria-expanded={String(store.isOpen)}
+                tabindex="0"
             >
                 <span class="dropdown__selected__text">
                     {selectedContent}

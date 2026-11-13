@@ -3,11 +3,11 @@
 .textbox {
     background-color: @color-input-back;
     border: @size-border solid @color-border;
+    border-radius: @size-radius;
     box-sizing: content-box;
     color: @color-input-fore;
     height: @size-control-inner;
     line-height: @size-control-inner;
-    outline: none;
     overflow: hidden;
     padding: 0;
     text-indent: @size-control-inner / 2 - @size-text-normal / 2;
@@ -17,6 +17,11 @@
     &:focus {
         background-color: @color-input-hover;
         transition: background-color @time-fast;
+    }
+
+    &:focus-visible {
+        outline: @size-focus-ring solid @color-focus;
+        outline-offset: @size-border-inner;
     }
 
     &:focus {

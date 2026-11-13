@@ -1,6 +1,6 @@
 @import "../../../theme";
 
-@more-settings-line-height: 2 * @size-border + @size-control-inner + @size-text-small-height;  
+@more-settings-line-height: 2 * @size-border + @size-control-inner + @size-text-small-height;
 
 .header {
     display: grid;
@@ -16,7 +16,6 @@
         background-size: 100%;
         grid-area: logo;
         height: @popup-content-width / 10;
-        outline: none;
         text-indent: -999rem;
         width: @popup-content-width;
 
@@ -43,15 +42,12 @@
         &__time {
             background-color: @color-heading;
             border-radius: 50%;
-            color: @color-control-fore;
-            cursor: pointer;
+            color: @color-back;
             display: none;
             height: @size-text-small-height;
-            pointer-events: none;
             position: absolute;
             right: -@size-text-small-height / 4;
             top: -@size-text-small-height / 4;
-            transition: opacity @time-slow @time-slow;
             width: @size-text-small-height;
 
             &--active {
@@ -61,6 +57,7 @@
     }
 
     &__more-settings-button {
+        border-radius: @size-radius;
         cursor: pointer;
         font-size: @size-text-small;
         line-height: @size-text-small-height;
@@ -68,6 +65,12 @@
         user-select: none;
 
         &:hover {
+            text-decoration: underline;
+        }
+
+        &:focus-visible {
+            outline: @size-focus-ring solid @color-focus;
+            outline-offset: @size-border-inner;
             text-decoration: underline;
         }
 
@@ -111,7 +114,7 @@
         top: @popup-content-padding + 2 * @size-control-inner + @size-border + 2 * @size-text-small-height + 2 * @indent-small;
         transition: all @time-slow;
         width: 100%;
-        z-index: 999;
+        z-index: @z-index-dropdown;
 
         &:not(&--expanded) {
             height: 0;
@@ -153,7 +156,7 @@
 
         &__content {
             flex: auto;
-            overflow: hidden;
+            overflow-y: auto;
             padding: @indent-large @popup-content-padding;
             transition: padding @time-slow;
         }
@@ -185,7 +188,7 @@
             line-height: @size-text-small-height;
             margin: 0;
             text-align: center;
-            white-space: pre;
+            white-space: pre-wrap;
             color: @color-heading;
         }
 
@@ -287,7 +290,7 @@
             line-height: @size-control-inner;
             padding-left: @size-control-inner;
             position: relative;
-            transition: all @time-fast;
+            transition: background-color @time-fast;
             white-space: nowrap;
             width: calc(100% - 2 * @size-border - @size-control-inner);
 
@@ -367,7 +370,7 @@
         position: absolute;
         right: 0rem;
         top: 5.75rem;
-        width: 17rem;
+        width: @popup-content-width;
 
         &__text {
             background: @color-heading;
@@ -381,6 +384,10 @@
         }
 
         &__lines {
+            display: block;
+            height: 100%;
+            width: 100%;
+
             path {
                 fill: none;
                 stroke: @color-heading;

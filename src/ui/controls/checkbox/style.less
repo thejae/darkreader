@@ -4,11 +4,13 @@
     align-items: stretch;
     background-color: @color-control-back;
     border: @size-border solid @color-border;
+    border-radius: @size-radius;
     cursor: pointer;
     display: inline-flex;
     flex: none;
     flex-direction: row;
     height: @size-control-inner;
+    position: relative;
     transition: background-color @time-slow;
     width: @size-control-inner;
 
@@ -17,8 +19,23 @@
         transition: background-color @time-fast;
     }
 
+    &:focus-within {
+        outline: @size-focus-ring solid @color-focus;
+        outline-offset: @size-border-inner;
+    }
+
     &__input {
-        display: none;
+        height: 100%;
+        left: 0;
+        margin: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    &__input:disabled + &__checkmark {
+        background-color: @color-control-back-disabled;
     }
 
     &__checkmark {
@@ -36,7 +53,7 @@
             left: @size-control-inner * 0.125;
             position: absolute;
             top: @size-control-inner * 0.425;
-            transition: all @time-fast;
+            transition: background-color @time-fast;
             width: @size-control-inner * 0.75;
         }
 

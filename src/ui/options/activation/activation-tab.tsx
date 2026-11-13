@@ -6,6 +6,19 @@ import {DONATE_URL} from '../../../utils/links';
 // import {getLocalMessage} from '../../../utils/locales';
 import {Button, ControlGroup, TextBox} from '../../controls';
 
+function validateActivationInput(email: string, key: string): string {
+    if (!email) {
+        return 'Please enter your email';
+    }
+    if (!email.includes('@')) {
+        return 'Please enter a valid email address';
+    }
+    if (key.replaceAll('-', '').length !== 25) {
+        return 'Activation code must be 25 characters long';
+    }
+    return '';
+}
+
 export function ActivationTab(props: ViewProps): Malevic.Child {
     const context = getContext();
     const store = context.getStore({
@@ -43,13 +56,13 @@ export function ActivationTab(props: ViewProps): Malevic.Child {
                     </ControlGroup.Control>
                 </ControlGroup>
                 <div class="activation__thumb-up">
-                    <img src="../assets/images/darkreader-thumb-up.svg" />
+                    <img src="../assets/images/darkreader-thumb-up.svg" alt="" />
                 </div>
             </div>
         );
     }
 
-    const activate = () => {
+    const activate = async () => {
         if (store.checking) {
             return;
         }
@@ -57,12 +70,20 @@ export function ActivationTab(props: ViewProps): Malevic.Child {
         const email = store.emailTextElement?.value.trim() ?? '';
         const key = store.keyTextElement?.value.trim() ?? '';
 
-        store.errorMessage = '';
+        store.errorMessage = validateActivationInput(email, key);
+        if (store.errorMessage) {
+            context.refresh();
+            const offender = email.includes('@') ? store.keyTextElement : store.emailTextElement;
+            offender?.focus();
+            return;
+        }
+
         store.checking = true;
         context.refresh();
-        props.actions.startActivation(email, key);
-        store.errorMessage = 'Please check your email and key';
+        await props.actions.startActivation(email, key);
         store.checking = false;
+        store.errorMessage = 'Please check your email and key';
+        context.refresh();
     };
 
     return <div

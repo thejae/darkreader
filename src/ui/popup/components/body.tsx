@@ -201,7 +201,7 @@ function Body(props: BodyProps & {fonts: string[]} & {installation: {date: numbe
             )
         ) : props.data.uiHighlights.includes('anniversary') ? (
             <div class="birthday-container">
-                <i class="birthday-icon">🎉</i>
+                <i class="birthday-icon"></i>
                 <span class="birthday-message">
                     {birthdayMessageSpec}
                 </span>

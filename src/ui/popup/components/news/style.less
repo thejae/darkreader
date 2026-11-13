@@ -69,6 +69,7 @@
     }
 
     &__close {
+        border-radius: @size-radius;
         color: @color-heading;
         cursor: pointer;
         display: inline-block;
@@ -82,12 +83,18 @@
         &:hover {
             background-color: fade(@color-control-active, 25%);
         }
+
+        &:focus-visible {
+            outline: @size-focus-ring solid @color-focus;
+            outline-offset: -@size-focus-ring;
+        }
     }
 
     &__list {
         background-color: fade(@color-back, 95%);
         border-bottom: @size-border solid @color-border;
         flex: auto;
+        overflow-y: auto;
         padding: @indent-large @popup-content-padding;
         position: relative;
 
@@ -244,9 +251,10 @@
     &::after {
         background-color: @color-heading;
         border-radius: @size-text-small-height / 2;
-        color: @color-control-fore;
+        color: @color-back;
         content: attr(data-count);
         font-size: @size-text-small;
+        font-weight: bold;
         line-height: @size-text-small-height;
         min-width: @size-text-small-height;
         position: absolute;

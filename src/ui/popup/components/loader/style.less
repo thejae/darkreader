@@ -14,7 +14,7 @@
     transform: translate(-50%, -50%);
     transition: background-color @loading-fade-duration ease-out;
     width: @popup-content-width + 2 * @popup-content-padding;
-    z-index: 999;
+    z-index: @z-index-loader;
 
     &--complete {
         background-color: fade(@color-back, 0%);
@@ -52,7 +52,16 @@
     }
 
     &__error {
-        font-size: @size-text-normal; 
+        font-size: @size-text-normal;
+        color: @color-error;
+    }
+
+    &__retry {
+        left: 50%;
+        pointer-events: initial;
+        position: absolute;
+        top: 45%;
+        transform: translateX(-50%);
     }
 
     &--complete &__message {

@@ -14,6 +14,13 @@ interface MobileLinksProps {
 }
 
 export function MobileLinks({expanded, onLinkClick, onClose}: MobileLinksProps) {
+    function onKeydown(e: KeyboardEvent) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClose();
+        }
+    }
+
     return (
         <div class={{'news': true, 'news--expanded': expanded}}>
             <div class="news__header">
@@ -29,7 +36,7 @@ export function MobileLinks({expanded, onLinkClick, onClose}: MobileLinksProps) 
                         <PhoneIcon />
                     </i>
                 </span>
-                <span class="news__close" role="button" onclick={onClose}>✕</span>
+                <span class="news__close" role="button" tabindex="0" aria-label="Close" onclick={onClose} onkeydown={onKeydown}>✕</span>
             </div>
             <div class="news__list">
                 <div class="news__mobile">
@@ -48,8 +55,8 @@ export function MobileLinks({expanded, onLinkClick, onClose}: MobileLinksProps) 
                                 {getLocalMessage('learn_more')}
                             </a>
                             <div class="news__mobile__logos">
-                                <img class="news__os-icon" src="../assets/images/icon-android-dark.svg" />
-                                <img class="news__os-icon" src="../assets/images/icon-apple-white.svg" />
+                                <img class="news__os-icon" src="../assets/images/icon-android-dark.svg" alt="" />
+                                <img class="news__os-icon" src="../assets/images/icon-apple-white.svg" alt="" />
                             </div>
                         </div>
                     </div>
@@ -57,6 +64,7 @@ export function MobileLinks({expanded, onLinkClick, onClose}: MobileLinksProps) 
                         <img
                             class="news__qr-code"
                             src={`../assets/images/${isFirefox ? 'mobile-qr-code-firefox.png' : 'mobile-qr-code.png'}`}
+                            alt="QR code linking to the Dark Reader mobile page"
                         />
                     </div>
                 </div>
@@ -74,10 +82,7 @@ export function MobileLinksButton({active, onClick}: NewsButtonProps) {
     return (
         <Button
             class={{'news-button': true, 'news-button--active': active}}
-            onclick={(e) => {
-                (e.currentTarget as HTMLElement).blur();
-                onClick();
-            }}
+            onclick={onClick}
         >
             <span class="news-button__wrapper">
                 <i class="news-button__phone-icon">

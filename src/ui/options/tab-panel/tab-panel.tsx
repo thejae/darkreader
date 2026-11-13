@@ -32,6 +32,9 @@ function TabPanel(props: TabPanelProps, ...children: Array<Malevic.ComponentSpec
                 'settings-tab-panel__button': true,
                 'settings-tab-panel__button--active': activeTabId === id,
             }}
+            role="tab"
+            aria-selected={String(activeTabId === id)}
+            aria-controls={`settings-tab-panel__tab--${id}`}
             onclick={tabSpec.props.onClick ?? onClick}
         >
             <span class={{
@@ -46,7 +49,7 @@ function TabPanel(props: TabPanelProps, ...children: Array<Malevic.ComponentSpec
 
     return (
         <div class={{'settings-tab-panel': true, 'settings-tab-panel--vertical': props.isVertical}}>
-            <div class="settings-tab-panel__buttons">
+            <div class="settings-tab-panel__buttons" role="tablist">
                 {...children.map(createTabButton)}
             </div>
             <div class="settings-tab-panel__tabs">
@@ -69,6 +72,7 @@ function TabPanel(props: TabPanelProps, ...children: Array<Malevic.ComponentSpec
 function Tab(props: TabProps, ...children: Malevic.Child[]) {
     return (
         <div
+            id={`settings-tab-panel__tab--${props.id}`}
             class={{
                 'settings-tab-panel__tab': true,
                 'settings-tab-panel__tab--active': props.isActive,

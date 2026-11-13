@@ -15,11 +15,18 @@ interface NewsProps {
 const NEWS_COUNT = 2;
 
 export function NewsGroup({news, expanded, onNewsOpen, onClose}: NewsProps) {
+    function onKeydown(e: KeyboardEvent) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClose();
+        }
+    }
+
     return (
         <div class={{'news': true, 'news--expanded': expanded}}>
             <div class="news__header">
                 <span class="news__header__text">{getLocalMessage('news')}</span>
-                <span class="news__close" role="button" onclick={onClose}>✕</span>
+                <span class="news__close" role="button" tabindex="0" aria-label="Close" onclick={onClose} onkeydown={onKeydown}>✕</span>
             </div>
             <div class="news__list">
                 {news.slice(0, NEWS_COUNT).map((event) => {
@@ -82,10 +89,7 @@ export function NewsButton({active, count, onClick}: NewsButtonProps) {
             class={{'news-button': true, 'news-button--active': active}}
             href="#news"
             data-count={count > 0 && !active ? count : null}
-            onclick={(e) => {
-                (e.currentTarget as HTMLElement).blur();
-                onClick();
-            }}
+            onclick={onClick}
         >
             {getLocalMessage('news')}
         </Button>

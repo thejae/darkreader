@@ -1,4 +1,4 @@
-@dropdown-height: 1.5rem;
+@dropdown-height: @size-control-inner;
 @dropdown-item-height: 1.25rem;
 @dropdown-item-active-height: 1.5rem;
 
@@ -17,6 +17,7 @@
         background-position: center right 0.25rem;
         background-repeat: no-repeat;
         background-size: 1rem;
+        border-radius: @size-radius;
         color: @color-control-fore;
         display: inline-flex;
         height: @dropdown-item-height;
@@ -26,6 +27,15 @@
         position: absolute;
         text-align: center;
         width: 100%;
+
+        &:hover {
+            background-color: mix(@color-control-active, @color-control-hover, 50%);
+        }
+
+        &:focus-visible {
+            outline: @size-focus-ring solid @color-focus;
+            outline-offset: @size-border-inner;
+        }
 
         &__text {
             display: inline-block;
@@ -39,33 +49,44 @@
     &__list {
         background-color: @color-control-back;
         border: @size-border solid @color-border;
+        border-radius: @size-radius;
         border-top: none;
-        box-shadow: 0 0 0.25rem black;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.4);
         box-sizing: border-box;
         display: none;
         margin-top: (@dropdown-height - @dropdown-item-height) / 2;
-        overflow: hidden;
+        max-height: 12rem;
+        overflow: auto;
         position: absolute;
         width: 100%;
+        z-index: @z-index-dropdown;
 
         &__item {
             align-items: center;
             background-color: @color-control-back;
+            border-radius: @size-radius;
             color: @color-control-fore;
             display: inline-flex;
             justify-content: center;
             min-height: @dropdown-item-height;
             text-align: center;
+            transition: background-color @time-slow;
             width: 100%;
-            
+
             &:hover {
                 background-color: @color-control-hover;
                 transition: background-color @time-fast;
             }
 
+            &:focus-visible {
+                outline: @size-focus-ring solid @color-focus;
+                outline-offset: -@size-focus-ring;
+            }
+
             &--selected {
+                background-color: @color-control-active;
+                color: @color-control-fore;
                 overflow: hidden;
-                visibility: hidden;
                 white-space: nowrap;
             }
         }
@@ -74,7 +95,6 @@
     &--open &__list {
         display: inline-block;
         margin-top: (@dropdown-height - @dropdown-item-active-height) / 2;
-        z-index: 1;
 
         &__item {
             min-height: @dropdown-item-active-height;
@@ -84,7 +104,7 @@
     &--open &__selected {
         height: @dropdown-item-active-height;
         margin-top: (@dropdown-height - @dropdown-item-active-height) / 2;
-        z-index: 2;
+        z-index: @z-index-dropdown + 1;
     }
 }
 

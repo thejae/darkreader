@@ -26,6 +26,7 @@
 
 html {
     background-color: @color-back;
+    caret-color: @color-heading;
     color: @color-fore;
     color-scheme: dark;
     font-family: @font-family;
@@ -37,9 +38,34 @@ body {
     font-size: @size-text-normal;
 }
 
-input, button {
+#logo {
+    display: inline-block;
+    font-size: @size-text-large;
+    height: @size-control-inner;
+    width: 15rem;
+}
+
+#title {
+    align-items: stretch;
+    display: inline-flex;
+    flex-direction: row;
+    font-size: @size-control-inner * 4 / 3;
+    font-weight: 100;
+    line-height: @size-control-inner;
+    height: @size-control-inner;
+    margin: 0 0 0 @indent-small;
+    text-transform: uppercase;
+    transform: translateY(-0.0625rem);
+}
+
+input, button, textarea, select {
     font-family: @font-family;
     font-size: @size-text-normal;
+}
+
+:focus-visible {
+    outline: @size-focus-ring solid @color-focus;
+    outline-offset: @size-border-inner;
 }
 
 ::-moz-selection {
@@ -50,6 +76,16 @@ input, button {
 ::selection {
     background-color: @color-selection-back;
     color: @color-selection-fore;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+    }
 }
 
 ::-webkit-scrollbar {
@@ -73,6 +109,9 @@ input, button {
     }
 }
 
-* {
-    scrollbar-color: @color-control-hover @color-back;
+@supports not selector(::-webkit-scrollbar) {
+    * {
+        scrollbar-color: @color-control-hover @color-back;
+        scrollbar-width: thin;
+    }
 }

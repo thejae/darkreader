@@ -255,7 +255,11 @@ export class Extension {
         // dies when an MV3 service worker is evicted. Register the listener on
         // every startup, so the menu keeps working after worker restarts; the
         // registeredContextMenus flag only guards the menu creation.
-        chrome.contextMenus.onClicked.addListener(Extension.contextMenuListener);
+        // contextMenus is an optional permission, so the API is undefined
+        // before the user grants it, and the startup must not depend on it.
+        if (chrome.contextMenus) {
+            chrome.contextMenus.onClicked.addListener(Extension.contextMenuListener);
+        }
         if (UserStorage.settings.enableContextMenus) {
             chrome.permissions.contains({permissions: ['contextMenus']}, (permitted) => {
                 if (permitted) {

@@ -13,26 +13,6 @@ html {
     padding: 0;
 }
 
-#logo {
-    display: inline-block;
-    font-size: @size-text-large;
-    height: @size-control-inner;
-    width: 15rem;
-}
-
-#title {
-    align-items: stretch;
-    display: inline-flex;
-    flex-direction: row;
-    font-size: @size-control-inner * 4 / 3;
-    font-weight: 100;
-    line-height: @size-control-inner;
-    height: @size-control-inner;
-    margin: 0 0 0 @indent-small;
-    text-transform: uppercase;
-    transform: translateY(-0.0625rem);
-}
-
 body {
     box-sizing: content-box;
     display: flex;
@@ -40,10 +20,6 @@ body {
     gap: @indent-small;
     margin: 0;
     padding: 1rem;
-}
-
-main {
-    flex: none;
 }
 
 .settings-tab-panel {
@@ -72,6 +48,20 @@ main {
         fill: currentColor;
         height: 75%;
         width: 75%;
+    }
+}
+
+.activation__success-message {
+    color: @color-fore;
+    text-align: center;
+}
+
+.activation__thumb-up {
+    text-align: center;
+
+    img {
+        height: 3rem;
+        width: 3rem;
     }
 }
 

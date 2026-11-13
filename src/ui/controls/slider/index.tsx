@@ -201,10 +201,46 @@ export default function Slider(props: SliderProps) {
         refreshOnWheel();
     }
 
+    function onKeydown(event: KeyboardEvent) {
+        const {min, max, step, onChange} = store.activeProps;
+        const current = getValue();
+        let next: number | null = null;
+        switch (event.key) {
+            case 'ArrowLeft':
+            case 'ArrowDown':
+                next = clamp(current - step, min, max);
+                break;
+            case 'ArrowRight':
+            case 'ArrowUp':
+                next = clamp(current + step, min, max);
+                break;
+            case 'Home':
+                next = min;
+                break;
+            case 'End':
+                next = max;
+                break;
+        }
+        if (next == null) {
+            return;
+        }
+        event.preventDefault();
+        onChange(stickToStep(next, step));
+    }
+
+    const value = stickToStep(getValue(), props.step);
+
     return (
         <span
             class={{'slider': true, 'slider--active': store.isActive}}
+            role="slider"
+            tabindex="0"
+            aria-valuemin={String(props.min)}
+            aria-valuemax={String(props.max)}
+            aria-valuenow={String(value)}
+            aria-valuetext={formattedValue}
             oncreate={onRootCreate}
+            onkeydown={onKeydown}
             onmousedown={onPointerDown}
         >
             <span

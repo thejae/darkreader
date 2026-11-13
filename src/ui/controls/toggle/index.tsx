@@ -30,17 +30,32 @@ export default function Toggle(props: ToggleProps) {
         'toggle__btn--active': !checked,
     };
 
+    function onKeydown(e: KeyboardEvent, value: boolean) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onChange && !checked && onChange(value);
+        }
+    }
+
     return (
         <span class={cls}>
             <span
                 class={clsOn}
+                role="button"
+                tabindex="0"
+                aria-pressed={String(checked)}
                 onclick={onChange ? () => !checked && onChange(true) : undefined}
+                onkeydown={(e: KeyboardEvent) => onKeydown(e, true)}
             >
                 {props.labelOn}
             </span>
             <span
                 class={clsOff}
+                role="button"
+                tabindex="0"
+                aria-pressed={String(checked)}
                 onclick={onChange ? () => checked && onChange(false) : undefined}
+                onkeydown={(e: KeyboardEvent) => onKeydown(e, false)}
             >
                 {props.labelOff}
             </span>

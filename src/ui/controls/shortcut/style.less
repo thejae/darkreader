@@ -1,18 +1,23 @@
 @import "../../theme";
 
 .shortcut {
+    border-radius: @size-radius;
     color: @color-fore;
     cursor: pointer;
     display: inline-block;
     font-size: @size-text-small;
     line-height: @size-text-small-height;
-    outline: none;
     text-align: center;
     text-decoration: none;
-    white-space: pre;
+    white-space: pre-wrap;
 
     &:hover {
         text-decoration: underline;
+    }
+
+    &:focus-visible {
+        outline: @size-focus-ring solid @color-focus;
+        outline-offset: @size-border-inner;
     }
 
     &--edit {
@@ -29,7 +34,8 @@
     }
 
     &:hover,
-    &--edit {
+    &--edit,
+    &:focus-visible {
         &::before {
             visibility: visible;
         }

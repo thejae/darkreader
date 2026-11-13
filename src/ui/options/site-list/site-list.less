@@ -27,7 +27,6 @@
         width: 100%;
 
         &:focus {
-            box-shadow: 0 0 0 @size-border @color-border;
             z-index: 1;
         }
     }
@@ -55,9 +54,16 @@
                 background-color: @color-control-active;
                 background-image: @icon-close;
             }
+
+            &:focus-visible {
+                outline: @size-focus-ring solid @color-focus;
+                outline-offset: -@size-focus-ring;
+            }
         }
 
-        &:hover .site-list__item__remove {
+        &:hover .site-list__item__remove,
+        &:focus-within .site-list__item__remove,
+        .site-list__item__remove:focus-visible {
             display: inline-block;
         }
     }

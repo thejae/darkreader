@@ -48,7 +48,7 @@ footer {
     p {
         margin: 0 0 @size-border 0;
         text-align: center;
-        white-space: pre;
+        white-space: pre-wrap;
     }
 }
 
@@ -94,6 +94,7 @@ footer {
 .donate-link {
     align-items: center;
     background-color: @color-control-active;
+    border-radius: @size-radius;
     color: @color-control-fore;
     cursor: pointer;
     display: inline-flex;
@@ -102,10 +103,15 @@ footer {
     margin: 0;
     position: relative;
     text-decoration: none;
-    transition: all @time-fast;
+    transition: background-color @time-fast, box-shadow @time-fast;
 
     &:hover {
-        box-shadow: 0 0 @indent-large @color-control-active;
+        box-shadow: 0 @size-border-inner @indent-large rgba(0, 0, 0, 0.4);
+    }
+
+    &:focus-visible {
+        outline: @size-focus-ring solid @color-focus;
+        outline-offset: @size-border-inner;
     }
 
     &__text {
@@ -137,65 +143,8 @@ footer {
     }
 }
 
-.mobile-link {
-    align-items: center;
-    background-color: @color-control-back;
-    border: @size-border solid @color-border;
-    border-bottom-left-radius: @size-text-normal-height;
-    border-top-left-radius: @size-text-normal-height;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: @indent-large;
-    position: relative;
-    text-decoration: none;
-    user-select: none;
-
-    &__icon {
-        background-image: url('../assets/images/mobile-icon-40x64.svg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        border-radius: 0.4375rem;
-        display: inline-block;
-        flex: none;
-        height: 2.8rem;
-        left: -@size-border;
-        overflow: hidden;
-        position: absolute;
-        width: 1.75rem;
-    }
-    &__text {
-        color: @color-control-fore;
-        flex: auto;
-        font-weight: bold;
-        height: @size-text-normal-height * 2;
-        line-height: @size-text-normal-height;
-        margin: @size-border 1rem @size-border 2rem;
-        text-align: center;
-        overflow: hidden;
-
-        &::after {
-            content: " →";
-            font-weight: bold;
-        }
-    }
-
-    &:hover {
-        background-color: @color-control-hover;
-    }
-
-    &:hover &__icon {
-        box-shadow: 0 0 0.5rem @color-fore;
-    }
-
-    &:active {
-        background-color: @color-control-active;
-    }
-}
-
+// Legacy mobile QR promotion markup is kept in components/body.tsx
+// but hidden; the visible flow lives in the news panel.
 .mobile-link {
     display: none;
 }
@@ -254,7 +203,7 @@ footer {
         box-shadow: none;
         box-sizing: border-box;
         grid-area: button;
-        transition: all @time-slow;
+        transition: background-color @time-slow, box-shadow @time-slow;
         width: 100%;
 
         &:hover {
@@ -368,7 +317,7 @@ footer {
     margin: 0;
     position: relative;
     text-decoration: none;
-    transition: all @time-fast;
+    transition: background-color @time-fast;
 
     &::before {
         background-color: @color-control-active;
@@ -394,8 +343,10 @@ footer {
 // Make popup borders the same
 // across platforms and browser versions
 
+@popup-border-width: 2px;
+
 body {
-    border: 2px solid white;
+    border: @popup-border-width solid white;
 }
 
 html:not(.mobile):not(.preview) body.ext-tall {
@@ -403,10 +354,10 @@ html:not(.mobile):not(.preview) body.ext-tall {
 }
 
 .overlay {
-    height: calc(100% - 4px);
-    left: 2px;
-    top: 2px;
-    width: calc(100% - 4px);
+    height: calc(100% - 2 * @popup-border-width);
+    left: @popup-border-width;
+    top: @popup-border-width;
+    width: calc(100% - 2 * @popup-border-width);
 }
 
 @import "./body/style";

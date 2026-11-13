@@ -95,6 +95,7 @@
     }
 
     &__close {
+        border-radius: @size-radius;
         color: @color-heading;
         cursor: pointer;
         display: inline-block;
@@ -104,6 +105,11 @@
         text-align: center;
         user-select: none;
         width: @size-control-inner;
+
+        &:focus-visible {
+            outline: @size-focus-ring solid @color-focus;
+            outline-offset: -@size-focus-ring;
+        }
 
         &:hover {
             background-color: fade(@color-control-active, 25%);

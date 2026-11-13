@@ -73,7 +73,7 @@ export function PerSiteConfigEditor(props: ConfigEditorProps): Malevic.Child {
             <div class="config-editor-per-site__search-wrapper">
                 <TextBox class="config-editor-per-site__search-input js-search" type="text" oninput={onSearchInput} placeholder="Search by URL" />
             </div>
-            <list class="config-editor-per-site__urls">
+            <ul class="config-editor-per-site__urls">
                 {filteredFixes.map((fix) => {
                     const text = fix.url.join(' ');
                     return <li>
@@ -91,7 +91,7 @@ export function PerSiteConfigEditor(props: ConfigEditorProps): Malevic.Child {
                         </Button>
                     </li>;
                 })}
-            </list>
+            </ul>
             {store.currentFix ? (
                 <ConfigEditor
                     text={fixText}

@@ -59,11 +59,26 @@ function Select(props: SelectProps) {
     function onKeyPress(e: KeyboardEvent) {
         const input = e.target as HTMLInputElement;
         if (e.key === 'Enter') {
-            const value = input.value;
+            const value = state.isExpanded && state.focusedIndex != null && state.focusedIndex >= 0
+                ? values[state.focusedIndex]
+                : input.value;
             input.blur();
             collapseList();
             props.onChange(value);
         }
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+        if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') {
+            return;
+        }
+        e.preventDefault();
+        const current = state.focusedIndex == null ? values.indexOf(props.value) : state.focusedIndex;
+        const nextIndex = Math.max(0, Math.min(values.length - 1, (current < 0 ? 0 : current) + (e.key === 'ArrowDown' ? 1 : -1)));
+        if (!state.isExpanded) {
+            expandList();
+        }
+        setState({focusedIndex: nextIndex});
     }
 
     function scrollToValue(value: string) {
@@ -121,6 +136,7 @@ function Select(props: SelectProps) {
                 props.class,
             ]}
             onrender={onRender}
+            onkeydown={onKeyDown}
         >
             <span class="select__line">
                 <TextBox
@@ -145,9 +161,15 @@ function Select(props: SelectProps) {
                     }}
                     onclick={onSelectOption}
                 />}
-                items={Object.entries(props.options).map(([value, content]) => (
+                items={Object.entries(props.options).map(([value, content], index) => (
                     <span
-                        class="select__option"
+                        class={{
+                            'select__option': true,
+                            'select__option--focused': index === state.focusedIndex,
+                            'select__option--selected': value === props.value,
+                        }}
+                        role="option"
+                        aria-selected={String(value === props.value)}
                         data={value}
                         onrender={(domNode) => saveValueNode(value, domNode)}
                         onremove={() => removeValueNode(value)}

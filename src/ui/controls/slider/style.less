@@ -9,14 +9,21 @@
 @slider-thumb-color: @color-control-fore;
 
 .slider {
+    border-radius: @size-radius;
     display: inline-block;
     height: @slider-height;
     position: relative;
     touch-action: none;
     width: 100%;
 
+    &:focus-visible {
+        outline: @size-focus-ring solid @color-focus;
+        outline-offset: @size-border-inner;
+    }
+
     &__track {
         background-color: @slider-track-color;
+        border-radius: @size-radius;
         display: inline-block;
         height: @slider-track-height;
         margin-left: @slider-thumb-width / 2;
@@ -66,12 +73,14 @@
 
     &__thumb {
         background-color: @slider-thumb-color;
+        border-radius: @size-radius;
         cursor: pointer;
         display: inline-block;
         height: @slider-thumb-size;
         margin-left: -@slider-thumb-width / 2;
         margin-top: (@slider-height - @slider-thumb-size) / 2;
         position: absolute;
+        transition: height @time-fast, margin-top @time-fast, box-shadow @time-fast;
         width: @slider-thumb-width;
 
         &__value {
@@ -91,7 +100,7 @@
     }
 
     &--active &__thumb {
-        box-shadow: 0 0 0.25rem black;
+        box-shadow: 0 0 0 @size-border-inner @color-control-active;
         height: @slider-thumb-active-size;
         margin-top: (@slider-height - @slider-thumb-active-size) / 2;
 
@@ -107,5 +116,19 @@
 
     &__value {
         display: none;
+        left: 0;
+        line-height: @slider-height;
+        pointer-events: none;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        -moz-user-select: none;
+        user-select: none;
+    }
+
+    &:hover &__value,
+    &:focus-visible &__value,
+    &--active &__value {
+        display: block;
     }
 }

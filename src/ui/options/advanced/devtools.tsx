@@ -13,7 +13,7 @@ export function DevTools(): Malevic.Child {
         <ControlGroup>
             <ControlGroup.Control>
                 <NavButton onClick={openDevTools} class="advanced__dev-tools-button">
-                    🛠 {getLocalMessage('open_dev_tools')}
+                    {getLocalMessage('open_dev_tools')}
                 </NavButton>
             </ControlGroup.Control>
             <ControlGroup.Description>
