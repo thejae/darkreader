@@ -14,7 +14,7 @@ interface NewsmakerState extends Record<string, unknown> {
     latestTimestamp: number | null;
 }
 
-let newsForTesting: News[] | null = [{
+const newsForTesting: News[] | null = [{
     id: 'some',
     date: '10',
     url: '/',
@@ -211,11 +211,5 @@ export default class Newsmaker {
 
     private static wasDisplayed(id: string, displayedNews: string[]): boolean {
         return displayedNews.includes(id);
-    }
-}
-
-export function setNewsForTesting(news: News[]): void {
-    if (__TEST__) {
-        newsForTesting = news;
     }
 }

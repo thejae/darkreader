@@ -1,6 +1,7 @@
 # Unreleased (2026-11-13)
 
 - Edge: Every `git push` now builds the Edge extension into `edge-build/` (pre-push hook + `scripts/build-edge.ps1`), ready for `edge://extensions` -> Load unpacked.
+- Popup: Removed the anniversary banner, the "Pay for using Dark Reader" boxes, the news and mobile QR panels, and the Help/News/Mobile footer buttons to simplify the interface.
 
 # 4.9.135 (November 6, 2026)
 

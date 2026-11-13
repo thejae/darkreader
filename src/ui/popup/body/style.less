@@ -80,76 +80,6 @@
         }
     }
 
-    .m-donate-group {
-        align-items: stretch;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .m-donate-button {
-        align-items: center;
-        background-color: @color-control-back;
-        border: @size-border solid @color-border;
-        border-radius: @size-radius;
-        box-sizing: border-box;
-        display: inline-flex;
-        height: @size-control-inner + 2 * @size-border;
-        isolation: isolate;
-        justify-content: center;
-        text-decoration: none;
-        transition: background-color @time-slow;
-        position: relative;
-        width: 100%;
-
-        &__text {
-            color: @color-control-fore;
-            display: inline-block;
-            font-weight: bold;
-            height: @size-control-inner;
-            line-height: @size-control-inner;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        &__darkreader {
-            color: @color-heading;
-            text-transform: uppercase;
-            -webkit-text-stroke: 0.0625rem;
-        }
-
-        &__icon {
-            display: none;
-            isolation: isolate;
-
-            &::before,
-            &::after {
-                border-radius: 50%;
-                content: "";
-                display: inline-block;
-                height: 1rem;
-                mix-blend-mode: screen;
-                position: absolute;
-                top: 0.375rem;
-                width: 1rem;
-            }
-    
-            &::before {
-                background-color: @color-heading;
-                left: 0.375rem;
-            }
-
-            &::after {
-                background-color: @color-fore;
-                left: 1rem;
-            }
-        }
-
-        &:hover {
-            background-color: @color-control-hover;
-        }
-    }
-
-    .m-donate-description,
     .darkreader-version {
         display: inline-block;
         font-size: @size-text-small;
@@ -188,12 +118,6 @@
     @import "../theme/controls/mode.less";
     @import "../theme/page/style.less";
     @import "../theme/preset-picker/style.less";
-}
-
-.preview {
-    .m-body-short {
-        height: @popup-content-height - 2.5rem;
-    }
 }
 
 .mobile.firefox {
