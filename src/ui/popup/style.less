@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     width: 376px;
+    max-width: 100vw;
     background: #171522;
     color: #f9f7ff;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -17,8 +18,8 @@ body {
 
 .dr-d06b {
     position: relative;
-    width: 376px;
-    max-width: 800px;
+    width: 100%;
+    max-width: 100%;
     max-height: 600px;
     border-radius: 0;
     overflow: hidden;
@@ -32,7 +33,8 @@ body {
     --d06b-scroll-thumb-hover: rgba(196, 181, 253, 0.6);
 
     &.is-site-mode {
-        border-color: rgba(245, 158, 11, 0.55);
+        border-color: rgba(245, 158, 11, 0.65);
+        box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.45);
         --d06b-scroll-thumb: rgba(251, 191, 36, 0.36);
         --d06b-scroll-thumb-hover: rgba(251, 191, 36, 0.68);
 
@@ -568,13 +570,15 @@ body {
         width: 100%;
         height: 5px;
         border-radius: 999px;
+        --fill-stop: calc(7px + (100% - 14px) * var(--ratio, 0.5));
         background: linear-gradient(
             90deg,
             #f472b6 0%,
-            #a855f7 var(--pct, 50%),
-            rgba(255, 255, 255, 0.15) var(--pct, 50%)
+            #a855f7 var(--fill-stop),
+            rgba(255, 255, 255, 0.15) var(--fill-stop)
         );
         outline: none;
+        cursor: pointer;
 
         &::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -582,6 +586,16 @@ body {
             height: 14px;
             border-radius: 50%;
             background: #fff;
+            cursor: pointer;
+        }
+
+        &::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border: none;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
         }
     }
 

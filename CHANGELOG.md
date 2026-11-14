@@ -1,3 +1,9 @@
+# 4.10.1 (November 15, 2026)
+
+- Fixed **Fine-Tune Optics** sliders so the track fill, percentage readout, and thumb stay synchronized while dragging and align with the thumb center.
+- Fixed popup-to-page option mappings: toggling On/Off now overrides active global/site schedules, site-mode custom themes take precedence over built-in defaults, and `Surface Darkness` and `Images & Media` updates apply immediately via dynamic theme static style overrides.
+- Fixed the site-mode amber border being clipped on the right edge of the popup by clamping `html, body` with `max-width: 100vw` and adding an inset border shadow.
+
 # 4.10.0 (November 14, 2026)
 
 - Replaced the extension popup UI with Design Option 6b (Arc Spatial Glass — Site-Scoped Sandbox Variant), including Live Mini-Preview Card, Global vs. Site-Scoped Sandbox, Quick Moods (`Balanced`, `Warm Read`, `Cinema`, `Midnight Ink`), Surface Darkness (`Slate`, `Charcoal`, `OLED`), Images & Media brightness, and per-site/global Auto-Schedule (`Off`, `Hours`, `Sunset` with country picker and GPS).

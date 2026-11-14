@@ -832,6 +832,7 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
         'darkSchemeBackgroundColor',
         'darkSchemeTextColor',
         'grayscale',
+        'imageBrightness',
         'lightSchemeBackgroundColor',
         'lightSchemeTextColor',
         'sepia',
@@ -857,6 +858,7 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
         }
 
         if (onlyColorsChanged) {
+            createStaticStyleOverrides();
             const palette = getColorPalette();
             clearColorPalette();
             palette.background.forEach((color) => modifyBackgroundColor(color, theme!));

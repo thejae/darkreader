@@ -16,6 +16,7 @@ import type {
     SiteScheduleConfig,
     SurfaceTone,
     Theme,
+    UserSettings,
 } from '../../definitions';
 import {FilterMode} from '../../generators/css-filter';
 import {AutomationMode} from '../../utils/automation';
@@ -172,8 +173,8 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
 
     function setEnabled(next: boolean) {
         if (isSiteMode) {
-            const nextEnabledFor = settings.enabledFor.filter((u) => u !== host);
-            const nextDisabledFor = settings.disabledFor.filter((u) => u !== host);
+            const nextEnabledFor = settings.enabledFor.filter((u) => u !== host && !isURLInList(tabURL, [u]));
+            const nextDisabledFor = settings.disabledFor.filter((u) => u !== host && !isURLInList(tabURL, [u]));
             if (next) {
                 nextEnabledFor.push(host);
             } else {
@@ -182,14 +183,24 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
             const nextCustomThemes = customThemeEntry
                 ? settings.customThemes
                 : [...settings.customThemes, {url: [host], theme: {...settings.theme}}];
-            actions.changeSettings({
+            const patch: Partial<UserSettings> = {
                 enabledFor: nextEnabledFor,
                 disabledFor: nextDisabledFor,
                 customThemes: nextCustomThemes,
-            });
+            };
+            if (siteSchedule && siteSchedule.mode !== 'off') {
+                patch.siteSchedules = {
+                    ...(settings.siteSchedules ?? {}),
+                    [host]: {...siteSchedule, mode: 'off'},
+                };
+            }
+            actions.changeSettings(patch);
             return;
         }
-        actions.changeSettings({enabled: next});
+        actions.changeSettings({
+            enabled: next,
+            automation: {...settings.automation, enabled: false},
+        });
     }
 
     function updateTheme(patch: Partial<Theme>) {
@@ -800,9 +811,41 @@ interface ArcBSliderProps {
     onChange: (v: number) => void;
 }
 
-function ArcBSlider(props: ArcBSliderProps) {
-    const pct = ((props.value - props.min) / (props.max - props.min)) * 100;
-    const isDirty = props.value !== props.defaultValue;
+interface ArcBSliderState {
+    isDragging: boolean;
+    draftValue: number | null;
+    lastPropValue: number;
+    lastInputTime: number;
+}
+
+/**
+ * Range slider with optimistic local state during drags so the track fill,
+ * percentage readout, and thumb stay in sync without waiting for background
+ * settings round-trips.
+ */
+const ArcBSlider = withState(function ArcBSlider(props: ArcBSliderProps, ..._children: any[]) {
+    const {state, setState} = useState<ArcBSliderState>({
+        isDragging: false,
+        draftValue: null,
+        lastPropValue: props.value,
+        lastInputTime: 0,
+    });
+
+    if (props.value !== state.lastPropValue) {
+        state.lastPropValue = props.value;
+        if (
+            state.draftValue !== null &&
+            (props.value === state.draftValue || (!state.isDragging && Date.now() - state.lastInputTime > 250))
+        ) {
+            state.draftValue = null;
+        }
+    }
+
+    const displayValue = state.draftValue ?? props.value;
+    const ratio = Math.min(1, Math.max(0, (displayValue - props.min) / (props.max - props.min)));
+    const pct = ratio * 100;
+    const isDirty = displayValue !== props.defaultValue;
+
     return (
         <div class="d06b-slider">
             <div class="d06b-slider-head">
@@ -814,20 +857,40 @@ function ArcBSlider(props: ArcBSliderProps) {
                     class="d06b-range"
                     min={props.min}
                     max={props.max}
-                    value={String(props.value)}
-                    style={`--pct: ${pct}%`}
+                    value={String(displayValue)}
+                    style={{'--pct': `${pct}%`, '--ratio': String(ratio)}}
                     onrender={(el: Element) => {
-                        (el as HTMLInputElement).value = String(props.value);
+                        if (!state.isDragging) {
+                            (el as HTMLInputElement).value = String(displayValue);
+                        }
                     }}
-                    oninput={(e: Event) => props.onChange(Number((e.target as HTMLInputElement).value))}
+                    oninput={(e: Event) => {
+                        const next = Number((e.target as HTMLInputElement).value);
+                        setState({
+                            isDragging: true,
+                            draftValue: next,
+                            lastInputTime: Date.now(),
+                        });
+                        props.onChange(next);
+                    }}
+                    onchange={(e: Event) => {
+                        const next = Number((e.target as HTMLInputElement).value);
+                        setState({
+                            isDragging: false,
+                            draftValue: props.value === next ? null : next,
+                        });
+                    }}
                 />
-                <span class="d06b-slider-val">{`${props.value}%`}</span>
+                <span class="d06b-slider-val">{`${displayValue}%`}</span>
                 <button
                     type="button"
                     class={`d06b-slider-reset ${isDirty ? 'is-dirty' : ''}`}
                     title={`Reset ${props.label} to ${props.defaultValue}%`}
                     aria-label={`Reset ${props.label} to default`}
-                    onclick={() => props.onChange(props.defaultValue)}
+                    onclick={() => {
+                        setState({isDragging: false, draftValue: null, lastInputTime: 0});
+                        props.onChange(props.defaultValue);
+                    }}
                 >
                     <svg viewBox="0 0 14 14" aria-hidden="true">
                         <path
@@ -843,7 +906,7 @@ function ArcBSlider(props: ArcBSliderProps) {
             </div>
         </div>
     );
-}
+});
 
 /**
  * Offline & CSP-safe country flag renderer: inline SVGs for popular countries

@@ -716,7 +716,9 @@ export class Extension {
             : ((Extension.isExtensionSwitchedOn() || isExplicitlyEnabledForSite) && isURLEnabled(tabURL, settings, tabInfo) && !topFrameHasDarkTheme);
 
         if (isTabActive) {
-            const custom = settings.customThemes.find(({url: urlList}) => isURLInList(tabURL, urlList));
+            const custom =
+                settings.customThemes.find((c) => !c.builtIn && isURLInList(tabURL, c.url)) ??
+                settings.customThemes.find(({url: urlList}) => isURLInList(tabURL, urlList));
             const preset = custom ? null : settings.presets.find(({urls}) => isURLInList(tabURL, urls));
             let theme = custom ? custom.theme : preset ? preset.theme : settings.theme;
             if (Extension.autoState === 'scheme-dark' || Extension.autoState === 'scheme-light') {
