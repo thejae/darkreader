@@ -1,3 +1,7 @@
+# 4.10.2 (November 15, 2026)
+
+- Fixed the popup collapsing to a thin strip by restoring explicit `width: 376px` (removing `max-width: 100vw`) on `html, body` and `.dr-d06b`, while keeping a `2px` inset amber border shadow on `.is-site-mode` so all four edges remain visible.
+
 # 4.10.1 (November 15, 2026)
 
 - Fixed **Fine-Tune Optics** sliders so the track fill, percentage readout, and thumb stay synchronized while dragging and align with the thumb center.
