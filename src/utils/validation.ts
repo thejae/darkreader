@@ -184,6 +184,7 @@ export function validateSettings(settings: Partial<UserSettings>): SettingValida
     validateProperty(settings, 'enableForProtectedPages', isBoolean, DEFAULT_SETTINGS);
     validateProperty(settings, 'enableContextMenus', isBoolean, DEFAULT_SETTINGS);
     validateProperty(settings, 'detectDarkTheme', isBoolean, DEFAULT_SETTINGS);
+    validateProperty(settings, 'siteSchedules', isPlainObject, DEFAULT_SETTINGS);
 
     return {errors, settings};
 }
@@ -219,6 +220,8 @@ export function validateTheme(theme: Partial<Theme> | null | undefined): ThemeVa
     validateProperty(theme, 'lightColorScheme', isNonEmptyString, DEFAULT_THEME);
     validateProperty(theme, 'darkColorScheme', isNonEmptyString, DEFAULT_THEME);
     validateProperty(theme, 'immediateModify', isBoolean, DEFAULT_THEME);
+    validateProperty(theme, 'imageBrightness', isNumberBetween(50, 100), DEFAULT_THEME);
+    validateProperty(theme, 'surfaceTone', isOneOf('slate', 'charcoal', 'oled'), DEFAULT_THEME);
 
     return {errors, theme};
 }

@@ -302,6 +302,11 @@ function createStaticStyleOverrides() {
     staticStyleInjector.inject('text', theme!.useFont || theme!.textStroke > 0 ? createTextStyle(theme!) : '', 'beginning');
     staticStyleInjector.inject('invert', getInversionStyleValue(), 'beginning');
     staticStyleInjector.inject('inline', getInlineOverrideStyle(), 'beginning');
+    const imageBrightness = theme!.imageBrightness ?? 100;
+    const imageBrightnessCSS = imageBrightness < 100
+        ? `img, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`
+        : '';
+    staticStyleInjector.inject('image-brightness', imageBrightnessCSS, 'beginning');
 
     const selectionColors = theme?.selectionColor ? getSelectionColor(theme) : null;
     const neutralBackgroundColor = modifyBackgroundColor(parseColorWithCache('#ffffff')!, theme!);
@@ -830,6 +835,7 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
         'lightSchemeBackgroundColor',
         'lightSchemeTextColor',
         'sepia',
+        'surfaceTone',
     ];
 
     if (prevTheme && prevFixes) {

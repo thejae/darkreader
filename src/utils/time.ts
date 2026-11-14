@@ -303,3 +303,31 @@ export function nextTimeChangeAtLocation(
     //                                    Current time
     return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1, 0, 0, 0, firstTimeOnDay);
 }
+
+/**
+ * Formats local sunrise and sunset times (HH:MM) for a given geographic coordinate.
+ */
+export function getSunsetSunriseLocalTimes(
+    latitude: number,
+    longitude: number,
+    date: Date = new Date(),
+): {sunrise: string; sunset: string} {
+    const time = getSunsetSunriseUTCTime(latitude, longitude, date);
+    if (time.alwaysDay) {
+        return {sunrise: '00:00', sunset: '23:59'};
+    }
+    if (time.alwaysNight) {
+        return {sunrise: '23:59', sunset: '00:00'};
+    }
+    const utcMidnight = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    const fmt = (utcMs: number): string => {
+        const d = new Date(utcMidnight + utcMs);
+        const h = String(d.getHours()).padStart(2, '0');
+        const m = String(d.getMinutes()).padStart(2, '0');
+        return `${h}:${m}`;
+    };
+    return {
+        sunrise: fmt(time.sunriseTime!),
+        sunset: fmt(time.sunsetTime!),
+    };
+}

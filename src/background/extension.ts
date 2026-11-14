@@ -700,7 +700,22 @@ export class Extension {
     private static getTabMessage = (tabURL: string, url: string, isTopFrame: boolean, topFrameHasDarkTheme?: boolean): TabData => {
         const settings = UserStorage.settings;
         const tabInfo = Extension.getTabInfo(tabURL);
-        if (Extension.isExtensionSwitchedOn() && isURLEnabled(tabURL, settings, tabInfo) && !topFrameHasDarkTheme) {
+        const host = getURLHostOrProtocol(tabURL);
+        const siteSchedule = settings.siteSchedules?.[host];
+        let siteScheduleActive: boolean | null = null;
+        if (siteSchedule && siteSchedule.mode !== 'off') {
+            if (siteSchedule.mode === 'time') {
+                siteScheduleActive = isInTimeIntervalLocal(siteSchedule.startTime, siteSchedule.endTime);
+            } else if (siteSchedule.mode === 'location' && siteSchedule.latitude != null && siteSchedule.longitude != null) {
+                siteScheduleActive = isNightAtLocation(siteSchedule.latitude, siteSchedule.longitude);
+            }
+        }
+        const isExplicitlyEnabledForSite = isURLInList(tabURL, settings.enabledFor);
+        const isTabActive = siteScheduleActive !== null
+            ? (siteScheduleActive && !topFrameHasDarkTheme && !(tabInfo.isProtected && !settings.enableForProtectedPages))
+            : ((Extension.isExtensionSwitchedOn() || isExplicitlyEnabledForSite) && isURLEnabled(tabURL, settings, tabInfo) && !topFrameHasDarkTheme);
+
+        if (isTabActive) {
             const custom = settings.customThemes.find(({url: urlList}) => isURLInList(tabURL, urlList));
             const preset = custom ? null : settings.presets.find(({urls}) => isURLInList(tabURL, urls));
             let theme = custom ? custom.theme : preset ? preset.theme : settings.theme;

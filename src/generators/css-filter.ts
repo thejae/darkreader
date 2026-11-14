@@ -74,6 +74,12 @@ export function cssFilterStyleSheetTemplate(filterRoot: string, filterValue: str
         lines.push(fix.css);
     }
 
+    if ((config.imageBrightness ?? 100) < 100) {
+        lines.push('');
+        lines.push('/* Image brightness */');
+        lines.push(`img, video, picture, canvas { filter: brightness(${config.imageBrightness}%) !important; }`);
+    }
+
     lines.push('');
     lines.push('}');
 

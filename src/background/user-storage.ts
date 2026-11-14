@@ -26,6 +26,8 @@ export default class UserStorage {
     private static fillDefaults(settings: UserSettings) {
         settings.theme = {...DEFAULT_THEME, ...settings.theme};
         settings.time = {...DEFAULT_SETTINGS.time, ...settings.time};
+        settings.location = {...DEFAULT_SETTINGS.location, ...settings.location};
+        settings.siteSchedules = settings.siteSchedules ?? {};
         settings.presets.forEach((preset) => {
             preset.theme = {...DEFAULT_THEME, ...preset.theme};
         });

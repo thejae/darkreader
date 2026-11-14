@@ -6,6 +6,17 @@ import type {DebugMessageTypeBGtoCS, DebugMessageTypeBGtoUI, DebugMessageTypeCSt
 
 export type ColorScheme = 'dark' | 'light';
 
+export type SurfaceTone = 'slate' | 'charcoal' | 'oled';
+
+export interface SiteScheduleConfig {
+    mode: 'off' | 'time' | 'location';
+    startTime: string;
+    endTime: string;
+    latitude: number | null;
+    longitude: number | null;
+    cityName: string;
+}
+
 export interface ExtensionData {
     isEnabled: boolean;
     isReady: boolean;
@@ -73,6 +84,10 @@ export interface Theme {
     lightColorScheme: string;
     darkColorScheme: string;
     immediateModify: boolean;
+    /** Brightness percentage applied specifically to images & media (50 to 100, default 100). */
+    imageBrightness?: number;
+    /** Background surface darkness tone when in Dark mode. */
+    surfaceTone?: SurfaceTone;
 }
 
 export interface CustomSiteConfig {
@@ -116,6 +131,8 @@ export interface UserSettings {
     enableForProtectedPages: boolean;
     enableContextMenus: boolean;
     detectDarkTheme: boolean;
+    /** Per-domain schedule overrides keyed by hostname. */
+    siteSchedules?: Record<string, SiteScheduleConfig>;
 }
 
 export interface TimeSettings {
@@ -126,6 +143,8 @@ export interface TimeSettings {
 export interface LocationSettings {
     latitude: number | null;
     longitude: number | null;
+    /** Human-readable city/country or GPS label for the selected coordinates. */
+    name?: string;
 }
 
 export interface TabInfo {
