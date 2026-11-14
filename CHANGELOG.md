@@ -1,3 +1,10 @@
+# 4.10.0 (November 14, 2026)
+
+- Replaced the extension popup UI with Design Option 6b (Arc Spatial Glass — Site-Scoped Sandbox Variant), including Live Mini-Preview Card, Global vs. Site-Scoped Sandbox, Quick Moods (`Balanced`, `Warm Read`, `Cinema`, `Midnight Ink`), Surface Darkness (`Slate`, `Charcoal`, `OLED`), Images & Media brightness, and per-site/global Auto-Schedule (`Off`, `Hours`, `Sunset` with country picker and GPS).
+- Removed rounded outer corners on the extension popup container.
+- Removed automatic opening of `https://darkreader.org/help/en/` upon extension installation.
+- Documented unmapped legacy popup features dropped from the new UI in `docs/unmapped-features.md`.
+
 # 4.9.135 (November 6, 2026)
 
 - Edge iOS: Update user interface.
