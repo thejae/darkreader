@@ -1,3 +1,7 @@
+# 4.10.4 (November 15, 2026)
+
+- Set `.dr-d06b` width to `375px` inside the `376px` `html, body` container so the `1px` right border sits inside Chrome's popup clip boundary and renders cleanly on all four sides.
+
 # 4.10.3 (November 15, 2026)
 
 - Restored the site-mode popup outline to `1px` by removing the `2px` inset `box-shadow` on `.dr-d06b.is-site-mode`.
