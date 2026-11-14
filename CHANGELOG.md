@@ -1,3 +1,7 @@
+# 4.10.5 (November 15, 2026)
+
+- Fixed dynamic theme fast-path updates (`onlyColorsChanged`) to use a dedicated `updateColorStaticOverrides()` helper instead of calling `createStaticStyleOverrides()`, avoiding redundant `__darkreader__cleanUp` dispatches and proxy script re-injections while keeping `Surface Darkness`, `Images & Media`, and filter sliders updating live on the page.
+
 # 4.10.4 (November 15, 2026)
 
 - Set `.dr-d06b` width to `375px` inside the `376px` `html, body` container so the `1px` right border sits inside Chrome's popup clip boundary and renders cleanly on all four sides.

@@ -282,6 +282,39 @@ function getInversionStyleValue(): string {
     return rules.join('\n');
 }
 
+function getImageBrightnessCSS(themeConfig: Theme): string {
+    const imageBrightness = themeConfig.imageBrightness ?? 100;
+    return imageBrightness < 100
+        ? `img, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`
+        : '';
+}
+
+function getVariablesStyleContent(themeConfig: Theme): string {
+    const selectionColors = themeConfig.selectionColor ? getSelectionColor(themeConfig) : null;
+    const neutralBackgroundColor = modifyBackgroundColor(parseColorWithCache('#ffffff')!, themeConfig);
+    const neutralTextColor = modifyForegroundColor(parseColorWithCache('#000000')!, themeConfig);
+    return [
+        `:root {`,
+        `   --darkreader-neutral-background: ${neutralBackgroundColor};`,
+        `   --darkreader-neutral-text: ${neutralTextColor};`,
+        `   --darkreader-selection-background: ${selectionColors?.backgroundColorSelection ?? 'initial'};`,
+        `   --darkreader-selection-text: ${selectionColors?.foregroundColorSelection ?? 'initial'};`,
+        `}`,
+    ].join('\n');
+}
+
+function updateColorStaticOverrides() {
+    if (!staticStyleInjector) {
+        return;
+    }
+    staticStyleInjector.inject('fallback', getModifiedFallbackStyle(theme!, {strict: true}), 'beginning');
+    staticStyleInjector.inject('user-agent', getModifiedUserAgentStyle(theme!, isIFrame!, theme!.styleSystemControls), 'beginning');
+    staticStyleInjector.inject('invert', getInversionStyleValue(), 'beginning');
+    staticStyleInjector.inject('image-brightness', getImageBrightnessCSS(theme!), 'beginning');
+    const variableSheet = staticStyleInjector.inject('variables', getVariablesStyleContent(theme!), 'beginning', () => registerVariablesSheet(variableSheet));
+    registerVariablesSheet(variableSheet);
+}
+
 function createStaticStyleOverrides() {
     if (!staticStyleInjector) {
         staticStyleInjector = createStaticStyleInjector();
@@ -302,24 +335,9 @@ function createStaticStyleOverrides() {
     staticStyleInjector.inject('text', theme!.useFont || theme!.textStroke > 0 ? createTextStyle(theme!) : '', 'beginning');
     staticStyleInjector.inject('invert', getInversionStyleValue(), 'beginning');
     staticStyleInjector.inject('inline', getInlineOverrideStyle(), 'beginning');
-    const imageBrightness = theme!.imageBrightness ?? 100;
-    const imageBrightnessCSS = imageBrightness < 100
-        ? `img, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`
-        : '';
-    staticStyleInjector.inject('image-brightness', imageBrightnessCSS, 'beginning');
+    staticStyleInjector.inject('image-brightness', getImageBrightnessCSS(theme!), 'beginning');
 
-    const selectionColors = theme?.selectionColor ? getSelectionColor(theme) : null;
-    const neutralBackgroundColor = modifyBackgroundColor(parseColorWithCache('#ffffff')!, theme!);
-    const neutralTextColor = modifyForegroundColor(parseColorWithCache('#000000')!, theme!);
-    const variableStyleContent = [
-        `:root {`,
-        `   --darkreader-neutral-background: ${neutralBackgroundColor};`,
-        `   --darkreader-neutral-text: ${neutralTextColor};`,
-        `   --darkreader-selection-background: ${selectionColors?.backgroundColorSelection ?? 'initial'};`,
-        `   --darkreader-selection-text: ${selectionColors?.foregroundColorSelection ?? 'initial'};`,
-        `}`,
-    ].join('\n');
-    const variableSheet = staticStyleInjector.inject('variables', variableStyleContent, 'beginning', () => registerVariablesSheet(variableSheet));
+    const variableSheet = staticStyleInjector.inject('variables', getVariablesStyleContent(theme!), 'beginning', () => registerVariablesSheet(variableSheet));
     registerVariablesSheet(variableSheet);
     staticStyleInjector.inject('root-vars', '', 'beginning');
 
@@ -858,7 +876,7 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
         }
 
         if (onlyColorsChanged) {
-            createStaticStyleOverrides();
+            updateColorStaticOverrides();
             const palette = getColorPalette();
             clearColorPalette();
             palette.background.forEach((color) => modifyBackgroundColor(color, theme!));
