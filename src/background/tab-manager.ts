@@ -477,19 +477,19 @@ export default class TabManager {
         });
     }
 
-    // sendMessage will send a tab messages to all active tabs and their frames.
-    // If onlyUpdateActiveTab is specified, it will only send a new message to any
-    // tab that matches the active tab's hostname. This is to ensure that when a user
-    // has multiple tabs of the same website, every tab will receive the new message
-    // and not just that tab as Dark Reader currently doesn't have per-tab operations,
-    // this should be the expected behavior.
-    static async sendMessage(onlyUpdateActiveTab = false): Promise<void> {
+    private static activeSendTimer: ReturnType<typeof setTimeout> | null = null;
+    private static lastActiveSendTime = 0;
+    private static backgroundSendTimer: ReturnType<typeof setTimeout> | null = null;
+    private static pendingBackgroundOnlyActive = true;
+
+    private static async dispatchTabMessages(onlyUpdateActiveTab: boolean, target: 'active' | 'background'): Promise<void> {
         TabManager.timestamp++;
 
         const activeTabHostname = onlyUpdateActiveTab ? getURLHostOrProtocol(await TabManager.getActiveTabURL()) : null;
 
         (await queryTabs({discarded: false}))
             .filter((tab) => Boolean(TabManager.tabs[tab.id!]))
+            .filter((tab) => (target === 'active' ? Boolean(tab.active) : !tab.active))
             .forEach((tab) => {
                 const frames = TabManager.tabs[tab.id!];
                 Object.entries(frames)
@@ -506,18 +506,50 @@ export default class TabManager {
                         const message = TabManager.getTabMessage(tabURL, url!, isTop || false);
                         message.scriptId = scriptId;
 
-                        if (tab.active && isTop) {
-                            TabManager.sendDocumentMessage(tab!.id!, documentId!, message, frameId);
-                        } else {
-                            setTimeout(() => {
-                                TabManager.sendDocumentMessage(tab!.id!, documentId!, message, frameId);
-                            });
-                        }
+                        TabManager.sendDocumentMessage(tab!.id!, documentId!, message, frameId);
                         if (TabManager.tabs[tab.id!][frameId]) {
                             TabManager.tabs[tab.id!][frameId].timestamp = TabManager.timestamp;
                         }
                     });
             });
+    }
+
+    // sendMessage will send a tab messages to all active tabs and their frames.
+    // Active tab updates are leading+trailing throttled (50ms) so the first toggle feels instant
+    // while rapid bursts coalesce; background tabs are debounced (300ms) so they never block.
+    static async sendMessage(onlyUpdateActiveTab = false): Promise<void> {
+        const ACTIVE_THROTTLE_MS = 50;
+        const BACKGROUND_DEBOUNCE_MS = 300;
+
+        const now = Date.now();
+        const elapsed = now - TabManager.lastActiveSendTime;
+        if (TabManager.activeSendTimer) {
+            clearTimeout(TabManager.activeSendTimer);
+            TabManager.activeSendTimer = null;
+        }
+        if (elapsed >= ACTIVE_THROTTLE_MS) {
+            TabManager.lastActiveSendTime = now;
+            await TabManager.dispatchTabMessages(onlyUpdateActiveTab, 'active');
+        } else {
+            TabManager.activeSendTimer = setTimeout(() => {
+                TabManager.activeSendTimer = null;
+                TabManager.lastActiveSendTime = Date.now();
+                TabManager.dispatchTabMessages(onlyUpdateActiveTab, 'active');
+            }, ACTIVE_THROTTLE_MS - elapsed);
+        }
+
+        if (!onlyUpdateActiveTab) {
+            TabManager.pendingBackgroundOnlyActive = false;
+        }
+        if (TabManager.backgroundSendTimer) {
+            clearTimeout(TabManager.backgroundSendTimer);
+        }
+        TabManager.backgroundSendTimer = setTimeout(() => {
+            TabManager.backgroundSendTimer = null;
+            const onlyActive = TabManager.pendingBackgroundOnlyActive;
+            TabManager.pendingBackgroundOnlyActive = true;
+            TabManager.dispatchTabMessages(onlyActive, 'background');
+        }, BACKGROUND_DEBOUNCE_MS);
     }
 
     static canAccessTab(tab: chrome.tabs.Tab | null): boolean {

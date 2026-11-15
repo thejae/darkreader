@@ -875,6 +875,20 @@ export function createOrUpdateDynamicTheme(theme: Theme, dynamicThemeFixes: Dyna
 
 let prevTheme: Theme | null = null;
 let prevFixes: Partial<DynamicThemeFix> | null = null;
+let lastFullRebuildTime = 0;
+let pendingRebuildTimer: ReturnType<typeof setTimeout> | null = null;
+
+function updateInlineSVGStyles() {
+    const svgSelector = 'svg[style], svg[fill], svg[stroke], svg [fill], svg [stroke], svg [stop-color], svg [style], img[src*=".svg" i], img[src^="data:image/svg+xml" i]';
+    const elements = toArray(document.querySelectorAll(svgSelector)) as HTMLElement[];
+    iterateShadowHosts(document.documentElement, (host) => {
+        const shadowElements = host.shadowRoot!.querySelectorAll(svgSelector);
+        if (shadowElements.length > 0) {
+            push(elements, shadowElements);
+        }
+    });
+    elements.forEach((el) => overrideInlineStyle(el, theme!, ignoredInlineSelectors, ignoredImageAnalysisSelectors));
+}
 
 /**
  * Note: This function should be directly used only in API builds, it is exported by this fle
@@ -896,6 +910,7 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
         'lightSchemeTextColor',
         'sepia',
         'surfaceTone',
+        'svgColorMode',
     ];
 
     if (prevTheme && prevFixes) {
@@ -918,11 +933,16 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
 
         if (onlyColorsChanged) {
             updateColorStaticOverrides();
+            if ((theme.svgColorMode ?? 'smart') !== (prevTheme.svgColorMode ?? 'smart')) {
+                updateInlineSVGStyles();
+            }
             const palette = getColorPalette();
             clearColorPalette();
             palette.background.forEach((color) => modifyBackgroundColor(color, theme!));
             palette.text.forEach((color) => modifyForegroundColor(color, theme!));
             palette.border.forEach((color) => modifyBorderColor(color, theme!));
+            prevTheme = theme;
+            prevFixes = fixes;
             return;
         }
 
@@ -972,7 +992,22 @@ export function createOrUpdateDynamicThemeInternal(themeConfig: Theme, dynamicTh
     };
 
     if (document.head) {
-        ready();
+        const REBUILD_COALESCE_MS = 60;
+        if (pendingRebuildTimer) {
+            clearTimeout(pendingRebuildTimer);
+            pendingRebuildTimer = null;
+        }
+        const elapsed = Date.now() - lastFullRebuildTime;
+        if (prevTheme && elapsed < REBUILD_COALESCE_MS) {
+            pendingRebuildTimer = setTimeout(() => {
+                pendingRebuildTimer = null;
+                lastFullRebuildTime = Date.now();
+                ready();
+            }, REBUILD_COALESCE_MS - elapsed);
+        } else {
+            lastFullRebuildTime = Date.now();
+            ready();
+        }
     } else {
         if (!isFirefox) {
             const fallbackStyle = createOrUpdateStyle('darkreader--fallback');
@@ -1085,6 +1120,10 @@ function setupDocumentPiPFontFix(): void {
 }
 
 export function removeDynamicTheme(): void {
+    if (pendingRebuildTimer) {
+        clearTimeout(pendingRebuildTimer);
+        pendingRebuildTimer = null;
+    }
     document.documentElement.removeAttribute(`data-darkreader-mode`);
     document.documentElement.removeAttribute(`data-darkreader-scheme`);
     cleanDynamicThemeCache();

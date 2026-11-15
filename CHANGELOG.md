@@ -1,3 +1,10 @@
+# 4.13.0 (November 15, 2026)
+
+- Improved responsiveness when rapidly toggling settings or dragging sliders:
+  - **Tab Messaging (`TabManager.sendMessage`)**: Added leading+trailing `50ms` throttling for active-tab updates (instant first response, coalesced rapid bursts) and `300ms` debouncing for background tabs so open background tabs no longer flood IPC or block the active tab.
+  - **Dynamic Theme Fast Path**: Added `svgColorMode` to `colorAffectingKeys` with targeted SVG inline-style updates (`updateInlineSVGStyles`), avoiding full stylesheet re-parses when switching between `Off`, `Smart Recolor`, and `Invert`.
+  - **Full Rebuild Coalescing**: Coalesced rapid back-to-back full dynamic-theme rebuilds (`60ms`) so intermediate toggles are skipped and only the latest state runs.
+
 # 4.12.6 (November 15, 2026)
 
 - Removed the obsolete `Check NPM dependencies` (`node tests/dependencies.js`) step from `.github/workflows/test-code.yml` (the script was removed in an earlier cleanup).
