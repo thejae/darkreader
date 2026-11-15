@@ -1,3 +1,7 @@
+# 4.10.9 (November 15, 2026)
+
+- Added an override notice banner in the Global sandbox view when the active site has a native dark theme, explaining that the site's native dark theme overrides Global settings and providing a one-click **Override** button to switch to **Customize This Site**.
+
 # 4.10.8 (November 15, 2026)
 
 - Added a clear `🌙 <host> (Native Dark Theme)` indicator in the popup preview header (replacing `(Global)`) when a site already uses a native dark theme or is in Dark Reader's dark-sites list, and updated `effectiveEnabled` to reflect that Dark Reader is paused unless overridden.

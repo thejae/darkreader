@@ -388,6 +388,22 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                                 View Site
                             </button>
                         </div>
+                    ) : hasNativeDarkTheme ? (
+                        <div class="d06b-global-override-notice">
+                            <div class="d06b-banner-text">
+                                <strong>{`🌙 ${host} has a native dark theme`}</strong>
+                                <span>
+                                    You can edit Global defaults below, but this site's native
+                                    dark theme will override them unless you customize this site.
+                                </span>
+                            </div>
+                            <button
+                                class="d06b-switch-site-btn"
+                                onclick={ensureSiteOverrideAndSwitchScope}
+                            >
+                                Override
+                            </button>
+                        </div>
                     ) : null}
 
                     {/* Scoped Extension Power (On / Off) */}
