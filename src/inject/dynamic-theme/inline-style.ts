@@ -286,23 +286,32 @@ export function stopWatchingForInlineStyles(): void {
     inlineStyleCache = new WeakMap();
     svgInversionCache = new WeakSet();
     svgAnalysisConditionCache = new WeakMap();
+    svgImgAnalysisCache = new WeakSet();
     resetInlineStyleLoopDetection();
 }
 
 let inlineStyleCache = new WeakMap<HTMLElement, string>();
 let svgInversionCache = new WeakSet<SVGSVGElement>();
 let svgAnalysisConditionCache = new WeakMap<SVGSVGElement, boolean>();
-const themeProps: Array<keyof Theme> = ['brightness', 'contrast', 'grayscale', 'sepia', 'mode'];
+let svgImgAnalysisCache = new WeakSet<HTMLImageElement>();
+const themeProps: Array<keyof Theme> = ['brightness', 'contrast', 'grayscale', 'sepia', 'mode', 'svgColorMode'];
+
+function hasLogoOrBrandHint(el: Element | null): boolean {
+    if (!el) {
+        return false;
+    }
+    const cls = el.getAttribute('class')?.toLowerCase() ?? '';
+    const id = el.getAttribute('id')?.toLowerCase() ?? '';
+    const label = el.getAttribute('aria-label')?.toLowerCase() ?? '';
+    return cls.includes('logo') || cls.includes('brand') || id.includes('logo') || id.includes('brand') || label.includes('logo') || label.includes('brand');
+}
 
 function shouldAnalyzeSVGAsImage(svg: SVGSVGElement) {
     if (svgAnalysisConditionCache.has(svg)) {
         return svgAnalysisConditionCache.get(svg);
     }
     const shouldAnalyze = Boolean(
-        svg && (
-            svg.getAttribute('class')?.includes('logo') ||
-            svg.parentElement?.getAttribute('class')?.includes('logo')
-        )
+        svg && (hasLogoOrBrandHint(svg) || hasLogoOrBrandHint(svg.parentElement)),
     );
     svgAnalysisConditionCache.set(svg, shouldAnalyze);
     return shouldAnalyze;
@@ -542,9 +551,38 @@ export function overrideInlineStyle(element: HTMLElement, theme: Theme, ignoreIn
         }
     }
 
+    const svgColorMode = theme.svgColorMode ?? 'smart';
+
+    if (element instanceof HTMLImageElement) {
+        const imgSrc = element.currentSrc || element.getAttribute('src') || '';
+        const isSvgImg = imgSrc.startsWith('data:image/svg+xml') || /\.svg(?:[?#]|$)/i.test(imgSrc);
+        if (isSvgImg) {
+            if (svgColorMode === 'smart' && theme.mode === 1) {
+                if (!svgImgAnalysisCache.has(element)) {
+                    svgImgAnalysisCache.add(element);
+                    getImageDetails(imgSrc).then((details) => {
+                        if (details.isDark && details.isTransparent) {
+                            element.setAttribute('data-darkreader-inline-invert', '');
+                        } else {
+                            element.removeAttribute('data-darkreader-inline-invert');
+                        }
+                    }).catch(() => { /* ignore */ });
+                }
+            } else {
+                element.removeAttribute('data-darkreader-inline-invert');
+            }
+        }
+    }
+
     const isSVGElement = element instanceof SVGElement;
     const svg = isSVGElement ? element.ownerSVGElement ?? (element instanceof SVGSVGElement ? element : null) : null;
-    if (isSVGElement && theme.mode === 1 && svg) {
+    if (isSVGElement && svgColorMode !== 'smart') {
+        element.removeAttribute('data-darkreader-inline-invert');
+        element.removeAttribute('data-darkreader-inline-fill');
+        element.removeAttribute('data-darkreader-inline-stroke');
+        element.removeAttribute('data-darkreader-inline-stop-color');
+    }
+    if (isSVGElement && svgColorMode === 'smart' && theme.mode === 1 && svg) {
         if (svgInversionCache.has(svg)) {
             return;
         }
@@ -607,7 +645,7 @@ export function overrideInlineStyle(element: HTMLElement, theme: Theme, ignoreIn
         overrideValue('color', '', 'color', 'color', attrValue, value);
     }
 
-    if (isSVGElement) {
+    if (isSVGElement && svgColorMode === 'smart') {
         if (element.hasAttribute('fill')) {
             const value = element.getAttribute('fill')!;
             if (value !== 'none' && value !== 'currentColor') {
@@ -655,7 +693,7 @@ export function overrideInlineStyle(element: HTMLElement, theme: Theme, ignoreIn
         }
     }
 
-    if (element.hasAttribute('stroke')) {
+    if (element.hasAttribute('stroke') && (!isSVGElement || svgColorMode === 'smart')) {
         const value = element.getAttribute('stroke')!;
         const cssProp = element instanceof SVGLineElement || element instanceof SVGTextElement ? 'border-color' : 'color';
         overrideValue('stroke', '', 'stroke', cssProp, value, value);

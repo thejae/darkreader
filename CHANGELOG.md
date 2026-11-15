@@ -1,3 +1,11 @@
+# 4.11.0 (November 15, 2026)
+
+- Added a collapsible **Advance Settings** section below **Auto-Schedule** in the popup, supporting both Global and Customize This Site scopes.
+- Added the **SVG Icons & Logos** (`Off` / `Smart Recolor` / `Invert`, defaulting to `Smart Recolor`) setting on `Theme` (`svgColorMode`):
+  - **Smart Recolor**: inherits `currentColor` for unstyled inline `<svg>` elements lacking an explicit `fill`, expands logo/brand detection (`class`, `id`, `aria-label`) for inline SVG image inversion, preserves inline `fill`/`stroke`/`stop-color` recoloring, and analyzes dark transparent `.svg` / `data:image/svg+xml` `<img>` logos for inversion.
+  - **Invert**: applies `invert(1) hue-rotate(180deg)` to `<svg>` and `.svg` / `data:image/svg+xml` `<img>` elements.
+  - **Off**: disables SVG icon/logo recoloring and inversion.
+
 # 4.10.10 (November 15, 2026)
 
 - Deferred creating a site override (`customThemes` / `enabledFor`) until an actual tweak is made in **Customize This Site** mode, so clicking **+ Customize This Site** without changing any controls no longer marks the site as having an active custom configuration.

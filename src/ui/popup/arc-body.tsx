@@ -14,6 +14,7 @@ import type {
     ExtensionData,
     SiteScheduleConfig,
     SurfaceTone,
+    SvgColorMode,
     Theme,
     UserSettings,
 } from '../../definitions';
@@ -39,7 +40,7 @@ interface ArcBodyProps {
 interface ArcUiState {
     scope: 'global' | 'site';
     scopeInitialized: boolean;
-    openPanel: 'none' | 'tune' | 'schedule';
+    openPanel: 'none' | 'tune' | 'schedule' | 'advanced';
     countryOpen: boolean;
     countryQuery: string;
     gpsStatus: 'idle' | 'locating' | 'ready' | 'error';
@@ -803,6 +804,50 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                                         </div>
                                     </div>
                                 ) : null}
+                            </div>
+                        ) : null}
+                    </div>
+
+                    {/* Advance Settings Accordion */}
+                    <div class="d06b-accordion">
+                        <button
+                            class="d06b-acc-trigger"
+                            onclick={() =>
+                                setUi({
+                                    ...ui,
+                                    openPanel: ui.openPanel === 'advanced' ? 'none' : 'advanced',
+                                    countryOpen: false,
+                                })
+                            }
+                        >
+                            <span>Advance Settings</span>
+                            <ChevronArrow open={ui.openPanel === 'advanced'} />
+                        </button>
+                        {ui.openPanel === 'advanced' ? (
+                            <div class="d06b-acc-body">
+                                <div class="d06b-tone-block">
+                                    <span class="d06b-tone-label">SVG Icons & Logos</span>
+                                    <div class="d06b-sched-pills">
+                                        {(
+                                            [
+                                                {id: 'off', label: 'Off'},
+                                                {id: 'smart', label: 'Smart Recolor'},
+                                                {id: 'invert', label: 'Invert'},
+                                            ] as Array<{id: SvgColorMode; label: string}>
+                                        ).map((opt) => (
+                                            <button
+                                                class={
+                                                    (editingTheme.svgColorMode ?? 'smart') === opt.id
+                                                        ? 'is-active'
+                                                        : ''
+                                                }
+                                                onclick={() => updateTheme({svgColorMode: opt.id})}
+                                            >
+                                                {opt.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         ) : null}
                     </div>

@@ -8,6 +8,8 @@ export type ColorScheme = 'dark' | 'light';
 
 export type SurfaceTone = 'slate' | 'charcoal' | 'oled';
 
+export type SvgColorMode = 'off' | 'smart' | 'invert';
+
 export interface SiteScheduleConfig {
     mode: 'off' | 'time' | 'location';
     startTime: string;
@@ -88,6 +90,8 @@ export interface Theme {
     imageBrightness?: number;
     /** Background surface darkness tone when in Dark mode. */
     surfaceTone?: SurfaceTone;
+    /** Color handling mode for SVG icons and logos. */
+    svgColorMode?: SvgColorMode;
 }
 
 export interface CustomSiteConfig {

@@ -289,6 +289,20 @@ function getImageBrightnessCSS(themeConfig: Theme): string {
         : '';
 }
 
+function getSvgColorCSS(themeConfig: Theme): string {
+    if (themeConfig.mode !== 1) {
+        return '';
+    }
+    const mode = themeConfig.svgColorMode ?? 'smart';
+    if (mode === 'smart') {
+        return ':where(svg:not([fill]):not([style*="fill"]):not([data-darkreader-inline-fill]):not([data-darkreader-inline-invert])) { fill: currentColor; }';
+    }
+    if (mode === 'invert') {
+        return 'svg, img[src*=".svg"], img[src^="data:image/svg+xml"] { filter: invert(1) hue-rotate(180deg) !important; }';
+    }
+    return '';
+}
+
 function getVariablesStyleContent(themeConfig: Theme): string {
     const selectionColors = themeConfig.selectionColor ? getSelectionColor(themeConfig) : null;
     const neutralBackgroundColor = modifyBackgroundColor(parseColorWithCache('#ffffff')!, themeConfig);
@@ -335,6 +349,7 @@ function createStaticStyleOverrides() {
     staticStyleInjector.inject('invert', getInversionStyleValue(), 'beginning');
     staticStyleInjector.inject('inline', getInlineOverrideStyle(), 'beginning');
     staticStyleInjector.inject('image-brightness', getImageBrightnessCSS(theme!), 'beginning');
+    staticStyleInjector.inject('svg-color', getSvgColorCSS(theme!), 'beginning');
 
     const variableSheet = staticStyleInjector.inject('variables', getVariablesStyleContent(theme!), 'beginning', () => registerVariablesSheet(variableSheet));
     registerVariablesSheet(variableSheet);

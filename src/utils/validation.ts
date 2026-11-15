@@ -222,6 +222,7 @@ export function validateTheme(theme: Partial<Theme> | null | undefined): ThemeVa
     validateProperty(theme, 'immediateModify', isBoolean, DEFAULT_THEME);
     validateProperty(theme, 'imageBrightness', isNumberBetween(50, 100), DEFAULT_THEME);
     validateProperty(theme, 'surfaceTone', isOneOf('slate', 'charcoal', 'oled'), DEFAULT_THEME);
+    validateProperty(theme, 'svgColorMode', isOneOf('off', 'smart', 'invert'), DEFAULT_THEME);
 
     return {errors, theme};
 }
