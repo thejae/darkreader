@@ -24,7 +24,7 @@
         &:hover,
         &:focus-visible {
             color: #fff;
-            background: rgba(168, 85, 247, 0.28);
+            background: var(--d06b-tooltip-hover, rgba(56, 189, 248, 0.28));
             outline: none;
         }
     }
@@ -39,7 +39,7 @@
         width: 248px;
         padding: 9px 11px;
         border-radius: 10px;
-        background: rgba(20, 22, 28, 0.96);
+        background: var(--d06b-menu-bg, rgba(14, 28, 38, 0.96));
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         border: 1px solid rgba(255, 255, 255, 0.16);
@@ -139,7 +139,7 @@
 
     &__term {
         font-weight: 700;
-        color: #e9d5ff;
+        color: var(--d06b-accent-tint, #bae6fd);
         font-size: 10.5px;
     }
 

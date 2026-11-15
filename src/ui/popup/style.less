@@ -1,12 +1,45 @@
 @import "../controls/info-tooltip/style";
 
+:root {
+    --d06b-bg: #0c1922;
+    --d06b-text: #f0f9ff;
+    --d06b-accent-grad: linear-gradient(135deg, #14b8a6, #38bdf8 52%, #6366f1);
+    --d06b-accent-solid: #38bdf8;
+    --d06b-accent-thumb: #6366f1;
+    --d06b-accent-tint: #bae6fd;
+    --d06b-accent-bg: rgba(56, 189, 248, 0.22);
+    --d06b-accent-bg-soft: rgba(56, 189, 248, 0.12);
+    --d06b-accent-border: rgba(56, 189, 248, 0.6);
+    --d06b-tooltip-hover: rgba(56, 189, 248, 0.28);
+    --d06b-menu-bg: rgba(14, 28, 38, 0.96);
+    --d06b-search-bg: rgba(8, 18, 26, 0.72);
+    --d06b-scroll-thumb: rgba(56, 189, 248, 0.34);
+    --d06b-scroll-thumb-hover: rgba(56, 189, 248, 0.64);
+}
+
+.d06b-accent-pill() {
+    background: var(--d06b-accent-grad);
+    color: #fff;
+}
+
+.d06b-range-thumb() {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--d06b-accent-thumb);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px var(--d06b-accent-thumb), 0 1px 4px rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
 html,
 body {
     margin: 0;
     padding: 0;
     width: 376px;
-    background: #171522;
-    color: #f9f7ff;
+    background: var(--d06b-bg);
+    color: var(--d06b-text);
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow: hidden;
 }
@@ -24,14 +57,12 @@ body {
     max-height: 600px;
     border-radius: 0;
     overflow: hidden;
-    background: #171522;
+    background: var(--d06b-bg);
     border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: 0 28px 70px rgba(10, 8, 24, 0.65);
-    color: #f9f7ff;
+    box-shadow: 0 28px 70px rgba(6, 14, 22, 0.65);
+    color: var(--d06b-text);
     font-family: 'Inter', sans-serif;
     transition: border-color 0.25s ease;
-    --d06b-scroll-thumb: rgba(196, 181, 253, 0.32);
-    --d06b-scroll-thumb-hover: rgba(196, 181, 253, 0.6);
 
     &.is-site-mode {
         border-color: rgba(245, 158, 11, 0.65);
@@ -43,7 +74,7 @@ body {
             background:
                 radial-gradient(circle at 18% 12%, rgba(245, 158, 11, 0.34), transparent 55%),
                 radial-gradient(circle at 88% 35%, rgba(251, 146, 60, 0.25), transparent 50%),
-                radial-gradient(circle at 40% 95%, rgba(168, 85, 247, 0.18), transparent 55%);
+                radial-gradient(circle at 40% 95%, rgba(56, 189, 248, 0.2), transparent 55%);
         }
     }
 
@@ -51,17 +82,27 @@ body {
         position: absolute;
         inset: -40px;
         background:
-            radial-gradient(circle at 15% 10%, rgba(168, 85, 247, 0.36), transparent 55%),
-            radial-gradient(circle at 90% 25%, rgba(244, 114, 182, 0.28), transparent 50%),
-            radial-gradient(circle at 40% 95%, rgba(245, 158, 11, 0.2), transparent 55%);
-        filter: blur(22px);
+            radial-gradient(circle at 12% 8%, rgba(20, 184, 166, 0.32), transparent 55%),
+            radial-gradient(circle at 85% 42%, rgba(56, 189, 248, 0.24), transparent 52%),
+            radial-gradient(circle at 88% 92%, rgba(99, 102, 241, 0.26), transparent 55%);
+        filter: blur(22px) saturate(0.55);
         pointer-events: none;
-        opacity: 0.45;
-        transition: all 0.3s ease;
+        opacity: 0.32;
+        transition: opacity 0.25s ease, filter 0.25s ease;
     }
 
-    &.is-live .d06b-aura {
-        opacity: 1;
+    &.is-live {
+        .d06b-aura {
+            opacity: 1;
+            filter: blur(22px) saturate(1.35) brightness(1.12);
+        }
+
+        .d06b-preview-card {
+            border-color: var(--d06b-accent-border);
+            box-shadow:
+                0 6px 24px -10px var(--d06b-accent-thumb),
+                inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
     }
 
     .d06b-content {
@@ -154,8 +195,7 @@ body {
         color: inherit;
 
         &.is-on {
-            background: linear-gradient(135deg, #9333ea, #ec4899);
-            color: #fff;
+            .d06b-accent-pill();
         }
     }
 
@@ -196,7 +236,7 @@ body {
 
         &.is-active {
             background: #fff;
-            color: #1a1528;
+            color: var(--d06b-bg);
         }
 
         &--cta {
@@ -338,12 +378,11 @@ body {
 
             &.is-active {
                 background: #fff;
-                color: #1a1528;
+                color: var(--d06b-bg);
             }
 
             &.is-power-on {
-                background: linear-gradient(135deg, #9333ea, #ec4899);
-                color: #fff;
+                .d06b-accent-pill();
             }
         }
     }
@@ -558,9 +597,9 @@ body {
         }
 
         &.is-dirty {
-            color: #f472b6;
-            border-color: rgba(244, 114, 182, 0.4);
-            background: rgba(244, 114, 182, 0.12);
+            color: var(--d06b-accent-solid);
+            border-color: var(--d06b-accent-border);
+            background: var(--d06b-accent-bg-soft);
         }
 
         &:hover {
@@ -575,34 +614,31 @@ body {
         appearance: none;
         flex: 1;
         width: 100%;
-        height: 5px;
+        height: 6px;
         border-radius: 999px;
         --fill-stop: calc(7px + (100% - 14px) * var(--ratio, 0.5));
-        background: linear-gradient(
-            90deg,
-            #f472b6 0%,
-            #a855f7 var(--fill-stop),
-            rgba(255, 255, 255, 0.15) var(--fill-stop)
-        );
+        background-color: rgba(255, 255, 255, 0.15);
+        background-image: var(--d06b-accent-grad);
+        background-size: var(--fill-stop) 100%;
+        background-repeat: no-repeat;
         outline: none;
         cursor: pointer;
 
         &::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #fff;
-            cursor: pointer;
+            .d06b-range-thumb();
         }
 
         &::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border: none;
-            border-radius: 50%;
-            background: #fff;
-            cursor: pointer;
+            .d06b-range-thumb();
+        }
+
+        &:hover::-webkit-slider-thumb,
+        &:active::-webkit-slider-thumb,
+        &:hover::-moz-range-thumb,
+        &:active::-moz-range-thumb {
+            transform: scale(1.14);
+            box-shadow: 0 0 14px var(--d06b-accent-thumb), 0 2px 6px rgba(0, 0, 0, 0.5);
         }
     }
 
@@ -621,9 +657,8 @@ body {
             cursor: pointer;
 
             &.is-active {
-                background: linear-gradient(135deg, #9333ea, #ec4899);
+                .d06b-accent-pill();
                 border-color: transparent;
-                color: #fff;
             }
         }
     }
@@ -675,7 +710,7 @@ body {
 
         &:hover,
         &.is-open {
-            border-color: rgba(168, 85, 247, 0.65);
+            border-color: var(--d06b-accent-border);
             background: rgba(0, 0, 0, 0.44);
         }
     }
@@ -714,7 +749,7 @@ body {
 
     .d06b-country-menu {
         margin-top: 6px;
-        background: rgba(26, 23, 38, 0.96);
+        background: var(--d06b-menu-bg);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.18);
         border-radius: 12px;
@@ -737,7 +772,7 @@ body {
         padding: 6px 9px;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(12, 10, 20, 0.72);
+        background: var(--d06b-search-bg);
         color: #fff;
         font-size: 11px;
         font-family: inherit;
@@ -748,7 +783,7 @@ body {
         }
 
         &:focus {
-            border-color: rgba(196, 181, 253, 0.5);
+            border-color: var(--d06b-accent-border);
         }
     }
 
@@ -796,14 +831,14 @@ body {
         }
 
         &.is-selected {
-            background: rgba(168, 85, 247, 0.25);
+            background: var(--d06b-accent-bg);
             color: #fff;
             font-weight: 600;
         }
     }
 
     .d06b-check {
-        color: #f472b6;
+        color: var(--d06b-accent-solid);
         font-size: 11px;
         font-weight: 700;
     }
@@ -846,8 +881,8 @@ body {
     }
 
     .d06b-gps-btn {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(168, 85, 247, 0.24);
+        border: 1px solid var(--d06b-accent-border);
+        background: var(--d06b-accent-bg);
         color: #fff;
         border-radius: 8px;
         padding: 4px 9px;

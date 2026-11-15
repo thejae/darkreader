@@ -1,3 +1,9 @@
+# 4.15.0 (November 15, 2026)
+
+- Applied the **Lagoon Reef** skin (`#0c1922` surface, `#14b8a6` → `#38bdf8` → `#6366f1` gradient, 3-stop aura) to `src/ui/popup/style.less` and `src/ui/controls/info-tooltip/style.less`.
+- Consolidated popup theme colors into reusable `:root` CSS custom properties (`--d06b-*`) and shared Less mixins (`.d06b-accent-pill()`, `.d06b-range-thumb()`) across active pills, slider tracks/thumbs, reset buttons, dropdowns, GPS button, scrollbars, and info tooltips.
+- Enriched `.dr-d06b.is-live` aura and preview card glow when the extension is On, and styled `.d06b-range` thumbs with `--d06b-accent-thumb` (`#6366f1`) matching the 100% gradient fill.
+
 # 4.14.2 (November 15, 2026)
 
 - Enriched `.dr-d06b.is-power-on` aura saturation, brightness, and preview card glow in `docs/skin-prototypes.html` when the extension is On (and dimmed when Off).
