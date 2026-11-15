@@ -287,20 +287,22 @@ function getImageBrightnessCSS(themeConfig: Theme): string {
     if (imageBrightness >= 100) {
         return '';
     }
+    // Exclude <picture>: it is an inline wrapper around <img>, so filtering it
+    // double-darkens the image and can hide <img> inside 0x0 inline <picture> boxes.
     const svgMode = themeConfig.mode === 1 ? (themeConfig.svgColorMode ?? 'smart') : 'off';
     if (svgMode === 'invert') {
         return [
-            `img:not([data-darkreader-inline-invert]):not([src*=".svg" i]):not([src^="data:image/svg+xml" i]), video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`,
+            `img:not([data-darkreader-inline-invert]):not([src*=".svg" i]):not([src^="data:image/svg+xml" i]), video, canvas { filter: brightness(${imageBrightness}%) !important; }`,
             `img[data-darkreader-inline-invert] { filter: invert(100%) hue-rotate(180deg) brightness(${imageBrightness}%) !important; }`,
         ].join('\n');
     }
     if (svgMode === 'smart') {
         return [
-            `svg:not(svg svg):not([data-darkreader-inline-invert]), img:not([data-darkreader-inline-invert]), video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`,
+            `svg:not(svg svg):not([data-darkreader-inline-invert]), img:not([data-darkreader-inline-invert]), video, canvas { filter: brightness(${imageBrightness}%) !important; }`,
             `svg:not(svg svg)[data-darkreader-inline-invert], img[data-darkreader-inline-invert] { filter: invert(100%) hue-rotate(180deg) brightness(${imageBrightness}%) !important; }`,
         ].join('\n');
     }
-    return `svg:not(svg svg), img, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`;
+    return `svg:not(svg svg), img, video, canvas { filter: brightness(${imageBrightness}%) !important; }`;
 }
 
 function getSvgColorCSS(themeConfig: Theme): string {

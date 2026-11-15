@@ -1,3 +1,7 @@
+# 4.15.5 (November 15, 2026)
+
+- Fixed `<img>` elements inside `<picture>` wrappers (such as `#pp_tools_image_3` on HSBC) disappearing when `imageBrightness < 100` by removing `picture` from `getImageBrightnessCSS()` in `src/inject/dynamic-theme/index.ts` and `src/generators/css-filter.ts` (avoiding `0x0` inline `<picture>` filter layers and double-darkening).
+
 # 4.15.4 (November 15, 2026)
 
 - Extracted `.d06b-btn-text()` (`font-size: 11px; font-weight: 600;`) in `src/ui/popup/style.less` and applied it consistently across `.d06b-chip`, `.d06b-polarity-pills button`, `.d06b-mood-name`, `.d06b-acc-trigger`, `.d06b-tone-pills button`, `.d06b-sched-pills button`, `.d06b-country-trigger`, and `.d06b-gps-btn`.
