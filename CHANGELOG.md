@@ -1,3 +1,7 @@
+# 4.15.4 (November 15, 2026)
+
+- Extracted `.d06b-btn-text()` (`font-size: 11px; font-weight: 600;`) in `src/ui/popup/style.less` and applied it consistently across `.d06b-chip`, `.d06b-polarity-pills button`, `.d06b-mood-name`, `.d06b-acc-trigger`, `.d06b-tone-pills button`, `.d06b-sched-pills button`, `.d06b-country-trigger`, and `.d06b-gps-btn`.
+
 # 4.15.3 (November 15, 2026)
 
 - Unified Quick Moods (`.d06b-mood-tile`) and SVG Icons & Logos / Auto-Schedule (`.d06b-sched-pills button`) in `src/ui/popup/style.less` with a shared `.d06b-tile-chrome()` mixin (`1px solid rgba(255, 255, 255, 0.12)` border and `12px` radius).
