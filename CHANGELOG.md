@@ -1,3 +1,8 @@
+# 4.14.2 (November 15, 2026)
+
+- Enriched `.dr-d06b.is-power-on` aura saturation, brightness, and preview card glow in `docs/skin-prototypes.html` when the extension is On (and dimmed when Off).
+- Added `--thumb-color` per skin in `docs/skin-prototypes.html` so each slider thumb matches the 100% end colour of the filled gradient.
+
 # 4.14.1 (November 15, 2026)
 
 - Upgraded slider tracks in `docs/skin-prototypes.html` to render each theme's gradient fill up to the thumb with a glowing thumb across all variants.

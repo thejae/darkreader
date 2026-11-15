@@ -110,7 +110,14 @@
     inset: 0;
     pointer-events: none;
     background: var(--aura);
-    opacity: 0.9;
+    opacity: 0.32;
+    filter: saturate(0.55);
+    transition: opacity 0.22s ease, filter 0.22s ease;
+  }
+
+  .dr-d06b.is-power-on .d06b-aura {
+    opacity: 1;
+    filter: saturate(1.35) brightness(1.12);
   }
 
   .d06b-content {
@@ -131,6 +138,12 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  .dr-d06b.is-power-on .d06b-preview-card {
+    border-color: var(--chip-active-border);
+    box-shadow: 0 6px 24px -10px var(--thumb-color, var(--accent-solid)), inset 0 1px 0 rgba(255, 255, 255, 0.14);
   }
 
   .d06b-preview-domain {
@@ -363,9 +376,9 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ffffff;
-    border: 2px solid var(--accent-solid);
-    box-shadow: 0 0 10px var(--accent-solid), 0 1px 4px rgba(0, 0, 0, 0.45);
+    background: var(--thumb-color, var(--accent-solid));
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px var(--thumb-color, var(--accent-solid)), 0 1px 4px rgba(0, 0, 0, 0.45);
     cursor: pointer;
     transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
@@ -373,16 +386,16 @@
   input[type="range"].d06b-range::-webkit-slider-thumb:hover,
   input[type="range"].d06b-range:active::-webkit-slider-thumb {
     transform: scale(1.14);
-    box-shadow: 0 0 14px var(--accent-solid), 0 2px 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 14px var(--thumb-color, var(--accent-solid)), 0 2px 6px rgba(0, 0, 0, 0.5);
   }
 
   input[type="range"].d06b-range::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ffffff;
-    border: 2px solid var(--accent-solid);
-    box-shadow: 0 0 10px var(--accent-solid), 0 1px 4px rgba(0, 0, 0, 0.45);
+    background: var(--thumb-color, var(--accent-solid));
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px var(--thumb-color, var(--accent-solid)), 0 1px 4px rgba(0, 0, 0, 0.45);
     cursor: pointer;
     transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
@@ -461,6 +474,7 @@
     --aura: radial-gradient(circle at 12% 8%, rgba(168, 85, 247, 0.28), transparent 55%),
             radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.18), transparent 55%);
     --accent-grad: linear-gradient(135deg, #9333ea, #ec4899);
+    --thumb-color: #ec4899;
     --accent-solid: #a855f7;
     --accent-tint: #e9d5ff;
     --chip-active-bg: rgba(168, 85, 247, 0.24);
@@ -477,6 +491,7 @@
     --aura: radial-gradient(circle at 12% 8%, rgba(6, 182, 212, 0.24), transparent 55%),
             radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.18), transparent 55%);
     --accent-grad: linear-gradient(135deg, #0891b2, #2563eb);
+    --thumb-color: #2563eb;
     --accent-solid: #06b6d4;
     --accent-tint: #a5f3fc;
     --chip-active-bg: rgba(6, 182, 212, 0.2);
@@ -493,6 +508,7 @@
     --aura: radial-gradient(circle at 15% 5%, rgba(255, 255, 255, 0.08), transparent 55%),
             radial-gradient(circle at 90% 95%, rgba(156, 163, 175, 0.07), transparent 55%);
     --accent-grad: linear-gradient(135deg, #f3f4f6, #cbd5e1);
+    --thumb-color: #cbd5e1;
     --accent-on-text: #111317;
     --accent-solid: #e5e7eb;
     --accent-tint: #f3f4f6;
@@ -510,6 +526,7 @@
     --aura: radial-gradient(circle at 12% 8%, rgba(245, 158, 11, 0.22), transparent 55%),
             radial-gradient(circle at 90% 90%, rgba(244, 63, 94, 0.18), transparent 55%);
     --accent-grad: linear-gradient(135deg, #d97706, #e11d48);
+    --thumb-color: #e11d48;
     --accent-solid: #f59e0b;
     --accent-tint: #fde68a;
     --chip-active-bg: rgba(245, 158, 11, 0.2);
@@ -526,6 +543,7 @@
     --aura: radial-gradient(circle at 12% 8%, rgba(16, 185, 129, 0.22), transparent 55%),
             radial-gradient(circle at 90% 90%, rgba(20, 184, 166, 0.16), transparent 55%);
     --accent-grad: linear-gradient(135deg, #059669, #0d9488);
+    --thumb-color: #0d9488;
     --accent-solid: #10b981;
     --accent-tint: #a7f3d0;
     --chip-active-bg: rgba(16, 185, 129, 0.2);
@@ -542,6 +560,7 @@
     --aura: radial-gradient(circle at 12% 8%, rgba(59, 130, 246, 0.26), transparent 55%),
             radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.16), transparent 55%);
     --accent-grad: linear-gradient(135deg, #2563eb, #0284c7);
+    --thumb-color: #0284c7;
     --accent-solid: #3b82f6;
     --accent-tint: #bae6fd;
     --chip-active-bg: rgba(59, 130, 246, 0.22);
@@ -559,6 +578,7 @@
             radial-gradient(circle at 88% 48%, rgba(249, 115, 22, 0.24), transparent 52%),
             radial-gradient(circle at 82% 94%, rgba(234, 179, 8, 0.22), transparent 55%);
     --accent-grad: linear-gradient(135deg, #f43f5e, #f97316 52%, #eab308);
+    --thumb-color: #eab308;
     --accent-solid: #fb7185;
     --accent-tint: #fecdd3;
     --chip-active-bg: rgba(249, 115, 22, 0.24);
@@ -576,6 +596,7 @@
             radial-gradient(circle at 85% 42%, rgba(56, 189, 248, 0.24), transparent 52%),
             radial-gradient(circle at 88% 92%, rgba(99, 102, 241, 0.26), transparent 55%);
     --accent-grad: linear-gradient(135deg, #14b8a6, #38bdf8 52%, #6366f1);
+    --thumb-color: #6366f1;
     --accent-solid: #38bdf8;
     --accent-tint: #bae6fd;
     --chip-active-bg: rgba(56, 189, 248, 0.22);
@@ -593,6 +614,7 @@
             radial-gradient(circle at 85% 48%, rgba(52, 211, 153, 0.22), transparent 52%),
             radial-gradient(circle at 88% 92%, rgba(45, 212, 191, 0.24), transparent 55%);
     --accent-grad: linear-gradient(135deg, #a3e635, #34d399 52%, #2dd4bf);
+    --thumb-color: #2dd4bf;
     --accent-on-text: #071912;
     --accent-solid: #4ade80;
     --accent-tint: #d9f99d;
@@ -639,7 +661,7 @@
             ${v.swatches.map((c) => `<span class="swatch" style="background:${c}"></span>`).join('')}
           </div>
         </div>
-        <div class="dr-d06b skin-${v.id}">
+        <div class="dr-d06b is-power-on skin-${v.id}">
           <div class="d06b-aura"></div>
           <div class="d06b-content">
             <div class="d06b-preview-card">
@@ -735,8 +757,14 @@
         group.querySelectorAll('button').forEach((btn) => {
           btn.addEventListener('click', () => {
             group.querySelectorAll('button').forEach((b) => b.classList.remove('is-active', 'is-power-on'));
-            if (type === 'power' && btn.textContent.trim() === 'On') {
-              btn.classList.add('is-power-on');
+            if (type === 'power') {
+              const isOn = btn.textContent.trim() === 'On';
+              card.classList.toggle('is-power-on', isOn);
+              if (isOn) {
+                btn.classList.add('is-power-on');
+              } else {
+                btn.classList.add('is-active');
+              }
             } else {
               btn.classList.add('is-active');
             }
