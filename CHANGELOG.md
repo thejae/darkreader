@@ -1,3 +1,7 @@
+# 4.12.5 (November 15, 2026)
+
+- Upgraded GitHub Actions workflows from `actions/checkout@v4` and `actions/setup-node@v4` to `actions/checkout@v5` and `actions/setup-node@v6` to eliminate the Node.js 20 runner deprecation notice.
+
 # 4.12.4 (November 15, 2026)
 
 - Fixed `object-curly-spacing` ESLint error in `src/ui/popup/countries.ts` that caused the GitHub Actions `Run tests` lint step to fail.

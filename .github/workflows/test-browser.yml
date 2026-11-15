@@ -54,7 +54,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Chrome
         if: ${{ matrix.chrome }}
@@ -80,7 +80,7 @@ jobs:
           { echo FIREFOX_BIN="$(which firefox)"; echo FIREFOX_TEST=1; } | tee -a "$GITHUB_ENV"
 
       - name: Node setup
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node_version || '22.x' }}
           cache: npm
