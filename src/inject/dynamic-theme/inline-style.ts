@@ -570,6 +570,7 @@ export function overrideInlineStyle(element: HTMLElement, theme: Theme, ignoreIn
                     }).catch(() => { /* ignore */ });
                 }
             } else {
+                svgImgAnalysisCache.delete(element);
                 element.removeAttribute('data-darkreader-inline-invert');
             }
         }
@@ -578,6 +579,7 @@ export function overrideInlineStyle(element: HTMLElement, theme: Theme, ignoreIn
     const isSVGElement = element instanceof SVGElement;
     const svg = isSVGElement ? element.ownerSVGElement ?? (element instanceof SVGSVGElement ? element : null) : null;
     if (isSVGElement && svgColorMode !== 'smart') {
+        svg && svgInversionCache.delete(svg);
         element.removeAttribute('data-darkreader-inline-invert');
         element.removeAttribute('data-darkreader-inline-fill');
         element.removeAttribute('data-darkreader-inline-stroke');

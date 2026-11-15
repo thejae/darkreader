@@ -1,3 +1,8 @@
+# 4.11.2 (November 15, 2026)
+
+- Fixed SVG `<img>` logo selection (`img[src*=".svg"]`, `img[src^="data:image/svg+xml"]`) in `createDynamicStyleOverrides()` so `.svg` images without a `style` attribute are analyzed and toggled properly.
+- Cleared `svgInversionCache` and `svgImgAnalysisCache` entries when `svgColorMode` is switched away from `smart` so toggling `Smart Recolor` -> `Off`/`Invert` -> `Smart Recolor` re-applies cleanly.
+
 # 4.11.1 (November 15, 2026)
 
 - Fixed SVG icon and logo recoloring for mid/dark fills on larger icons (e.g. `48px` icons with `fill="#757575"`) and multi-path wordmark logos (e.g. dark `#001246` letters taller than `32px`): dark/mid-tone fills (`lightness < 0.55`) on icons and logo paths up to `200px` are now treated as foreground ink (`modifyForegroundColor`) rather than darkened as backgrounds, while light/bright backdrop shapes still darken appropriately.

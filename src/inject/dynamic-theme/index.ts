@@ -496,10 +496,10 @@ function createDynamicStyleOverrides() {
     }
     newManagers.forEach((manager) => manager.watch());
 
-    const inlineStyleElements = toArray(document.querySelectorAll(INLINE_STYLE_SELECTOR)) as HTMLElement[];
+    const inlineStyleElements = toArray(document.querySelectorAll(`${INLINE_STYLE_SELECTOR}, img[src*=".svg"], img[src^="data:image/svg+xml"]`)) as HTMLElement[];
     iterateShadowHosts(document.documentElement, (host) => {
         createShadowStaticStyleOverrides(host.shadowRoot!);
-        const elements = host.shadowRoot!.querySelectorAll(INLINE_STYLE_SELECTOR);
+        const elements = host.shadowRoot!.querySelectorAll(`${INLINE_STYLE_SELECTOR}, img[src*=".svg"], img[src^="data:image/svg+xml"]`);
         if (elements.length > 0) {
             push(inlineStyleElements, elements);
         }
