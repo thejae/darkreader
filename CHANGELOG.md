@@ -1,3 +1,7 @@
+# 4.13.1 (November 15, 2026)
+
+- Updated `ArcBSlider` in `src/ui/popup/arc-body.tsx` to update local slider state smoothly while dragging (`oninput`) and commit theme changes only on release (`onchange`) when the value actually changed.
+
 # 4.13.0 (November 15, 2026)
 
 - Improved responsiveness when rapidly toggling settings or dragging sliders:

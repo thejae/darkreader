@@ -965,14 +965,17 @@ const ArcBSlider = withState(function ArcBSlider(props: ArcBSliderProps, ..._chi
                             draftValue: next,
                             lastInputTime: Date.now(),
                         });
-                        props.onChange(next);
                     }}
                     onchange={(e: Event) => {
                         const next = Number((e.target as HTMLInputElement).value);
                         setState({
                             isDragging: false,
                             draftValue: props.value === next ? null : next,
+                            lastInputTime: Date.now(),
                         });
+                        if (next !== props.value) {
+                            props.onChange(next);
+                        }
                     }}
                 />
                 <span class="d06b-slider-val">{`${displayValue}%`}</span>
