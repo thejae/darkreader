@@ -1,3 +1,7 @@
+# 4.14.0 (November 15, 2026)
+
+- Added standalone interactive popup skin prototype page `docs/skin-prototypes.html` comparing the current Arc Purple skin with 5 less-purple color variants (Midnight Ocean, Graphite Neutral, Warm Amber / Sunset, Emerald Forest, and Deep Cobalt).
+
 # 4.13.3 (November 15, 2026)
 
 - Updated `.d06b-sched-pills button.is-active` in `src/ui/popup/style.less` to use `linear-gradient(135deg, #9333ea, #ec4899)` so **SVG Icons & Logos** and **Auto-Schedule** selected pills match the Extension On gradient.

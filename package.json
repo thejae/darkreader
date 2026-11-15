@@ -1,6 +1,6 @@
 {
   "name": "darkreader",
-  "version": "4.13.3",
+  "version": "4.14.0",
   "engines": {
     "node": ">=22.0.0"
   },

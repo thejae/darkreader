@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dark Reader — Arc Popup Skin Prototypes</title>
+<style>
+  :root {
+    --page-bg: #0b0c10;
+    --page-text: #f3f4f6;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 28px 24px 64px;
+    background: radial-gradient(circle at 20% 0%, #1a1d29 0%, #0b0c10 60%);
+    color: var(--page-text);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .header {
+    max-width: 1680px;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 16px;
+  }
+
+  .header h1 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .header p {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .grid {
+    max-width: 1680px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .variant-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 376px;
+  }
+
+  .variant-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2px;
+  }
+
+  .variant-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .variant-swatches {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  /* Popup Shell (376px) */
+  .dr-d06b {
+    position: relative;
+    width: 376px;
+    background: var(--bg);
+    color: #f9f7ff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.65);
+    overflow: hidden;
+  }
+
+  .dr-d06b.is-site-mode {
+    box-shadow: inset 0 0 0 1px var(--site-ring), 0 22px 54px rgba(0, 0, 0, 0.65);
+  }
+
+  .d06b-aura {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--aura);
+    opacity: 0.9;
+  }
+
+  .d06b-content {
+    position: relative;
+    z-index: 1;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Preview Card */
+  .d06b-preview-card {
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: var(--preview-bg);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .d06b-preview-domain {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .d06b-preview-sample {
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* Scope Row */
+  .d06b-quick-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .d06b-chip {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.78);
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .d06b-chip.is-active {
+    background: var(--chip-active-bg);
+    border-color: var(--chip-active-border);
+    color: var(--chip-active-text, #fff);
+  }
+
+  /* Power / Polarity Rows */
+  .d06b-power-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 2px;
+  }
+
+  .d06b-power-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .d06b-polarity-pills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 132px;
+    background: rgba(0, 0, 0, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .d06b-polarity-pills button {
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.72);
+    border-radius: 999px;
+    padding: 4px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .d06b-polarity-pills button.is-active {
+    background: #fff;
+    color: #141619;
+  }
+
+  .d06b-polarity-pills button.is-power-on {
+    background: var(--accent-grad);
+    color: var(--accent-on-text, #fff);
+  }
+
+  /* Mood Grid */
+  .d06b-subhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .d06b-mood-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .d06b-mood-tile {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    border-radius: 12px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+
+  .d06b-mood-tile.is-active {
+    background: var(--tile-active-bg);
+    border-color: var(--tile-active-border);
+    box-shadow: 0 0 0 1px var(--tile-active-border);
+  }
+
+  /* Accordions */
+  .d06b-accordion {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 13px;
+    overflow: visible;
+  }
+
+  .d06b-acc-trigger {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    padding: 9px 11px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .d06b-acc-body {
+    padding: 0 11px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .d06b-tone-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .d06b-tone-block:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .d06b-tone-label-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .d06b-tone-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Segmented Pills */
+  .d06b-sched-pills {
+    display: flex;
+    gap: 6px;
+  }
+
+  .d06b-sched-pills button {
+    flex: 1;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(0, 0, 0, 0.22);
+    color: rgba(255, 255, 255, 0.78);
+    border-radius: 8px;
+    padding: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .d06b-sched-pills button.is-active {
+    background: var(--accent-grad);
+    border-color: transparent;
+    color: var(--accent-on-text, #fff);
+  }
+
+  /* Slider */
+  .d06b-slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .d06b-slider-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  input[type="range"].d06b-range {
+    width: 100%;
+    accent-color: var(--accent-solid);
+    cursor: pointer;
+  }
+
+  /* Info Tooltip */
+  .info-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .info-tooltip__trigger {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .info-tooltip__trigger:hover {
+    color: #fff;
+    background: var(--tooltip-hover);
+  }
+
+  .info-tooltip__popover {
+    position: absolute;
+    z-index: 50;
+    bottom: calc(100% + 7px);
+    left: -6px;
+    width: 240px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    background: rgba(16, 18, 24, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+    font-size: 10.5px;
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  }
+
+  .info-tooltip:hover .info-tooltip__popover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .info-tooltip__term {
+    font-weight: 700;
+    color: var(--accent-tint);
+    margin-bottom: 2px;
+  }
+
+  .info-tooltip__desc {
+    color: rgba(255, 255, 255, 0.78);
+    margin-bottom: 6px;
+  }
+
+  .info-tooltip__desc:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ================== SKIN TOKENS ================== */
+  .skin-purple {
+    --bg: #171522;
+    --preview-bg: #1c1d22;
+    --aura: radial-gradient(circle at 12% 8%, rgba(168, 85, 247, 0.28), transparent 55%),
+            radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.18), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #9333ea, #ec4899);
+    --accent-solid: #a855f7;
+    --accent-tint: #e9d5ff;
+    --chip-active-bg: rgba(168, 85, 247, 0.24);
+    --chip-active-border: rgba(168, 85, 247, 0.55);
+    --tile-active-bg: rgba(168, 85, 247, 0.22);
+    --tile-active-border: rgba(192, 132, 252, 0.6);
+    --tooltip-hover: rgba(168, 85, 247, 0.28);
+    --site-ring: rgba(192, 132, 252, 0.55);
+  }
+
+  .skin-ocean {
+    --bg: #0f1722;
+    --preview-bg: #141d29;
+    --aura: radial-gradient(circle at 12% 8%, rgba(6, 182, 212, 0.24), transparent 55%),
+            radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.18), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #0891b2, #2563eb);
+    --accent-solid: #06b6d4;
+    --accent-tint: #a5f3fc;
+    --chip-active-bg: rgba(6, 182, 212, 0.2);
+    --chip-active-border: rgba(34, 211, 238, 0.5);
+    --tile-active-bg: rgba(6, 182, 212, 0.18);
+    --tile-active-border: rgba(34, 211, 238, 0.55);
+    --tooltip-hover: rgba(6, 182, 212, 0.26);
+    --site-ring: rgba(34, 211, 238, 0.5);
+  }
+
+  .skin-graphite {
+    --bg: #141518;
+    --preview-bg: #1b1d21;
+    --aura: radial-gradient(circle at 15% 5%, rgba(255, 255, 255, 0.08), transparent 55%),
+            radial-gradient(circle at 90% 95%, rgba(156, 163, 175, 0.07), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #f3f4f6, #cbd5e1);
+    --accent-on-text: #111317;
+    --accent-solid: #e5e7eb;
+    --accent-tint: #f3f4f6;
+    --chip-active-bg: rgba(255, 255, 255, 0.16);
+    --chip-active-border: rgba(255, 255, 255, 0.4);
+    --tile-active-bg: rgba(255, 255, 255, 0.14);
+    --tile-active-border: rgba(255, 255, 255, 0.45);
+    --tooltip-hover: rgba(255, 255, 255, 0.18);
+    --site-ring: rgba(255, 255, 255, 0.45);
+  }
+
+  .skin-amber {
+    --bg: #1a1412;
+    --preview-bg: #221a17;
+    --aura: radial-gradient(circle at 12% 8%, rgba(245, 158, 11, 0.22), transparent 55%),
+            radial-gradient(circle at 90% 90%, rgba(244, 63, 94, 0.18), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #d97706, #e11d48);
+    --accent-solid: #f59e0b;
+    --accent-tint: #fde68a;
+    --chip-active-bg: rgba(245, 158, 11, 0.2);
+    --chip-active-border: rgba(251, 191, 36, 0.5);
+    --tile-active-bg: rgba(245, 158, 11, 0.18);
+    --tile-active-border: rgba(251, 191, 36, 0.55);
+    --tooltip-hover: rgba(245, 158, 11, 0.26);
+    --site-ring: rgba(251, 191, 36, 0.5);
+  }
+
+  .skin-emerald {
+    --bg: #0f1916;
+    --preview-bg: #14221e;
+    --aura: radial-gradient(circle at 12% 8%, rgba(16, 185, 129, 0.22), transparent 55%),
+            radial-gradient(circle at 90% 90%, rgba(20, 184, 166, 0.16), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #059669, #0d9488);
+    --accent-solid: #10b981;
+    --accent-tint: #a7f3d0;
+    --chip-active-bg: rgba(16, 185, 129, 0.2);
+    --chip-active-border: rgba(52, 211, 153, 0.5);
+    --tile-active-bg: rgba(16, 185, 129, 0.18);
+    --tile-active-border: rgba(52, 211, 153, 0.55);
+    --tooltip-hover: rgba(16, 185, 129, 0.26);
+    --site-ring: rgba(52, 211, 153, 0.5);
+  }
+
+  .skin-cobalt {
+    --bg: #101426;
+    --preview-bg: #161b31;
+    --aura: radial-gradient(circle at 12% 8%, rgba(59, 130, 246, 0.26), transparent 55%),
+            radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.16), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #2563eb, #0284c7);
+    --accent-solid: #3b82f6;
+    --accent-tint: #bae6fd;
+    --chip-active-bg: rgba(59, 130, 246, 0.22);
+    --chip-active-border: rgba(96, 165, 250, 0.55);
+    --tile-active-bg: rgba(59, 130, 246, 0.2);
+    --tile-active-border: rgba(96, 165, 250, 0.55);
+    --tooltip-hover: rgba(59, 130, 246, 0.26);
+    --site-ring: rgba(96, 165, 250, 0.55);
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Dark Reader — Arc Popup Skin Prototypes</h1>
+      <p>Interactive side-by-side comparison (376px popup width). Click pills, presets, and hover the (i) icon to test each skin.</p>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const VARIANTS = [
+      {id: 'purple', name: 'Current · Arc Purple', swatches: ['#171522', '#9333ea', '#ec4899']},
+      {id: 'ocean', name: '1 · Midnight Ocean', swatches: ['#0f1722', '#0891b2', '#2563eb']},
+      {id: 'graphite', name: '2 · Graphite Neutral', swatches: ['#141518', '#f3f4f6', '#6b7280']},
+      {id: 'amber', name: '3 · Warm Amber / Sunset', swatches: ['#1a1412', '#d97706', '#e11d48']},
+      {id: 'emerald', name: '4 · Emerald Forest', swatches: ['#0f1916', '#059669', '#0d9488']},
+      {id: 'cobalt', name: '5 · Deep Cobalt', swatches: ['#101426', '#2563eb', '#0284c7']},
+    ];
+
+    const grid = document.getElementById('grid');
+
+    VARIANTS.forEach((v) => {
+      const col = document.createElement('div');
+      col.className = 'variant-col';
+      col.innerHTML = `
+        <div class="variant-meta">
+          <span class="variant-title">${v.name}</span>
+          <div class="variant-swatches">
+            ${v.swatches.map((c) => `<span class="swatch" style="background:${c}"></span>`).join('')}
+          </div>
+        </div>
+        <div class="dr-d06b skin-${v.id}">
+          <div class="d06b-aura"></div>
+          <div class="d06b-content">
+            <div class="d06b-preview-card">
+              <div class="d06b-preview-top">
+                <span class="d06b-preview-domain">🌐 example.com (Global)</span>
+              </div>
+              <div class="d06b-preview-sample">
+                <span>Bri 100% · Con 100% · Sep 0% · Img 85%</span>
+              </div>
+            </div>
+
+            <div class="d06b-quick-row" data-group="scope">
+              <button class="d06b-chip is-active" data-scope="global">Global</button>
+              <button class="d06b-chip" data-scope="site">+ Customize This Site</button>
+            </div>
+
+            <div class="d06b-power-row">
+              <span class="d06b-power-label">Extension (Global)</span>
+              <div class="d06b-polarity-pills" data-group="power">
+                <button class="is-power-on">On</button>
+                <button>Off</button>
+              </div>
+            </div>
+
+            <div class="d06b-power-row">
+              <span class="d06b-power-label">Theme Mode</span>
+              <div class="d06b-polarity-pills" data-group="mode">
+                <button class="is-active">🌙 Dark</button>
+                <button>☀️ Light</button>
+              </div>
+            </div>
+
+            <div class="d06b-subhead"><span>Quick Moods</span></div>
+            <div class="d06b-mood-grid" data-group="mood">
+              <button class="d06b-mood-tile">☀️ Daylight</button>
+              <button class="d06b-mood-tile is-active">🌙 Midnight</button>
+              <button class="d06b-mood-tile">🌆 Twilight</button>
+              <button class="d06b-mood-tile">🖤 OLED</button>
+            </div>
+
+            <div class="d06b-accordion">
+              <button class="d06b-acc-trigger"><span>Optics & Fine-Tuning</span><span>▾</span></button>
+              <div class="d06b-acc-body">
+                <div class="d06b-slider-row">
+                  <div class="d06b-slider-head"><span>Brightness</span><span class="val">100%</span></div>
+                  <input type="range" class="d06b-range" min="50" max="150" value="100" />
+                </div>
+                <div class="d06b-slider-row">
+                  <div class="d06b-slider-head"><span>Image Brightness</span><span class="val">85%</span></div>
+                  <input type="range" class="d06b-range" min="50" max="100" value="85" />
+                </div>
+              </div>
+            </div>
+
+            <div class="d06b-accordion">
+              <button class="d06b-acc-trigger"><span>Advance Settings</span><span>▾</span></button>
+              <div class="d06b-acc-body">
+                <div class="d06b-tone-block">
+                  <div class="d06b-tone-label-row">
+                    <span class="d06b-tone-label">SVG Icons & Logos</span>
+                    <span class="info-tooltip">
+                      <button type="button" class="info-tooltip__trigger" aria-label="About SVG Icons & Logos">
+                        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+                          <circle cx="8" cy="8" r="6.75" fill="none" stroke="currentColor" stroke-width="1.35" />
+                          <circle cx="8" cy="4.9" r="0.9" fill="currentColor" />
+                          <path d="M8 7.3v4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                      </button>
+                      <div class="info-tooltip__popover">
+                        <div class="info-tooltip__term">Smart Recolor</div>
+                        <div class="info-tooltip__desc">Lightens dark icons &amp; logo paths while keeping brand colors.</div>
+                        <div class="info-tooltip__term">Invert</div>
+                        <div class="info-tooltip__desc">Applies a full invert + hue-rotate filter to SVGs.</div>
+                      </div>
+                    </span>
+                  </div>
+                  <div class="d06b-sched-pills" data-group="svg">
+                    <button>Off</button>
+                    <button class="is-active">Smart Recolor</button>
+                    <button>Invert</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Wire interactive demo controls inside each card
+      const card = col.querySelector('.dr-d06b');
+      col.querySelectorAll('[data-group]').forEach((group) => {
+        const type = group.dataset.group;
+        group.querySelectorAll('button').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            group.querySelectorAll('button').forEach((b) => b.classList.remove('is-active', 'is-power-on'));
+            if (type === 'power' && btn.textContent.trim() === 'On') {
+              btn.classList.add('is-power-on');
+            } else {
+              btn.classList.add('is-active');
+            }
+            if (type === 'scope') {
+              card.classList.toggle('is-site-mode', btn.dataset.scope === 'site');
+            }
+          });
+        });
+      });
+
+      col.querySelectorAll('.d06b-range').forEach((range) => {
+        range.addEventListener('input', () => {
+          range.previousElementSibling.querySelector('.val').textContent = range.value + '%';
+        });
+      });
+
+      grid.appendChild(col);
+    });
+  </script>
+</body>
+</html>
