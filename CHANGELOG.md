@@ -1,3 +1,7 @@
+# 4.12.2 (November 15, 2026)
+
+- Fixed `darkreader--image-brightness` (`img { filter: brightness(...) !important; }`) overriding SVG `<img>` inversion filters (`[data-darkreader-inline-invert]` in Smart Recolor mode and `.svg` / `data:image/svg+xml` in Invert mode). Both filters now compose cleanly without one overwriting the other.
+
 # 4.12.1 (November 15, 2026)
 
 - Imported `../controls/info-tooltip/style` in `src/ui/popup/style.less` so `InfoTooltip` styles are bundled into the popup stylesheet.

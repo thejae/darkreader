@@ -284,9 +284,17 @@ function getInversionStyleValue(): string {
 
 function getImageBrightnessCSS(themeConfig: Theme): string {
     const imageBrightness = themeConfig.imageBrightness ?? 100;
-    return imageBrightness < 100
-        ? `img, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`
-        : '';
+    if (imageBrightness >= 100) {
+        return '';
+    }
+    const svgMode = themeConfig.mode === 1 ? (themeConfig.svgColorMode ?? 'smart') : 'off';
+    const imgExclusions = svgMode === 'invert'
+        ? ':not([data-darkreader-inline-invert]):not([src*=".svg"]):not([src^="data:image/svg+xml"])'
+        : ':not([data-darkreader-inline-invert])';
+    return [
+        `img${imgExclusions}, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`,
+        `img[data-darkreader-inline-invert] { filter: invert(100%) hue-rotate(180deg) brightness(${imageBrightness}%) !important; }`,
+    ].join('\n');
 }
 
 function getSvgColorCSS(themeConfig: Theme): string {
@@ -298,7 +306,12 @@ function getSvgColorCSS(themeConfig: Theme): string {
         return ':where(svg:not([fill]):not([style*="fill"]):not([data-darkreader-inline-fill]):not([data-darkreader-inline-invert])) { fill: currentColor; }';
     }
     if (mode === 'invert') {
-        return 'svg, img[src*=".svg"], img[src^="data:image/svg+xml"] { filter: invert(1) hue-rotate(180deg) !important; }';
+        const imageBrightness = themeConfig.imageBrightness ?? 100;
+        const brightnessPart = imageBrightness < 100 ? ` brightness(${imageBrightness}%)` : '';
+        return [
+            `svg { filter: invert(1) hue-rotate(180deg) !important; }`,
+            `img[src*=".svg"], img[src^="data:image/svg+xml"] { filter: invert(1) hue-rotate(180deg)${brightnessPart} !important; }`,
+        ].join('\n');
     }
     return '';
 }
