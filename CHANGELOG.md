@@ -1,3 +1,8 @@
+# 4.15.3 (November 15, 2026)
+
+- Unified Quick Moods (`.d06b-mood-tile`) and SVG Icons & Logos / Auto-Schedule (`.d06b-sched-pills button`) in `src/ui/popup/style.less` with a shared `.d06b-tile-chrome()` mixin (`1px solid rgba(255, 255, 255, 0.12)` border and `12px` radius).
+- Updated `.d06b-mood-tile.is-active` to use `.d06b-accent-pill()` (Lagoon Reef gradient background) with `border-color: transparent`.
+
 # 4.15.2 (November 15, 2026)
 
 - Styled `.d06b-reset-site-btn` (Cancel / Reset to Global) in `src/ui/popup/style.less` with a `#DF6B32` gradient (`--d06b-cancel-grad: linear-gradient(135deg, #df6b32, #c24d19)`).

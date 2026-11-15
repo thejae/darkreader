@@ -23,6 +23,11 @@
     color: #fff;
 }
 
+.d06b-tile-chrome() {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+}
+
 .d06b-range-thumb() {
     width: 14px;
     height: 14px;
@@ -416,10 +421,9 @@ body {
     }
 
     .d06b-mood-tile {
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        .d06b-tile-chrome();
         background: rgba(255, 255, 255, 0.06);
         color: #fff;
-        border-radius: 12px;
         padding: 8px 10px;
         display: flex;
         align-items: center;
@@ -427,8 +431,8 @@ body {
         cursor: pointer;
 
         &.is-active {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.45);
+            .d06b-accent-pill();
+            border-color: transparent;
         }
     }
 
@@ -661,10 +665,9 @@ body {
 
         button {
             flex: 1;
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            .d06b-tile-chrome();
             background: rgba(0, 0, 0, 0.2);
             color: rgba(255, 255, 255, 0.78);
-            border-radius: 8px;
             padding: 5px;
             font-size: 11px;
             cursor: pointer;
