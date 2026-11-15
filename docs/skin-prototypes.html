@@ -343,9 +343,48 @@
   }
 
   input[type="range"].d06b-range {
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
-    accent-color: var(--accent-solid);
+    height: 6px;
+    margin: 4px 0;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.12);
+    background-image: var(--accent-grad);
+    background-size: var(--range-pct, 50%) 100%;
+    background-repeat: no-repeat;
+    outline: none;
     cursor: pointer;
+  }
+
+  input[type="range"].d06b-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid var(--accent-solid);
+    box-shadow: 0 0 10px var(--accent-solid), 0 1px 4px rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  input[type="range"].d06b-range::-webkit-slider-thumb:hover,
+  input[type="range"].d06b-range:active::-webkit-slider-thumb {
+    transform: scale(1.14);
+    box-shadow: 0 0 14px var(--accent-solid), 0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  input[type="range"].d06b-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid var(--accent-solid);
+    box-shadow: 0 0 10px var(--accent-solid), 0 1px 4px rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
 
   /* Info Tooltip */
@@ -512,6 +551,58 @@
     --tooltip-hover: rgba(59, 130, 246, 0.26);
     --site-ring: rgba(96, 165, 250, 0.55);
   }
+
+  .skin-prism-sunset {
+    --bg: #1e1116;
+    --preview-bg: #27161d;
+    --aura: radial-gradient(circle at 12% 8%, rgba(244, 63, 94, 0.34), transparent 55%),
+            radial-gradient(circle at 88% 48%, rgba(249, 115, 22, 0.24), transparent 52%),
+            radial-gradient(circle at 82% 94%, rgba(234, 179, 8, 0.22), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #f43f5e, #f97316 52%, #eab308);
+    --accent-solid: #fb7185;
+    --accent-tint: #fecdd3;
+    --chip-active-bg: rgba(249, 115, 22, 0.24);
+    --chip-active-border: rgba(251, 146, 60, 0.62);
+    --tile-active-bg: rgba(244, 63, 94, 0.22);
+    --tile-active-border: rgba(251, 146, 60, 0.65);
+    --tooltip-hover: rgba(244, 63, 94, 0.3);
+    --site-ring: rgba(251, 146, 60, 0.65);
+  }
+
+  .skin-lagoon-reef {
+    --bg: #0c1922;
+    --preview-bg: #11222e;
+    --aura: radial-gradient(circle at 12% 8%, rgba(20, 184, 166, 0.32), transparent 55%),
+            radial-gradient(circle at 85% 42%, rgba(56, 189, 248, 0.24), transparent 52%),
+            radial-gradient(circle at 88% 92%, rgba(99, 102, 241, 0.26), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #14b8a6, #38bdf8 52%, #6366f1);
+    --accent-solid: #38bdf8;
+    --accent-tint: #bae6fd;
+    --chip-active-bg: rgba(56, 189, 248, 0.22);
+    --chip-active-border: rgba(56, 189, 248, 0.6);
+    --tile-active-bg: rgba(20, 184, 166, 0.22);
+    --tile-active-border: rgba(56, 189, 248, 0.62);
+    --tooltip-hover: rgba(56, 189, 248, 0.28);
+    --site-ring: rgba(56, 189, 248, 0.62);
+  }
+
+  .skin-matcha-citrus {
+    --bg: #0f1b14;
+    --preview-bg: #15251b;
+    --aura: radial-gradient(circle at 12% 8%, rgba(163, 230, 53, 0.26), transparent 54%),
+            radial-gradient(circle at 85% 48%, rgba(52, 211, 153, 0.22), transparent 52%),
+            radial-gradient(circle at 88% 92%, rgba(45, 212, 191, 0.24), transparent 55%);
+    --accent-grad: linear-gradient(135deg, #a3e635, #34d399 52%, #2dd4bf);
+    --accent-on-text: #071912;
+    --accent-solid: #4ade80;
+    --accent-tint: #d9f99d;
+    --chip-active-bg: rgba(52, 211, 153, 0.22);
+    --chip-active-border: rgba(163, 230, 53, 0.58);
+    --tile-active-bg: rgba(52, 211, 153, 0.2);
+    --tile-active-border: rgba(163, 230, 53, 0.6);
+    --tooltip-hover: rgba(52, 211, 153, 0.28);
+    --site-ring: rgba(163, 230, 53, 0.58);
+  }
 </style>
 </head>
 <body>
@@ -531,6 +622,9 @@
       {id: 'amber', name: '3 · Warm Amber / Sunset', swatches: ['#1a1412', '#d97706', '#e11d48']},
       {id: 'emerald', name: '4 · Emerald Forest', swatches: ['#0f1916', '#059669', '#0d9488']},
       {id: 'cobalt', name: '5 · Deep Cobalt', swatches: ['#101426', '#2563eb', '#0284c7']},
+      {id: 'prism-sunset', name: '6 · Prism Sunset', swatches: ['#1e1116', '#f43f5e', '#f97316', '#eab308']},
+      {id: 'lagoon-reef', name: '7 · Lagoon Reef', swatches: ['#0c1922', '#14b8a6', '#38bdf8', '#6366f1']},
+      {id: 'matcha-citrus', name: '8 · Matcha Citrus', swatches: ['#0f1b14', '#a3e635', '#34d399', '#2dd4bf']},
     ];
 
     const grid = document.getElementById('grid');
@@ -654,9 +748,15 @@
       });
 
       col.querySelectorAll('.d06b-range').forEach((range) => {
-        range.addEventListener('input', () => {
+        const syncRange = () => {
+          const min = Number(range.min) || 0;
+          const max = Number(range.max) || 100;
+          const pct = ((Number(range.value) - min) / (max - min)) * 100;
+          range.style.setProperty('--range-pct', pct + '%');
           range.previousElementSibling.querySelector('.val').textContent = range.value + '%';
-        });
+        };
+        syncRange();
+        range.addEventListener('input', syncRange);
       });
 
       grid.appendChild(col);

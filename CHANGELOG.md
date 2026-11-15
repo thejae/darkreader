@@ -1,3 +1,8 @@
+# 4.14.1 (November 15, 2026)
+
+- Upgraded slider tracks in `docs/skin-prototypes.html` to render each theme's gradient fill up to the thumb with a glowing thumb across all variants.
+- Added 3 colourful 3-stop skin variants to `docs/skin-prototypes.html`: **Prism Sunset**, **Lagoon Reef**, and **Matcha Citrus**.
+
 # 4.14.0 (November 15, 2026)
 
 - Added standalone interactive popup skin prototype page `docs/skin-prototypes.html` comparing the current Arc Purple skin with 5 less-purple color variants (Midnight Ocean, Graphite Neutral, Warm Amber / Sunset, Emerald Forest, and Deep Cobalt).
