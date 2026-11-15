@@ -1,0 +1,152 @@
+.info-tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+
+    &__trigger {
+        width: 16px;
+        height: 16px;
+        padding: 0;
+        border: none;
+        border-radius: 999px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.55);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+            color 0.15s ease,
+            background 0.15s ease,
+            transform 0.15s ease;
+
+        &:hover,
+        &:focus-visible {
+            color: #fff;
+            background: rgba(168, 85, 247, 0.28);
+            outline: none;
+        }
+    }
+
+    &__icon {
+        display: block;
+    }
+
+    &__popover {
+        position: absolute;
+        z-index: 60;
+        width: 248px;
+        padding: 9px 11px;
+        border-radius: 10px;
+        background: rgba(20, 22, 28, 0.96);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow:
+            0 10px 26px rgba(0, 0, 0, 0.55),
+            0 0 0 1px rgba(0, 0, 0, 0.25);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 10.5px;
+        line-height: 1.45;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(4px) scale(0.98);
+        transition:
+            opacity 0.15s ease,
+            transform 0.15s ease,
+            visibility 0.15s ease;
+
+        /* Invisible hover bridge so moving pointer onto popover keeps it open */
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 10px;
+        }
+    }
+
+    &--top &__popover {
+        bottom: calc(100% + 7px);
+
+        &::before {
+            top: 100%;
+        }
+    }
+
+    &--bottom &__popover {
+        top: calc(100% + 7px);
+        transform: translateY(-4px) scale(0.98);
+
+        &::before {
+            bottom: 100%;
+        }
+    }
+
+    &--align-left &__popover {
+        left: -6px;
+    }
+
+    &--align-center &__popover {
+        left: 50%;
+        transform: translateX(-50%) translateY(4px) scale(0.98);
+    }
+
+    &--align-right &__popover {
+        right: -6px;
+    }
+
+    &:hover &__popover,
+    &:focus-within &__popover {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+    }
+
+    &--align-center:hover &__popover,
+    &--align-center:focus-within &__popover {
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    &__title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+    }
+
+    &__text {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    &__list {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    &__term {
+        font-weight: 700;
+        color: #e9d5ff;
+        font-size: 10.5px;
+    }
+
+    &__desc {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 10px;
+        line-height: 1.4;
+    }
+}

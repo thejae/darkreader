@@ -1,3 +1,8 @@
+# 4.12.0 (November 15, 2026)
+
+- Added a reusable `InfoTooltip` control (`src/ui/controls/info-tooltip/`) with hover, keyboard-focus, click, and `Escape` support, configurable placement/alignment, and glassmorphic styling.
+- Added an `(i)` info tooltip next to **SVG Icons & Logos** in **Advance Settings** explaining the difference between **Smart Recolor** and **Invert**.
+
 # 4.11.2 (November 15, 2026)
 
 - Fixed SVG `<img>` logo selection (`img[src*=".svg"]`, `img[src^="data:image/svg+xml"]`) in `createDynamicStyleOverrides()` so `.svg` images without a `style` attribute are analyzed and toggled properly.

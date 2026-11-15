@@ -9,6 +9,8 @@
 import {m} from 'malevic';
 import {useState, withState} from 'malevic/state';
 
+import {InfoTooltip} from '../controls';
+
 import type {
     ExtensionActions,
     ExtensionData,
@@ -826,7 +828,25 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                         {ui.openPanel === 'advanced' ? (
                             <div class="d06b-acc-body">
                                 <div class="d06b-tone-block">
-                                    <span class="d06b-tone-label">SVG Icons & Logos</span>
+                                    <div class="d06b-tone-label-row">
+                                        <span class="d06b-tone-label">SVG Icons & Logos</span>
+                                        <InfoTooltip
+                                            label="About SVG Icons & Logos modes"
+                                            title="SVG Icons & Logos"
+                                            placement="top"
+                                            align="left"
+                                            items={[
+                                                {
+                                                    term: 'Smart Recolor',
+                                                    description: 'Selectively lightens dark icons, unstyled SVGs, and dark wordmark paths while preserving bright brand colors.',
+                                                },
+                                                {
+                                                    term: 'Invert',
+                                                    description: 'Applies a full invert + hue-rotate filter to all SVG elements and .svg images.',
+                                                },
+                                            ]}
+                                        />
+                                    </div>
                                     <div class="d06b-sched-pills">
                                         {(
                                             [

@@ -5,6 +5,7 @@ import ColorDropDown from './color-dropdown';
 import ColorPicker from './color-picker';
 import ControlGroup from './control-group/control-group';
 import DropDown from './dropdown';
+import InfoTooltip from './info-tooltip';
 import MessageBox from './message-box';
 import MultiSwitch from './multi-switch';
 import NavButton from './nav-button';
@@ -28,6 +29,7 @@ export {
     ColorPicker,
     ControlGroup,
     DropDown,
+    InfoTooltip,
     MessageBox,
     MultiSwitch,
     NavButton,
