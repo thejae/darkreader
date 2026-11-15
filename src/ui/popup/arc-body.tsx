@@ -78,7 +78,7 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
     });
 
     const scope: 'global' | 'site' = ui.scopeInitialized
-        ? (ui.scope === 'site' && !hasSiteOverride ? 'global' : ui.scope)
+        ? ui.scope
         : (hasSiteOverride ? 'site' : 'global');
     const isSiteMode = scope === 'site';
 
@@ -143,20 +143,7 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
         ? getSunsetSunriseLocalTimes(editingSchedule.latitude, editingSchedule.longitude)
         : {sunset: '--:--', sunrise: '--:--'};
 
-    function ensureSiteOverrideAndSwitchScope() {
-        const patch: Partial<UserSettings> = {};
-        if (!customThemeEntry) {
-            patch.customThemes = [
-                ...settings.customThemes,
-                {url: [host], theme: {...settings.theme}},
-            ];
-        }
-        if (!isInEnabledFor && !isInDisabledFor && editingEnabled) {
-            patch.enabledFor = [...settings.enabledFor, host];
-        }
-        if (Object.keys(patch).length > 0) {
-            actions.changeSettings(patch);
-        }
+    function switchToSiteScope() {
         setUi({...ui, scope: 'site', scopeInitialized: true});
     }
 
@@ -219,7 +206,11 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
             const nextCustomThemes = customThemeIndex >= 0
                 ? settings.customThemes.map((c, idx) => (idx === customThemeIndex ? {...c, theme: nextTheme} : c))
                 : [...settings.customThemes, {url: [host], theme: nextTheme}];
-            actions.changeSettings({customThemes: nextCustomThemes});
+            const settingsPatch: Partial<UserSettings> = {customThemes: nextCustomThemes};
+            if (!isInEnabledFor && !isInDisabledFor && editingEnabled) {
+                settingsPatch.enabledFor = [...settings.enabledFor, host];
+            }
+            actions.changeSettings(settingsPatch);
             return;
         }
         actions.setTheme(patch);
@@ -343,15 +334,18 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                     >
                         Global
                     </button>
-                    {isSiteMode || hasSiteOverride ? (
+                    {hasSiteOverride ? (
                         <button
                             class={`d06b-chip d06b-chip--site-active ${isSiteMode ? 'is-active' : ''}`}
-                            onclick={ensureSiteOverrideAndSwitchScope}
+                            onclick={switchToSiteScope}
                         >
                             {`⚡ ${host}`}
                         </button>
                     ) : (
-                        <button class="d06b-chip d06b-chip--cta" onclick={ensureSiteOverrideAndSwitchScope}>
+                        <button
+                            class={`d06b-chip ${isSiteMode ? 'd06b-chip--site-active is-active' : 'd06b-chip--cta'}`}
+                            onclick={switchToSiteScope}
+                        >
                             + Customize This Site
                         </button>
                     )}
@@ -364,13 +358,20 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                             <div class="d06b-banner-text">
                                 <strong>{`Customizing ${host} only`}</strong>
                                 <span>
-                                    Power, mode, presets, optics & schedule below apply only to this
-                                    site and override Global
+                                    {hasSiteOverride
+                                        ? 'Power, mode, presets, optics & schedule below apply only to this site and override Global'
+                                        : 'Adjust any control below to save a custom override for this site'}
                                 </span>
                             </div>
-                            <button class="d06b-reset-site-btn" onclick={resetSiteToGlobal}>
-                                ✕ Reset to Global
-                            </button>
+                            {hasSiteOverride ? (
+                                <button class="d06b-reset-site-btn" onclick={resetSiteToGlobal}>
+                                    ✕ Reset to Global
+                                </button>
+                            ) : (
+                                <button class="d06b-reset-site-btn" onclick={switchToGlobalScope}>
+                                    ✕ Cancel
+                                </button>
+                            )}
                         </div>
                     ) : hasSiteOverride ? (
                         <div class="d06b-global-override-notice">
@@ -383,7 +384,7 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                             </div>
                             <button
                                 class="d06b-switch-site-btn"
-                                onclick={ensureSiteOverrideAndSwitchScope}
+                                onclick={switchToSiteScope}
                             >
                                 View Site
                             </button>
@@ -399,7 +400,7 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                             </div>
                             <button
                                 class="d06b-switch-site-btn"
-                                onclick={ensureSiteOverrideAndSwitchScope}
+                                onclick={switchToSiteScope}
                             >
                                 Override
                             </button>

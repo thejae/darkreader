@@ -1,3 +1,7 @@
+# 4.10.10 (November 15, 2026)
+
+- Deferred creating a site override (`customThemes` / `enabledFor`) until an actual tweak is made in **Customize This Site** mode, so clicking **+ Customize This Site** without changing any controls no longer marks the site as having an active custom configuration.
+
 # 4.10.9 (November 15, 2026)
 
 - Added an override notice banner in the Global sandbox view when the active site has a native dark theme, explaining that the site's native dark theme overrides Global settings and providing a one-click **Override** button to switch to **Customize This Site**.
