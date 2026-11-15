@@ -1,3 +1,7 @@
+# 4.15.2 (November 15, 2026)
+
+- Styled `.d06b-reset-site-btn` (Cancel / Reset to Global) in `src/ui/popup/style.less` with a `#DF6B32` gradient (`--d06b-cancel-grad: linear-gradient(135deg, #df6b32, #c24d19)`).
+
 # 4.15.1 (November 15, 2026)
 
 - Upgraded **Customize This Site** (`.is-site-mode` and `.d06b-sandbox.is-site`) in `src/ui/popup/style.less` to an ultra-bright, vibrant Lagoon Reef background gradient (`saturate(1.6) brightness(1.28)` when live), matching cyan/sky sandbox gradient wash, border, and `.d06b-accent-pill()` active site chip.

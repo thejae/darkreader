@@ -15,6 +15,7 @@
     --d06b-search-bg: rgba(8, 18, 26, 0.72);
     --d06b-scroll-thumb: rgba(56, 189, 248, 0.34);
     --d06b-scroll-thumb-hover: rgba(56, 189, 248, 0.64);
+    --d06b-cancel-grad: linear-gradient(135deg, #df6b32, #c24d19);
 }
 
 .d06b-accent-pill() {
@@ -303,15 +304,20 @@ body {
     }
 
     .d06b-reset-site-btn {
-        border: 1px solid rgba(244, 63, 94, 0.5);
-        background: rgba(244, 63, 94, 0.16);
-        color: #ffe4e6;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: var(--d06b-cancel-grad);
+        color: #fff;
         border-radius: 999px;
-        padding: 4px 8px;
+        padding: 4px 9px;
         font-size: 10px;
         font-weight: 600;
         cursor: pointer;
         white-space: nowrap;
+        transition: filter 0.15s ease;
+
+        &:hover {
+            filter: brightness(1.1);
+        }
     }
 
     .d06b-global-override-notice {
