@@ -64,6 +64,9 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
     const isInEnabledFor = isURLInList(tabURL, settings.enabledFor);
     const isInDisabledFor = isURLInList(tabURL, settings.disabledFor);
     const hasSiteOverride = Boolean(customThemeEntry || siteSchedule || isInEnabledFor || isInDisabledFor);
+    const hasNativeDarkTheme = Boolean(
+        activeTab?.isInDarkList || (settings.detectDarkTheme && activeTab?.isDarkThemeDetected),
+    );
 
     const {state: ui, setState: setUi} = useState<ArcUiState>({
         scope: hasSiteOverride ? 'site' : 'global',
@@ -101,6 +104,8 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
         effectiveEnabled = false;
     } else if (isInEnabledFor) {
         effectiveEnabled = true;
+    } else if (hasNativeDarkTheme) {
+        effectiveEnabled = false;
     } else {
         effectiveEnabled = data.isEnabled;
     }
@@ -318,7 +323,9 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                         <span class="d06b-preview-domain">
                             {hasSiteOverride
                                 ? `⚡ ${host} (Site Override)`
-                                : `🌐 ${host} (Global)`}
+                                : hasNativeDarkTheme
+                                    ? `🌙 ${host} (Native Dark Theme)`
+                                    : `🌐 ${host} (Global)`}
                         </span>
                     </div>
                     <div class="d06b-preview-sample">

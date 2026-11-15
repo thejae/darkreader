@@ -1,3 +1,7 @@
+# 4.10.8 (November 15, 2026)
+
+- Added a clear `🌙 <host> (Native Dark Theme)` indicator in the popup preview header (replacing `(Global)`) when a site already uses a native dark theme or is in Dark Reader's dark-sites list, and updated `effectiveEnabled` to reflect that Dark Reader is paused unless overridden.
+
 # 4.10.7 (November 15, 2026)
 
 - Fixed **Customize This Site** settings being overridden on sites with a native dark theme (such as `https://www.macrumors.com/`): clicking **+ Customize This Site** while enabled now adds the host to `enabledFor`, and `Extension.getTabMessage()` allows explicit per-site `enabledFor` entries to override `topFrameHasDarkTheme`.
