@@ -1,3 +1,7 @@
+# 4.13.2 (November 15, 2026)
+
+- Updated the top preview card in `src/ui/popup/arc-body.tsx` when Dark Reader is paused by a site's native dark theme: the card now renders with a dark surface (`is-dark is-tone-charcoal`) and displays `"Paused — site's native dark theme is active"` instead of inactive Global filter metrics.
+
 # 4.13.1 (November 15, 2026)
 
 - Updated `ArcBSlider` in `src/ui/popup/arc-body.tsx` to update local slider state smoothly while dragging (`oninput`) and commit theme changes only on release (`onchange`) when the value actually changed.

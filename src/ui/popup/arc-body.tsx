@@ -304,13 +304,21 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
         );
     }
 
+    const isPausedByNativeDarkTheme = !effectiveEnabled && hasNativeDarkTheme && !hasSiteOverride;
+
     return (
         <div class={`dr-d06b ${effectiveEnabled ? 'is-live' : ''} ${isSiteMode ? 'is-site-mode' : ''}`}>
             <div class="d06b-aura" />
             <div class="d06b-content">
                 {/* Live Mini-Preview Card */}
                 <div
-                    class={`d06b-preview-card ${effectiveEnabled && effectiveTheme.mode === FilterMode.dark ? `is-dark is-tone-${effectiveTheme.surfaceTone ?? 'charcoal'}` : 'is-light'}`}
+                    class={`d06b-preview-card ${
+                        isPausedByNativeDarkTheme
+                            ? 'is-dark is-tone-charcoal'
+                            : effectiveEnabled && effectiveTheme.mode === FilterMode.dark
+                                ? `is-dark is-tone-${effectiveTheme.surfaceTone ?? 'charcoal'}`
+                                : 'is-light'
+                    }`}
                     style={`filter: ${previewFilter}`}
                 >
                     <div class="d06b-preview-top">
@@ -324,7 +332,9 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
                     </div>
                     <div class="d06b-preview-sample">
                         <span>
-                            {`Bri ${effectiveTheme.brightness}% · Con ${effectiveTheme.contrast}% · Sep ${effectiveTheme.sepia}% · Img ${effectiveTheme.imageBrightness ?? 100}%`}
+                            {isPausedByNativeDarkTheme
+                                ? "Paused — site's native dark theme is active"
+                                : `Bri ${effectiveTheme.brightness}% · Con ${effectiveTheme.contrast}% · Sep ${effectiveTheme.sepia}% · Img ${effectiveTheme.imageBrightness ?? 100}%`}
                         </span>
                     </div>
                 </div>
