@@ -1,3 +1,7 @@
+# 4.12.6 (November 15, 2026)
+
+- Removed the obsolete `Check NPM dependencies` (`node tests/dependencies.js`) step from `.github/workflows/test-code.yml` (the script was removed in an earlier cleanup).
+
 # 4.12.5 (November 15, 2026)
 
 - Upgraded GitHub Actions workflows from `actions/checkout@v4` and `actions/setup-node@v4` to `actions/checkout@v5` and `actions/setup-node@v6` to eliminate the Node.js 20 runner deprecation notice.
