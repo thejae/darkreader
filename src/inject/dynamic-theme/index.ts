@@ -288,13 +288,19 @@ function getImageBrightnessCSS(themeConfig: Theme): string {
         return '';
     }
     const svgMode = themeConfig.mode === 1 ? (themeConfig.svgColorMode ?? 'smart') : 'off';
-    const imgExclusions = svgMode === 'invert'
-        ? ':not([data-darkreader-inline-invert]):not([src*=".svg"]):not([src^="data:image/svg+xml"])'
-        : ':not([data-darkreader-inline-invert])';
-    return [
-        `img${imgExclusions}, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`,
-        `img[data-darkreader-inline-invert] { filter: invert(100%) hue-rotate(180deg) brightness(${imageBrightness}%) !important; }`,
-    ].join('\n');
+    if (svgMode === 'invert') {
+        return [
+            `img:not([data-darkreader-inline-invert]):not([src*=".svg" i]):not([src^="data:image/svg+xml" i]), video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`,
+            `img[data-darkreader-inline-invert] { filter: invert(100%) hue-rotate(180deg) brightness(${imageBrightness}%) !important; }`,
+        ].join('\n');
+    }
+    if (svgMode === 'smart') {
+        return [
+            `svg:not(svg svg):not([data-darkreader-inline-invert]), img:not([data-darkreader-inline-invert]), video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`,
+            `svg:not(svg svg)[data-darkreader-inline-invert], img[data-darkreader-inline-invert] { filter: invert(100%) hue-rotate(180deg) brightness(${imageBrightness}%) !important; }`,
+        ].join('\n');
+    }
+    return `svg:not(svg svg), img, video, picture, canvas { filter: brightness(${imageBrightness}%) !important; }`;
 }
 
 function getSvgColorCSS(themeConfig: Theme): string {
@@ -308,10 +314,7 @@ function getSvgColorCSS(themeConfig: Theme): string {
     if (mode === 'invert') {
         const imageBrightness = themeConfig.imageBrightness ?? 100;
         const brightnessPart = imageBrightness < 100 ? ` brightness(${imageBrightness}%)` : '';
-        return [
-            `svg { filter: invert(1) hue-rotate(180deg) !important; }`,
-            `img[src*=".svg"], img[src^="data:image/svg+xml"] { filter: invert(1) hue-rotate(180deg)${brightnessPart} !important; }`,
-        ].join('\n');
+        return `svg:not(svg svg), img[src*=".svg" i], img[src^="data:image/svg+xml" i] { filter: invert(1) hue-rotate(180deg)${brightnessPart} !important; }`;
     }
     return '';
 }

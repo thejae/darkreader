@@ -1,3 +1,7 @@
+# 4.12.3 (November 15, 2026)
+
+- Applied **Image Brightness** dimming to all top-level `<svg>` elements (`svg:not(svg svg)`) across `Off`, `Smart Recolor`, and `Invert` modes, composing cleanly with `invert(...) hue-rotate(180deg)` when SVG inversion is active.
+
 # 4.12.2 (November 15, 2026)
 
 - Fixed `darkreader--image-brightness` (`img { filter: brightness(...) !important; }`) overriding SVG `<img>` inversion filters (`[data-darkreader-inline-invert]` in Smart Recolor mode and `.svg` / `data:image/svg+xml` in Invert mode). Both filters now compose cleanly without one overwriting the other.
