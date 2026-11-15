@@ -324,6 +324,14 @@ function updateColorStaticOverrides() {
     staticStyleInjector.inject('user-agent', getModifiedUserAgentStyle(theme!, isIFrame!, theme!.styleSystemControls), 'beginning');
     staticStyleInjector.inject('invert', getInversionStyleValue(), 'beginning');
     staticStyleInjector.inject('image-brightness', getImageBrightnessCSS(theme!), 'beginning');
+    const svgColorCSS = getSvgColorCSS(theme!);
+    staticStyleInjector.inject('svg-color', svgColorCSS, 'beginning');
+    shadowRootsWithOverrides.forEach((root) => {
+        const shadowSvgStyle = root.querySelector<HTMLStyleElement>('.darkreader--svg-color');
+        if (shadowSvgStyle) {
+            shadowSvgStyle.textContent = svgColorCSS;
+        }
+    });
     const variableSheet = staticStyleInjector.inject('variables', getVariablesStyleContent(theme!), 'beginning', () => registerVariablesSheet(variableSheet));
     registerVariablesSheet(variableSheet);
 }
@@ -384,6 +392,9 @@ function createShadowStaticStyleOverridesInner(root: ShadowRoot) {
     const invertStyle = createOrUpdateStyle('darkreader--invert', root);
     invertStyle.textContent = getInversionStyleValue();
     root.insertBefore(invertStyle, overrideStyle.nextSibling);
+    const svgColorStyle = createOrUpdateStyle('darkreader--svg-color', root);
+    svgColorStyle.textContent = getSvgColorCSS(theme!);
+    root.insertBefore(svgColorStyle, invertStyle.nextSibling);
     shadowRootsWithOverrides.add(root);
 }
 
@@ -396,7 +407,7 @@ function delayedCreateShadowStaticStyleOverrides(root: ShadowRoot): void {
         for (const {type, removedNodes} of mutations) {
             if (type === 'childList') {
                 for (const {nodeName, className} of removedNodes as any) {
-                    if (nodeName === 'STYLE' && ['darkreader darkreader--inline', 'darkreader darkreader--override', 'darkreader darkreader--invert'].includes(className)) {
+                    if (nodeName === 'STYLE' && ['darkreader darkreader--inline', 'darkreader darkreader--override', 'darkreader darkreader--invert', 'darkreader darkreader--svg-color'].includes(className)) {
                         createShadowStaticStyleOverridesInner(root);
                         return;
                     }
@@ -1069,6 +1080,8 @@ export function removeDynamicTheme(): void {
             '.darkreader--invert',
             '.darkreader--inline',
             '.darkreader--override',
+            '.darkreader--image-brightness',
+            '.darkreader--svg-color',
             '.darkreader--variables',
             '.darkreader--root-vars',
             'meta[name="darkreader"]',
@@ -1086,6 +1099,7 @@ export function removeDynamicTheme(): void {
         // so the invert style created in createDelayedoverrides (:341) must be
         // removed here, otherwise custom elements stay inverted after disabling.
         removeNode(root.querySelector('.darkreader--invert'));
+        removeNode(root.querySelector('.darkreader--svg-color'));
     });
     shadowRootsWithOverrides.clear();
     forEach(styleManagers.keys(), (el) => removeManager(el));

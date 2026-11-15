@@ -1,6 +1,7 @@
 import {setInlineStyleValue} from '@plus/dynamic/inject';
 import type {Theme} from '../../definitions';
 import {forEach, push} from '../../utils/array';
+import {getSRGBLightness, parseColorWithCache} from '../../utils/color';
 import {isShadowDomSupported} from '../../utils/platform';
 import {throttle} from '../../utils/throttle';
 import {getDuration} from '../../utils/time';
@@ -672,7 +673,15 @@ export function overrideInlineStyle(element: HTMLElement, theme: Theme, ignoreIn
                             isBg = false;
                         } else {
                             const {width, height} = element.getBoundingClientRect();
-                            isBg = (width > SMALL_SVG_THRESHOLD || height > SMALL_SVG_THRESHOLD);
+                            const parsedFill = parseColorWithCache(value);
+                            const lightness = parsedFill ? getSRGBLightness(parsedFill.r, parsedFill.g, parsedFill.b) : 1;
+                            // Treat dark/mid-tone fills on icons and logo paths (e.g. #757575 48px icon or
+                            // tall logo letters) as foreground ink unless they form a large backdrop shape.
+                            if (lightness < 0.55 && ((width <= 200 && height <= 200) || (element as Element) === root)) {
+                                isBg = false;
+                            } else {
+                                isBg = (width > SMALL_SVG_THRESHOLD || height > SMALL_SVG_THRESHOLD);
+                            }
                         }
                         overrideValue('fill', '', 'fill', isBg ? 'background-color' : 'color', value, value);
                     };

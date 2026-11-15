@@ -1,3 +1,8 @@
+# 4.11.1 (November 15, 2026)
+
+- Fixed SVG icon and logo recoloring for mid/dark fills on larger icons (e.g. `48px` icons with `fill="#757575"`) and multi-path wordmark logos (e.g. dark `#001246` letters taller than `32px`): dark/mid-tone fills (`lightness < 0.55`) on icons and logo paths up to `200px` are now treated as foreground ink (`modifyForegroundColor`) rather than darkened as backgrounds, while light/bright backdrop shapes still darken appropriately.
+- Added `darkreader--svg-color` injection and updates for Shadow DOM roots and `updateColorStaticOverrides()`, and cleanup on theme removal.
+
 # 4.11.0 (November 15, 2026)
 
 - Added a collapsible **Advance Settings** section below **Auto-Schedule** in the popup, supporting both Global and Customize This Site scopes.
