@@ -1,3 +1,7 @@
+# 4.12.1 (November 15, 2026)
+
+- Imported `../controls/info-tooltip/style` in `src/ui/popup/style.less` so `InfoTooltip` styles are bundled into the popup stylesheet.
+
 # 4.12.0 (November 15, 2026)
 
 - Added a reusable `InfoTooltip` control (`src/ui/controls/info-tooltip/`) with hover, keyboard-focus, click, and `Escape` support, configurable placement/alignment, and glassmorphic styling.
