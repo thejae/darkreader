@@ -1,3 +1,7 @@
+# 4.10.6 (November 15, 2026)
+
+- Fixed images and videos disappearing (e.g. on `https://www.apple.com/hk/en/`) after color/slider updates by removing the `fallback` style re-injection from `updateColorStaticOverrides()`, which previously left `body :not(iframe) { background-color: ... !important; }` active over transparent overlay elements.
+
 # 4.10.5 (November 15, 2026)
 
 - Fixed dynamic theme fast-path updates (`onlyColorsChanged`) to use a dedicated `updateColorStaticOverrides()` helper instead of calling `createStaticStyleOverrides()`, avoiding redundant `__darkreader__cleanUp` dispatches and proxy script re-injections while keeping `Surface Darkness`, `Images & Media`, and filter sliders updating live on the page.

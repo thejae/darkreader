@@ -307,7 +307,6 @@ function updateColorStaticOverrides() {
     if (!staticStyleInjector) {
         return;
     }
-    staticStyleInjector.inject('fallback', getModifiedFallbackStyle(theme!, {strict: true}), 'beginning');
     staticStyleInjector.inject('user-agent', getModifiedUserAgentStyle(theme!, isIFrame!, theme!.styleSystemControls), 'beginning');
     staticStyleInjector.inject('invert', getInversionStyleValue(), 'beginning');
     staticStyleInjector.inject('image-brightness', getImageBrightnessCSS(theme!), 'beginning');
