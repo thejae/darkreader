@@ -1,3 +1,7 @@
+# 4.12.4 (November 15, 2026)
+
+- Fixed `object-curly-spacing` ESLint error in `src/ui/popup/countries.ts` that caused the GitHub Actions `Run tests` lint step to fail.
+
 # 4.12.3 (November 15, 2026)
 
 - Applied **Image Brightness** dimming to all top-level `<svg>` elements (`svg:not(svg svg)`) across `Off`, `Smart Recolor`, and `Invert` modes, composing cleanly with `invert(...) hue-rotate(180deg)` when SVG inversion is active.

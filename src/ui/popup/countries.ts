@@ -17,7 +17,7 @@ export const TOP_TRAFFIC_COUNTRIES: CountryPreset[] = [
     {name: 'China', code: 'CN', flag: '🇨🇳', latitude: 39.9042, longitude: 116.4074},
     {name: 'Hong Kong', code: 'HK', flag: '🇭🇰', latitude: 22.3193, longitude: 114.1694},
     {name: 'India', code: 'IN', flag: '🇮🇳', latitude: 28.6139, longitude: 77.209},
-    { name: 'Indonesia', code: 'ID', flag: '🇮🇩', latitude: -6.2088, longitude: 106.8456},
+    {name: 'Indonesia', code: 'ID', flag: '🇮🇩', latitude: -6.2088, longitude: 106.8456},
     {name: 'Japan', code: 'JP', flag: '🇯🇵', latitude: 35.6762, longitude: 139.6503},
     {name: 'United States', code: 'US', flag: '🇺🇸', latitude: 37.7749, longitude: -122.4194},
 ];
