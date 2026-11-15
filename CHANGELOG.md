@@ -1,3 +1,7 @@
+# 4.10.7 (November 15, 2026)
+
+- Fixed **Customize This Site** settings being overridden on sites with a native dark theme (such as `https://www.macrumors.com/`): clicking **+ Customize This Site** while enabled now adds the host to `enabledFor`, and `Extension.getTabMessage()` allows explicit per-site `enabledFor` entries to override `topFrameHasDarkTheme`.
+
 # 4.10.6 (November 15, 2026)
 
 - Fixed images and videos disappearing (e.g. on `https://www.apple.com/hk/en/`) after color/slider updates by removing the `fallback` style re-injection from `updateColorStaticOverrides()`, which previously left `body :not(iframe) { background-color: ... !important; }` active over transparent overlay elements.

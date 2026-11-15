@@ -712,8 +712,8 @@ export class Extension {
         }
         const isExplicitlyEnabledForSite = isURLInList(tabURL, settings.enabledFor);
         const isTabActive = siteScheduleActive !== null
-            ? (siteScheduleActive && !topFrameHasDarkTheme && !(tabInfo.isProtected && !settings.enableForProtectedPages))
-            : ((Extension.isExtensionSwitchedOn() || isExplicitlyEnabledForSite) && isURLEnabled(tabURL, settings, tabInfo) && !topFrameHasDarkTheme);
+            ? (siteScheduleActive && (!topFrameHasDarkTheme || isExplicitlyEnabledForSite) && !(tabInfo.isProtected && !settings.enableForProtectedPages))
+            : ((Extension.isExtensionSwitchedOn() || isExplicitlyEnabledForSite) && isURLEnabled(tabURL, settings, tabInfo) && (!topFrameHasDarkTheme || isExplicitlyEnabledForSite));
 
         if (isTabActive) {
             const custom =

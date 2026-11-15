@@ -10,7 +10,6 @@ import {m} from 'malevic';
 import {useState, withState} from 'malevic/state';
 
 import type {
-    CustomSiteConfig,
     ExtensionActions,
     ExtensionData,
     SiteScheduleConfig,
@@ -140,12 +139,18 @@ export const ArcSiteScopedBody = withState(function ArcSiteScopedBody(props: Arc
         : {sunset: '--:--', sunrise: '--:--'};
 
     function ensureSiteOverrideAndSwitchScope() {
+        const patch: Partial<UserSettings> = {};
         if (!customThemeEntry) {
-            const nextCustomThemes: CustomSiteConfig[] = [
+            patch.customThemes = [
                 ...settings.customThemes,
                 {url: [host], theme: {...settings.theme}},
             ];
-            actions.changeSettings({customThemes: nextCustomThemes});
+        }
+        if (!isInEnabledFor && !isInDisabledFor && editingEnabled) {
+            patch.enabledFor = [...settings.enabledFor, host];
+        }
+        if (Object.keys(patch).length > 0) {
+            actions.changeSettings(patch);
         }
         setUi({...ui, scope: 'site', scopeInitialized: true});
     }
