@@ -35,6 +35,12 @@ This will create a `build/release/darkreader-chrome.zip` file for use in a Chrom
 
 You can customize the build process by passing flags to build script. To see all flags, run `npm run build -- --help`.
 
+### Versioning and releases
+
+The extension version has a single source of truth: `version` in [package.json](package.json). Release builds stamp it into every platform's `manifest.json` via `tasks/bundle-manifest.js` (debug builds get version `1`), so `src/manifest*.json` must not declare a version of their own.
+
+To publish, bump `package.json`, add a matching `CHANGELOG.md` entry, and tag the commit `v<version>`; the `tagged-release` workflow builds the archives from the tag.
+
 ### Building with Deno
 
 You can build Dark Reader with an alternative runtime called [Deno](https://deno.land/). For this run `deno:bootstrap` script (e.g., via `npm run deno:bootstrap` or manually copy the command from `package.json`). Then run the same commands described above.

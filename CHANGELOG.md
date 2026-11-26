@@ -1,3 +1,9 @@
+# 4.15.6 (November 26, 2026)
+
+- Merged upstream `darkreader/darkreader` `main` (through 2026-11-24, 25 commits): site fixes for Strava, Databricks, OLX, Intercars, Amtrak, abanderado, dba.dk, iol.pt, lavoz.com.ar, matematykaszkolna.pl, dict.variants.moe.edu.tw, autoweek.com, the NYT crossword and levtech.jp; correct `viewBox` sizing when the root `<svg>` element is not first; wait for an empty `href` to load; detect page-declared dark themes without forcing layout; add `sidestore.io` to dark sites; update the Japanese translation.
+- Release builds now take the extension version from `package.json` (`tasks/version.js`, `tasks/bundle-manifest.js`) instead of `src/manifest.json`, which still declared `4.9.135` while the package was on `4.15.5`. All platform manifests (chromium MV2/MV3, Firefox, Thunderbird) and the API bundle banner share the same validated version source; debug builds keep version `1`.
+- Synced `package-lock.json` to the package version.
+
 # 4.15.5 (November 15, 2026)
 
 - Fixed `<img>` elements inside `<picture>` wrappers (such as `#pp_tools_image_3` on HSBC) disappearing when `imageBrightness < 100` by removing `picture` from `getImageBrightnessCSS()` in `src/inject/dynamic-theme/index.ts` and `src/generators/css-filter.ts` (avoiding `0x0` inline `<picture>` filter layers and double-darkening).

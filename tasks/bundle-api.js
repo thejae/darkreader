@@ -12,12 +12,7 @@ import typescript from 'typescript';
 
 import {absolutePath} from './paths.js';
 import {createTask} from './task.js';
-
-async function getVersion() {
-    const file = await fs.promises.readFile(new URL('../package.json', import.meta.url), 'utf8');
-    const p = JSON.parse(file);
-    return p.version;
-}
+import {getExtensionVersion} from './version.js';
 
 /** @type {string[]} */
 let watchFiles = [];
@@ -61,7 +56,7 @@ async function bundleAPIModule({debug, watch}, moduleType, dest) {
     });
     watchFiles = bundle.watchFiles;
     await bundle.write({
-        banner: `/**\n * Dark Reader v${await getVersion()}\n * https://darkreader.org/\n */\n`,
+        banner: `/**\n * Dark Reader v${await getExtensionVersion()}\n * https://darkreader.org/\n */\n`,
         // TODO: Consider removing next line
         esModule: true,
         file: dest,
